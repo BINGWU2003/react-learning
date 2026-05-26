@@ -1,0 +1,35 @@
+stages:
+  - build
+
+workflow:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - when: never
+
+default:
+  tags:
+    - vite-project-react
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+    policy: pull-push
+
+.package_job:
+  before_script:
+    - node --version
+    - npm --version
+    - npm ci --cache .npm --prefer-offline
+
+build:
+  extends: .package_job
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    name: dist-$CI_COMMIT_REF_SLUG
+    paths:
+      - dist/
+    expire_in: 1 week
