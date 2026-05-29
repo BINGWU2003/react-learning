@@ -1,0 +1,105 @@
+.card {
+  padding: 20px;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.card h3 {
+  margin: 0 0 4px;
+  font-size: 18px;
+}
+
+.card .role {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.card p {
+  margin: 0 0 8px;
+  color: #516070;
+  font-size: 14px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #f0f5ff;
+  color: #1677ff;
+  font-size: 12px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.inputArea {
+  display: flex;
+  gap: 8px;
+}
+
+.inputArea input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.inputArea input:focus {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.15);
+}
+
+.inputArea button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #1677ff;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.inputArea button:hover {
+  background: #0958d9;
+}
+
+.msgList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 60px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.msgItem {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #e6f4ff;
+  font-size: 14px;
+}
+
+.msgItem span {
+  display: block;
+  margin-top: 2px;
+  color: #8c8c8c;
+  font-size: 11px;
+}
