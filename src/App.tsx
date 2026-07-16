@@ -4,10 +4,17 @@ import { DynamicSelectCard } from "./DynamicSelectCard";
 import Fruits from "./Fruits";
 import Game from "./Game";
 import { ParentChildDemo } from "./ParentChildDemo";
-
+import { UserContextDemo } from "./UserContextDemo";
 function App() {
   return (
     <main className="demo-page">
+      <div className="demo-copy dynamic-copy">
+        <p className="eyebrow">React Context</p>
+        <h2>useContext 跨组件共享用户信息</h2>
+        <p>左侧组件负责展示，右侧组件负责修改，它们通过同一个 Context 同步数据。</p>
+      </div>
+      <UserContextDemo />
+
       <div className="demo-copy">
         <p className="eyebrow">CSS Modules + :global</p>
         <h1>A / B 组件样式穿透隔离</h1>
