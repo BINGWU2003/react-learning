@@ -1,6 +1,7 @@
 import { ComponentA } from "./ComponentA";
 import { ComponentB } from "./ComponentB";
 import { DynamicSelectCard } from "./DynamicSelectCard";
+import { ForwardRefDemo } from "./ForwardRefDemo";
 import Fruits from "./Fruits";
 import Game from "./Game";
 import { ParentChildDemo } from "./ParentChildDemo";
@@ -8,6 +9,15 @@ import { UserContextDemo } from "./UserContextDemo";
 function App() {
   return (
     <main className="demo-page">
+      <div className="demo-copy dynamic-copy">
+        <p className="eyebrow">React forwardRef</p>
+        <h2>父组件访问子组件 DOM</h2>
+        <p>
+          子组件通过 <code>forwardRef</code> 转发输入框引用，父组件可以让它聚焦或选中内容。
+        </p>
+      </div>
+      <ForwardRefDemo />
+
       <div className="demo-copy dynamic-copy">
         <p className="eyebrow">React Context</p>
         <h2>useContext 跨组件共享用户信息</h2>
