@@ -1,0 +1,29 @@
+---
+title: useCallback 与 Vue 普通函数
+description: React 使用 useCallback 稳定回调引用；Vue setup 中声明的普通函数天然保持稳定。
+---
+
+import Comparison from "./Comparison.astro";
+
+父组件同时维护商品选择和购物车数量。增加购物车只更新父组件中的无关状态，不应该让商品列表进行不必要的更新。
+
+<Comparison />
+
+## API 对照
+
+| React | Vue |
+| --- | --- |
+| `useCallback(fn, [deps])` | 通常直接声明 `function fn()` |
+| 函数组件每次渲染都会重新执行 | `setup` 每个组件实例通常只执行一次 |
+| 手动维护闭包依赖 | 函数通过 `ref.value` 读取最新响应式值 |
+| 常与 `memo` 子组件配合 | props 未变化时，Vue 会跳过不必要的子组件更新 |
+
+`useCallback(fn, deps)` 可以理解为 `useMemo(() => fn, deps)`：它缓存的是函数本身，不是函数执行后的结果。
+
+:::tip[什么时候使用]
+只有回调传给 `memo` 子组件，或作为其他 Hook 的依赖时，稳定引用通常才有价值。不要为了“看起来优化”而包装每个事件函数。
+:::
+
+:::note[Vue 没有直接对应的 Hook]
+Vue 通常使用组件事件和 `setup` 中的普通函数。不要用 `computed(() => function)` 模拟 `useCallback`，这只会增加不必要的复杂度。
+:::

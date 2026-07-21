@@ -1,0 +1,26 @@
+---
+import FrameworkCard from "../../../components/FrameworkCard.astro";
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import reactSource from "./ReactDemo.tsx?raw";
+import vueSource from "./VueDemo.vue?raw";
+---
+
+<div class="framework-comparison">
+  <FrameworkCard
+    framework="React"
+    tone="react"
+    summary="useMemo 根据手动依赖缓存筛选、排序和汇总结果。"
+    sources={[{ code: reactSource, fileName: "ReactDemo.tsx", language: "tsx" }]}
+  >
+    <ReactDemo client:visible />
+  </FrameworkCard>
+  <FrameworkCard
+    framework="Vue 3"
+    tone="vue"
+    summary="computed 自动追踪读取的响应式状态并缓存结果。"
+    sources={[{ code: vueSource, fileName: "VueDemo.vue", language: "vue" }]}
+  >
+    <VueDemo client:visible />
+  </FrameworkCard>
+</div>

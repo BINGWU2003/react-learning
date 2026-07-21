@@ -1,0 +1,29 @@
+---
+title: useMemo 与 computed
+description: React 使用 useMemo 缓存昂贵计算；Vue 使用 computed 声明并缓存响应式派生值。
+---
+
+import Comparison from "./Comparison.astro";
+
+从 5,000 条商品中筛选、排序并计算合计。修改搜索词或排序方式会重新计算；增加购物车数量与结果无关，两边都会复用缓存。
+
+<Comparison />
+
+## API 对照
+
+| React | Vue |
+| --- | --- |
+| `useMemo(() => value, [deps])` | `computed(() => value)` |
+| 手动维护依赖数组 | 自动追踪回调中读取的响应式依赖 |
+| 返回普通值 | 返回 `ComputedRef`，脚本中通过 `.value` 读取 |
+| 主要用于性能优化，不保证缓存永久存在 | Vue 中表达缓存派生状态的常规方式 |
+
+两者的计算函数都应该保持纯粹，不要在其中请求接口、修改状态或操作 DOM。
+
+:::tip[先直接计算]
+小数组或简单算式通常不需要 `useMemo`。先像[派生状态](/derived-state/)示例一样在渲染期间直接计算，确认存在明显开销后再缓存。
+:::
+
+:::note[`v-memo` 不是对应 API]
+Vue 的 `v-memo` 缓存模板子树，更接近组件渲染优化；与 React `useMemo` 直接对应的是 `computed`。
+:::
