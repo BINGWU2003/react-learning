@@ -1,0 +1,26 @@
+---
+import FrameworkCard from "../../../components/FrameworkCard.astro";
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import reactSource from "./ReactDemo.tsx?raw";
+import vueSource from "./VueDemo.vue?raw";
+---
+
+<div class="framework-comparison">
+  <FrameworkCard
+    framework="React"
+    tone="react"
+    summary="useEffect 根据依赖重新连接，并在返回函数中清理旧连接。"
+    sources={[{ code: reactSource, fileName: "ReactDemo.tsx", language: "tsx" }]}
+  >
+    <ReactDemo client:only="react" />
+  </FrameworkCard>
+  <FrameworkCard
+    framework="Vue 3"
+    tone="vue"
+    summary="watch 显式监听房间，并通过 onCleanup 清理上一次连接。"
+    sources={[{ code: vueSource, fileName: "VueDemo.vue", language: "vue" }]}
+  >
+    <VueDemo client:only="vue" />
+  </FrameworkCard>
+</div>

@@ -34,6 +34,7 @@ export default defineConfig({
           items: [
             { label: "组件通信", slug: "component-communication" },
             { label: "跨组件状态", slug: "context" },
+            { label: "副作用", slug: "effect" },
             { label: "DOM 引用", slug: "ref" },
             { label: "状态管理", slug: "state" },
             { label: "派生状态", slug: "derived-state" },
