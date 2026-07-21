@@ -1,0 +1,14 @@
+{/* 站点固定使用浅色主题，避免跟随系统设置切换。 */}
+<script is:inline>
+  document.documentElement.dataset.theme = "light";
+
+  try {
+    localStorage.setItem("starlight-theme", "light");
+  } catch {
+    // 隐私模式下 localStorage 可能不可用，页面仍保持浅色。
+  }
+
+  window.StarlightThemeProvider = {
+    updatePickers() {},
+  };
+</script>

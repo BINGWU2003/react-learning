@@ -1,0 +1,30 @@
+---
+import FrameworkCard from "../../../components/FrameworkCard.astro";
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import reactSource from "./ReactDemo.tsx?raw";
+import vueSource from "./VueDemo.vue?raw";
+import searchInputSource from "./SearchInput.vue?raw";
+---
+
+<div class="framework-comparison">
+  <FrameworkCard
+    framework="React"
+    tone="react"
+    summary="forwardRef 把子组件的命令式能力交给父组件。"
+    sources={[{ code: reactSource, fileName: "ReactDemo.tsx", language: "tsx" }]}
+  >
+    <ReactDemo client:visible />
+  </FrameworkCard>
+  <FrameworkCard
+    framework="Vue 3"
+    tone="vue"
+    summary="模板 ref 获取子组件，defineExpose 限定可调用方法。"
+    sources={[
+      { code: vueSource, fileName: "VueDemo.vue", language: "vue" },
+      { code: searchInputSource, fileName: "SearchInput.vue", language: "vue" },
+    ]}
+  >
+    <VueDemo client:visible />
+  </FrameworkCard>
+</div>

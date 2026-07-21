@@ -1,0 +1,48 @@
+---
+import { Code } from "@astrojs/starlight/components";
+
+type SourceFile = {
+  code: string;
+  fileName: string;
+  language: string;
+};
+
+type Props = {
+  framework: "React" | "Vue 3";
+  summary: string;
+  tone: "react" | "vue";
+  sources: SourceFile[];
+};
+
+const { framework, summary, tone, sources } = Astro.props;
+---
+
+<article class:list={["framework-card", `framework-card--${tone}`]}>
+  <header class="framework-card__header">
+    <div>
+      <span class="framework-card__dot" aria-hidden="true"></span>
+      <strong>{framework}</strong>
+    </div>
+    <p>{summary}</p>
+  </header>
+
+  <div class="framework-card__preview">
+    <p class="framework-card__eyebrow">在线预览</p>
+    <slot />
+  </div>
+
+  <div class="framework-card__source" aria-label={`${framework} 源代码`}>
+    <p class="framework-card__eyebrow">实际运行源码</p>
+    <div class="framework-card__code-list">
+      {
+        sources.map(({ code, fileName, language }) => (
+          <Code
+            code={code.trim()}
+            lang={language}
+            meta={`title="${fileName}"`}
+          />
+        ))
+      }
+    </div>
+  </div>
+</article>
