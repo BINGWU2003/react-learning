@@ -1,5 +1,6 @@
 import { ChangeEvent } from "react";
-import { UserProvider, useUser } from "./context/user";
+import { UserProvider } from "./context/user";
+import { useUser } from "./context/user-context";
 
 const UserProfileCard = () => {
   const { user } = useUser();
