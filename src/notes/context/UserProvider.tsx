@@ -4,7 +4,7 @@ import {
   UserContext,
   type User,
   type UserContextValue,
-} from "./user-context";
+} from "./userContext";
 
 const defaultUser: User = {
   name: "小明",

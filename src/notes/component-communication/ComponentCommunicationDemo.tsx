@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from "./ParentChildDemo.module.css";
+import styles from "./ComponentCommunicationDemo.module.css";
 
 /* ───────── 父传子：Props ───────── */
 
@@ -55,7 +55,7 @@ function ParentToChild() {
 
 /* ───────── 子传父：回调函数 ───────── */
 
-type Item = { text: string; time: string };
+type Item = { id: string; text: string; time: string };
 
 function MessageInput({ onSend }: { onSend: (text: string) => void }) {
   const [value, setValue] = useState("");
@@ -84,7 +84,7 @@ function ChildToParent() {
 
   const handleSend = (text: string) => {
     setMessages((prev) => [
-      { text, time: new Date().toLocaleTimeString() },
+      { id: crypto.randomUUID(), text, time: new Date().toLocaleTimeString() },
       ...prev,
     ]);
   };
@@ -99,8 +99,8 @@ function ChildToParent() {
         {messages.length === 0 && (
           <span style={{ color: "#bbb", fontSize: 13 }}>暂无消息</span>
         )}
-        {messages.map((m, i) => (
-          <div key={i} className={styles.msgItem}>
+        {messages.map((m) => (
+          <div key={m.id} className={styles.msgItem}>
             {m.text}
             <span>{m.time}</span>
           </div>
@@ -112,7 +112,7 @@ function ChildToParent() {
 
 /* ───────── 合并导出 ───────── */
 
-export function ParentChildDemo() {
+export function ComponentCommunicationDemo() {
   return (
     <div className={styles.wrapper}>
       <ParentToChild />

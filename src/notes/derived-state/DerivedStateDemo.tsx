@@ -1,5 +1,5 @@
 import { type ReactNode, useState } from "react";
-import styles from "./Fruits.module.css";
+import styles from "./DerivedStateDemo.module.css";
 
 type Product = {
   category: string;
@@ -160,8 +160,6 @@ const PRODUCTS: Product[] = [
   { category: "Vegetables", price: "$1", stocked: true, name: "Peas" },
 ];
 
-const Fruits = () => {
+export function DerivedStateDemo() {
   return <FilterableProductTable products={PRODUCTS} />;
-};
-
-export default Fruits;
+}

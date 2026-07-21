@@ -5,6 +5,7 @@ type Squares = SquareValue[];
 
 type SquareProps = {
   value: SquareValue;
+  position: number;
   onSquareClick: () => void;
 };
 
@@ -14,9 +15,14 @@ type BoardProps = {
   onPlay: (nextSquares: Squares) => void;
 };
 
-const Square = ({ value, onSquareClick }: SquareProps) => {
+const Square = ({ value, position, onSquareClick }: SquareProps) => {
   return (
-    <button className="square" onClick={onSquareClick}>
+    <button
+      className="square"
+      type="button"
+      aria-label={`棋盘第 ${position + 1} 格${value ? `：${value}` : "，空"}`}
+      onClick={onSquareClick}
+    >
       {value}
     </button>
   );
@@ -51,25 +57,25 @@ const Board = ({ xIsNext, squares, onPlay }: BoardProps) => {
     <>
       <div className="status">{status}</div>
       <div className="board-row">
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
+        <Square value={squares[0]} position={0} onSquareClick={() => handleClick(0)} />
+        <Square value={squares[1]} position={1} onSquareClick={() => handleClick(1)} />
+        <Square value={squares[2]} position={2} onSquareClick={() => handleClick(2)} />
       </div>
       <div className="board-row">
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
+        <Square value={squares[3]} position={3} onSquareClick={() => handleClick(3)} />
+        <Square value={squares[4]} position={4} onSquareClick={() => handleClick(4)} />
+        <Square value={squares[5]} position={5} onSquareClick={() => handleClick(5)} />
       </div>
       <div className="board-row">
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+        <Square value={squares[6]} position={6} onSquareClick={() => handleClick(6)} />
+        <Square value={squares[7]} position={7} onSquareClick={() => handleClick(7)} />
+        <Square value={squares[8]} position={8} onSquareClick={() => handleClick(8)} />
       </div>
     </>
   );
 };
 
-const Game = () => {
+export function StateDemo() {
   // history 保存每一步的棋盘快照，用于实现回到历史步骤。
   const [history, setHistory] = useState<Squares[]>([
     Array<SquareValue>(9).fill(null),
@@ -99,7 +105,9 @@ const Game = () => {
     }
     return (
       <li key={move}>
-        <button onClick={() => jumpTo(move)}>{description}</button>
+        <button type="button" onClick={() => jumpTo(move)}>
+          {description}
+        </button>
       </li>
     );
   });
@@ -114,7 +122,7 @@ const Game = () => {
       </div>
     </div>
   );
-};
+}
 
 const calculateWinner = (squares: Squares) => {
   // 所有可能连成一线的获胜组合。
@@ -136,5 +144,3 @@ const calculateWinner = (squares: Squares) => {
   }
   return null;
 };
-
-export default Game;

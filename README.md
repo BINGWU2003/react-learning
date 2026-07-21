@@ -11,7 +11,7 @@ pnpm dev
 
 ## 新增笔记
 
-在 `src/noteRoutes.tsx` 的 `noteRoutes` 中添加一项。侧边栏、搜索与页面路由会自动读取这份配置。
+每篇笔记独立放在 `src/notes/<topic>/` 中，由 Demo、样式和 `note.tsx` 组成；最后在 `src/notes/registry.ts` 注册。侧边栏、搜索与页面路由会自动读取这份配置。
 
 每条笔记包含：
 
@@ -20,4 +20,17 @@ pnpm dev
 - `label`：简短分类
 - `description`：当前差异说明
 - `keywords`：侧边栏搜索关键词
-- `content`：React 示例或任意 JSX 内容
+- `Demo`：可运行的 React 示例
+- `react`：React 代码片段
+- `vue`：对应的 Vue 代码片段
+
+## 目录结构
+
+```text
+src/
+├─ app/                 # 页面骨架与笔记页面
+├─ notes/               # 每个主题自包含的 Demo、样式和代码对比
+├─ shared/components/   # 通用代码对比组件
+├─ styles/              # 全局布局样式
+└─ main.tsx             # 应用入口
+```

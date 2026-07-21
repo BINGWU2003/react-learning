@@ -255,9 +255,40 @@ code {
   line-height: 1.75;
 }
 
+.note-section {
+  display: grid;
+  gap: 16px;
+}
+
+.section-heading p {
+  margin: 0 0 6px;
+  color: #8a94a4;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.section-heading h2 {
+  margin: 0;
+  color: #172033;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+
 .note-demo {
   display: grid;
   gap: 24px;
+}
+
+.demo-loading {
+  display: grid;
+  min-height: 180px;
+  place-items: center;
+  border: 1px dashed #ccd5e2;
+  border-radius: 16px;
+  color: #7d8797;
+  background: #fff;
 }
 
 .demo-copy {

@@ -1,6 +1,6 @@
 import { ChangeEvent } from "react";
-import { UserProvider } from "./context/user";
-import { useUser } from "./context/user-context";
+import { useUser } from "./userContext";
+import { UserProvider } from "./UserProvider";
 
 const UserProfileCard = () => {
   const { user } = useUser();
@@ -40,7 +40,7 @@ const UserActionPanel = () => {
   );
 };
 
-export const UserContextDemo = () => {
+export function ContextDemo() {
   return (
     <UserProvider>
       <div className="demo-grid">
@@ -49,4 +49,4 @@ export const UserContextDemo = () => {
       </div>
     </UserProvider>
   );
-};
+}

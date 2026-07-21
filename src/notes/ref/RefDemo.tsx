@@ -15,7 +15,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
   },
 );
 
-export function ForwardRefDemo() {
+export function RefDemo() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [action, setAction] = useState("等待父组件操作");
 

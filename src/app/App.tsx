@@ -1,53 +1,28 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import {
   Navigate,
   NavLink,
   Route,
   Routes,
-  useLocation,
 } from "react-router-dom";
-import { noteRoutes, type NoteRoute } from "./noteRoutes";
+import { noteRoutes } from "../notes/registry";
+import { NotePage } from "./NotePage";
 
 const normalizeSearchText = (value: string) => value.trim().toLowerCase();
 
-function NoteContent({ note }: { note: NoteRoute }) {
-  return (
-    <article className="note-page">
-      <header className="note-header">
-        <p className="note-label">{note.label}</p>
-        <h1>{note.title}</h1>
-        <p className="note-description">{note.description}</p>
-      </header>
-      <section className="note-demo" aria-label={`${note.title} 示例`}>
-        {note.content}
-      </section>
-    </article>
-  );
-}
-
-function App() {
-  const location = useLocation();
+export function App() {
   const [query, setQuery] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const normalizedQuery = normalizeSearchText(query);
 
-  const filteredRoutes = useMemo(() => {
-    const normalizedQuery = normalizeSearchText(query);
-
-    if (!normalizedQuery) {
-      return noteRoutes;
-    }
-
-    return noteRoutes.filter((note) =>
-      [note.title, note.label, ...note.keywords]
-        .join(" ")
-        .toLowerCase()
-        .includes(normalizedQuery),
-    );
-  }, [query]);
-
-  useEffect(() => {
-    setIsSidebarOpen(false);
-  }, [location.pathname]);
+  const filteredRoutes = normalizedQuery
+    ? noteRoutes.filter((note) =>
+        [note.title, note.label, ...note.keywords]
+          .join(" ")
+          .toLowerCase()
+          .includes(normalizedQuery),
+      )
+    : noteRoutes;
 
   return (
     <div className="app-shell">
@@ -100,6 +75,7 @@ function App() {
               <NavLink
                 key={note.path}
                 to={note.path}
+                onClick={() => setIsSidebarOpen(false)}
                 className={({ isActive }) =>
                   `route-link ${isActive ? "route-link-active" : ""}`
                 }
@@ -131,7 +107,7 @@ function App() {
             <Route
               key={note.path}
               path={note.path}
-              element={<NoteContent note={note} />}
+              element={<NotePage note={note} />}
             />
           ))}
           <Route
@@ -143,5 +119,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
