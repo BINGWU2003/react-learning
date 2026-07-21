@@ -1,0 +1,25 @@
+---
+title: useEffect 与 watch
+description: React 使用 useEffect 同步外部系统；Vue 使用 watch、watchEffect 或生命周期 API 处理对应场景。
+---
+
+import Comparison from "./Comparison.astro";
+
+切换聊天室时，需要先断开旧连接再建立新连接。这个 Demo 对比两边如何执行副作用、声明依赖并注册清理函数。
+
+<Comparison />
+
+## API 对照
+
+| React | Vue | 适用场景 |
+| --- | --- | --- |
+| `useEffect(fn, [roomId])` | `watch(roomId, fn, { immediate: true })` | 明确监听某个状态 |
+| `useEffect(fn, [])` | `onMounted` + `onUnmounted` | 只关心挂载和卸载 |
+| `useEffect` 读取多个依赖 | `watchEffect` | Vue 自动追踪回调中读取的响应式状态 |
+| `return cleanup` | `onCleanup` | 下次执行或组件卸载前清理 |
+
+React 把副作用统一为“渲染后与外部系统同步”，依赖需要显式列出；Vue 则按意图拆分为 `watch`、`watchEffect` 和生命周期 API。
+
+:::note[开发模式]
+React 的 Strict Mode 可能额外执行一次“连接 → 清理 → 再连接”，用于检查清理逻辑是否完整。
+:::
