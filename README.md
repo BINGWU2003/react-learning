@@ -1,50 +1,23 @@
-# React + TypeScript + Vite
+# React × Vue 差异笔记
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+一个用于记录 React 与 Vue 使用差异的个人学习项目。页面采用可搜索侧边栏与独立内容路由，现有示例被拆分为不同笔记页面。
 
-Currently, two official plugins are available:
+## 本地运行
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+pnpm install
+pnpm dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## 新增笔记
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+在 `src/noteRoutes.tsx` 的 `noteRoutes` 中添加一项。侧边栏、搜索与页面路由会自动读取这份配置。
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+每条笔记包含：
+
+- `path`：访问路径
+- `title`：侧边栏与页面标题
+- `label`：简短分类
+- `description`：当前差异说明
+- `keywords`：侧边栏搜索关键词
+- `content`：React 示例或任意 JSX 内容

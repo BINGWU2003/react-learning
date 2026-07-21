@@ -1,104 +1,146 @@
-import { ComponentA } from "./ComponentA";
-import { ComponentB } from "./ComponentB";
-import { DynamicSelectCard } from "./DynamicSelectCard";
-import { ForwardRefDemo } from "./ForwardRefDemo";
-import Fruits from "./Fruits";
-import Game from "./Game";
-import { ParentChildDemo } from "./ParentChildDemo";
-import { UserContextDemo } from "./UserContextDemo";
-function App() {
+import { useEffect, useMemo, useState } from "react";
+import {
+  Navigate,
+  NavLink,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+import { noteRoutes, type NoteRoute } from "./noteRoutes";
+
+const normalizeSearchText = (value: string) => value.trim().toLowerCase();
+
+function NoteContent({ note }: { note: NoteRoute }) {
   return (
-    <main className="demo-page">
-      <div className="demo-copy dynamic-copy">
-        <p className="eyebrow">React forwardRef</p>
-        <h2>父组件访问子组件 DOM</h2>
-        <p>
-          子组件通过 <code>forwardRef</code> 转发输入框引用，父组件可以让它聚焦或选中内容。
-        </p>
-      </div>
-      <ForwardRefDemo />
+    <article className="note-page">
+      <header className="note-header">
+        <p className="note-label">{note.label}</p>
+        <h1>{note.title}</h1>
+        <p className="note-description">{note.description}</p>
+      </header>
+      <section className="note-demo" aria-label={`${note.title} 示例`}>
+        {note.content}
+      </section>
+    </article>
+  );
+}
 
-      <div className="demo-copy dynamic-copy">
-        <p className="eyebrow">React Context</p>
-        <h2>useContext 跨组件共享用户信息</h2>
-        <p>左侧组件负责展示，右侧组件负责修改，它们通过同一个 Context 同步数据。</p>
-      </div>
-      <UserContextDemo />
+function App() {
+  const location = useLocation();
+  const [query, setQuery] = useState("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-      <div className="demo-copy">
-        <p className="eyebrow">CSS Modules + :global</p>
-        <h1>A / B 组件样式穿透隔离</h1>
-        <p>
-          A 和 B 的样式文件里都写了同名的 <code>.page</code>，也都覆盖了
-          <code>.ant-select-content</code>，但它们会被编译成不同的哈希类名。
-        </p>
-      </div>
+  const filteredRoutes = useMemo(() => {
+    const normalizedQuery = normalizeSearchText(query);
 
-      <div className="demo-grid">
-        <ComponentA />
-        <ComponentB />
-      </div>
+    if (!normalizedQuery) {
+      return noteRoutes;
+    }
 
-      <div className="demo-copy dynamic-copy">
-        <p className="eyebrow">Props + CSS Variables</p>
-        <h2>通过 props 动态改变穿透样式</h2>
-        <p>
-          下面两个组件复用同一个 <code>DynamicSelectCard</code>，动态值来自
-          props， CSS Modules 仍然负责隔离作用域。
-        </p>
-      </div>
+    return noteRoutes.filter((note) =>
+      [note.title, note.label, ...note.keywords]
+        .join(" ")
+        .toLowerCase()
+        .includes(normalizedQuery),
+    );
+  }, [query]);
 
-      <div className="demo-grid">
-        <DynamicSelectCard
-          title="动态组件 A"
-          description="props 传入蓝色背景和 24px 圆角。"
-          accentColor="#0958d9"
-          borderColor="#1677ff"
-          selectBg="#d6eaff"
-          radius={24}
-          defaultValue="hangzhou"
-          options={[
-            { value: "hangzhou", label: "Hangzhou" },
-            { value: "shanghai", label: "Shanghai" },
-            { value: "shenzhen", label: "Shenzhen" },
-          ]}
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
+
+  return (
+    <div className="app-shell">
+      <button
+        className={`mobile-menu-button ${
+          isSidebarOpen ? "mobile-menu-button-open" : ""
+        }`}
+        type="button"
+        aria-expanded={isSidebarOpen}
+        aria-controls="notes-sidebar"
+        onClick={() => setIsSidebarOpen((current) => !current)}
+      >
+        {isSidebarOpen ? "关闭目录" : "打开目录"}
+      </button>
+
+      {isSidebarOpen && (
+        <button
+          className="sidebar-backdrop"
+          type="button"
+          aria-label="关闭目录遮罩"
+          onClick={() => setIsSidebarOpen(false)}
         />
-        <DynamicSelectCard
-          title="动态组件 B"
-          description="props 传入紫色背景和 8px 圆角。"
-          accentColor="#531dab"
-          borderColor="#9254de"
-          selectBg="#f3e8ff"
-          radius={8}
-          defaultValue="design"
-          options={[
-            { value: "design", label: "Design" },
-            { value: "frontend", label: "Frontend" },
-            { value: "backend", label: "Backend" },
-          ]}
-        />
-      </div>
+      )}
 
-      <div className="demo-copy dynamic-copy">
-        <p className="eyebrow">Props + Callback</p>
-        <h2>父传子 &amp; 子传父 数据流</h2>
-      </div>
-      <ParentChildDemo />
+      <aside
+        id="notes-sidebar"
+        className={`sidebar ${isSidebarOpen ? "sidebar-open" : ""}`}
+      >
+        <div className="brand">
+          <span className="brand-mark">R/V</span>
+          <div>
+            <strong>React × Vue</strong>
+            <span>差异笔记</span>
+          </div>
+        </div>
 
-      <div className="demo-copy dynamic-copy">
-        <p className="eyebrow">React State</p>
-        <h2>井字棋小游戏</h2>
-        <p>点击棋盘落子，也可以通过右侧记录回到任意一步。</p>
-      </div>
-      <Game />
+        <label className="route-search">
+          <span className="sr-only">搜索笔记路由</span>
+          <input
+            type="search"
+            value={query}
+            placeholder="搜索路由..."
+            onChange={(event) => setQuery(event.target.value)}
+          />
+        </label>
 
-      <div className="demo-copy dynamic-copy">
-        <p className="eyebrow">Thinking In React</p>
-        <h2>水果和蔬菜筛选表格</h2>
-        <p>输入关键字筛选商品，也可以只显示有库存的商品。</p>
-      </div>
-      <Fruits />
-    </main>
+        <nav className="route-nav" aria-label="笔记目录">
+          {filteredRoutes.length > 0 ? (
+            filteredRoutes.map((note) => (
+              <NavLink
+                key={note.path}
+                to={note.path}
+                className={({ isActive }) =>
+                  `route-link ${isActive ? "route-link-active" : ""}`
+                }
+              >
+                <span>{note.title}</span>
+                <small>{note.label}</small>
+              </NavLink>
+            ))
+          ) : (
+            <div className="empty-search">
+              <strong>没有匹配的路由</strong>
+              <span>换一个关键词试试</span>
+            </div>
+          )}
+        </nav>
+
+        <p className="route-count">
+          {query ? `${filteredRoutes.length} 条结果` : `${noteRoutes.length} 条笔记`}
+        </p>
+      </aside>
+
+      <main className="content-panel">
+        <Routes>
+          <Route
+            path="/"
+            element={<Navigate to={noteRoutes[0].path} replace />}
+          />
+          {noteRoutes.map((note) => (
+            <Route
+              key={note.path}
+              path={note.path}
+              element={<NoteContent note={note} />}
+            />
+          ))}
+          <Route
+            path="*"
+            element={<Navigate to={noteRoutes[0].path} replace />}
+          />
+        </Routes>
+      </main>
+    </div>
   );
 }
 
