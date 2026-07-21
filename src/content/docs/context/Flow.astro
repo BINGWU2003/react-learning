@@ -1,0 +1,58 @@
+---
+import FrameworkFlow from "../../../components/FrameworkFlow.astro";
+
+type Props = { framework: "react" | "vue" };
+
+const flows = {
+  react: {
+    framework: "React" as const,
+    tone: "react" as const,
+    chart: `flowchart TB
+  accTitle: React Context Provider 更新机制
+  accDescr: ReactDemo 每次渲染创建 Provider value 对象，value 身份变化后 useContext 消费者重新渲染，UserActions 通过 setUser 更新源状态。
+  user(["user state"]) --> render{{"ReactDemo render 创建 value"}}
+  render --> context[("UserContext.Provider value")]
+  context --> profile["UserProfile useContext"]
+  context --> actions["UserActions useContext"]
+  actions -.->|"setUser"| user
+  class user state
+  class profile,actions component
+  class render process
+  class context resource`,
+    description:
+      "Provider value 身份随 render 更新，useContext 消费者接收新的上下文值。",
+    focus: "Provider 的 value 引用变化会推动 Context 消费者重新渲染。",
+  },
+  vue: {
+    framework: "Vue 3" as const,
+    tone: "vue" as const,
+    chart: `flowchart TB
+  accTitle: Vue provide inject 响应式共享机制
+  accDescr: setup 执行时 provide 一次包含 user ref 的上下文，inject 消费者读取同一个 ref，修改 ref 后只触发读取它的响应式视图更新。
+  setup{{"setup 中 provide 一次"}} --> context[("userKey + user ref")]
+  context --> profile["UserProfile inject"]
+  context --> actions["UserActions inject"]
+  actions -.->|"直接修改共享 ref"| user(["user ref"])
+  user -->|"响应式依赖触发"| profile
+  user --> actions
+  class user state
+  class profile,actions component
+  class setup process
+  class context resource`,
+    description:
+      "provide 传递同一个响应式 ref；inject 消费者按实际读取建立依赖。",
+    focus: "共享的是响应式引用，不依赖 Provider value 的对象身份变化。",
+  },
+};
+
+const flow = flows[Astro.props.framework];
+---
+
+<FrameworkFlow
+  {...flow}
+  legend={[
+    { kind: "state", label: "State" },
+    { kind: "component", label: "Component" },
+    { kind: "resource", label: "Context" },
+  ]}
+/>

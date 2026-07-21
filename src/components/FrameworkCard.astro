@@ -15,7 +15,6 @@ type Props = {
 };
 
 const { framework, summary, tone, sources } = Astro.props;
-const hasMultipleSources = sources.length > 1;
 const hasFlow = Astro.slots.has("flow");
 ---
 
@@ -43,31 +42,16 @@ const hasFlow = Astro.slots.has("flow");
 
   <div class="framework-card__source" aria-label={`${framework} 源代码`}>
     <p class="framework-card__eyebrow">实际运行源码</p>
-    <div
-      class:list={[
-        "framework-card__code-list",
-        { "framework-card__code-list--tabs": hasMultipleSources },
-      ]}
-    >
-      {
-        hasMultipleSources ? (
-          <Tabs>
-            {sources.map(({ code, fileName, language }) => (
-              <TabItem label={fileName}>
-                <Code code={code.trim()} lang={language} />
-              </TabItem>
-            ))}
-          </Tabs>
-        ) : (
+    <div class="framework-card__code-list framework-card__code-list--tabs">
+      <Tabs>
+        {
           sources.map(({ code, fileName, language }) => (
-            <Code
-              code={code.trim()}
-              lang={language}
-              meta={`title="${fileName}"`}
-            />
+            <TabItem label={fileName}>
+              <Code code={code.trim()} lang={language} />
+            </TabItem>
           ))
-        )
-      }
+        }
+      </Tabs>
     </div>
   </div>
 </article>

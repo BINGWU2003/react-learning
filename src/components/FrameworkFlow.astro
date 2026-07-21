@@ -1,0 +1,78 @@
+---
+import FlowDiagram from "./FlowDiagram.astro";
+
+export type FlowLegendKind = "state" | "component" | "process" | "resource";
+
+export type FlowLegendItem = {
+  kind: FlowLegendKind;
+  label: string;
+};
+
+type Props = {
+  chart: string;
+  description: string;
+  focus: string;
+  framework: "React" | "Vue 3";
+  hint?: string;
+  legend: FlowLegendItem[];
+  tone: "react" | "vue";
+};
+
+const {
+  chart,
+  description,
+  focus,
+  framework,
+  hint = "实线表示依赖、数据或命令传递，虚线表示事件、回调或清理路径。",
+  legend,
+  tone,
+} = Astro.props;
+
+const classDefinitions =
+  tone === "react"
+    ? `classDef state fill:#ffffff,stroke:#149eca,color:#172033,stroke-width:1.2px
+  classDef component fill:#e5f6fb,stroke:#149eca,color:#172033,stroke-width:2px,font-weight:600
+  classDef process fill:#f4fbfd,stroke:#149eca,color:#172033,stroke-width:1.6px
+  classDef resource fill:#f3f5f8,stroke:#778195,color:#172033,stroke-width:1.4px`
+    : `classDef state fill:#ffffff,stroke:#42b883,color:#172033,stroke-width:1.2px
+  classDef component fill:#e7f8f0,stroke:#42b883,color:#172033,stroke-width:2px,font-weight:600
+  classDef process fill:#f2fbf7,stroke:#42b883,color:#172033,stroke-width:1.6px
+  classDef resource fill:#f3f5f8,stroke:#778195,color:#172033,stroke-width:1.4px`;
+
+const themedChart = `${chart.trim()}\n  ${classDefinitions}`;
+---
+
+<section class="framework-flow" aria-label={`${framework} 组件关系与数据流`}>
+  <div class="framework-flow__intro">
+    <p class="framework-card__eyebrow">组件关系与数据流</p>
+    <div class="framework-flow__legend" aria-label="节点类型图例">
+      {
+        legend.map(({ kind, label }) => (
+          <span>
+            <i
+              class:list={[
+                "framework-flow__legend-mark",
+                `framework-flow__legend-mark--${kind}`,
+              ]}
+              aria-hidden="true"
+            />
+            {label}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+  <p class="framework-flow__focus">
+    <span>差异焦点</span>
+    {focus}
+  </p>
+  <p class="framework-flow__hint">{hint}</p>
+
+  <FlowDiagram
+    framework={framework}
+    tone={tone}
+    chart={themedChart}
+    description={description}
+    showHeader={false}
+  />
+</section>

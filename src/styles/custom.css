@@ -134,28 +134,9 @@ body {
   min-height: min(35rem, 70vh);
 }
 
-.framework-card__code-list > .expressive-code + .expressive-code {
-  margin-top: 0.85rem;
-}
-
 .framework-card__code-list .expressive-code figure {
   max-height: 35rem;
   overflow: auto;
-}
-
-.framework-card__code-list > .expressive-code:only-child {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.framework-card__code-list > .expressive-code:only-child figure {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  max-height: none;
 }
 
 .framework-card__code-list--tabs > starlight-tabs {
@@ -211,6 +192,7 @@ body {
 }
 
 .framework-flow__intro p,
+.framework-flow__focus,
 .framework-flow__hint,
 .flow-card h3,
 .flow-card p {
@@ -220,6 +202,25 @@ body {
 .framework-flow__hint {
   color: var(--sl-color-gray-3);
   font-size: 0.78rem;
+}
+
+.framework-flow__focus {
+  display: flex;
+  gap: 0.45rem;
+  align-items: baseline;
+  color: var(--sl-color-gray-2);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.framework-flow__focus span {
+  flex: none;
+  border-radius: 999px;
+  padding: 0.12rem 0.42rem;
+  color: var(--sl-color-accent-high);
+  font-size: 0.64rem;
+  font-weight: 800;
+  background: var(--sl-color-accent-low);
 }
 
 .framework-flow__intro .framework-card__eyebrow {
@@ -260,6 +261,19 @@ body {
   border-radius: 0.1rem;
 }
 
+.framework-flow__legend-mark--process {
+  border-width: 1.5px;
+  border-style: dashed;
+  border-radius: 0.15rem;
+}
+
+.framework-flow__legend-mark--resource {
+  border-width: 1.5px;
+  border-color: var(--sl-color-gray-3);
+  border-radius: 50% / 30%;
+  background: var(--sl-color-gray-6);
+}
+
 .framework-card--react .framework-flow__legend-mark {
   border-color: #149eca;
 }
@@ -268,12 +282,20 @@ body {
   background: #e5f6fb;
 }
 
+.framework-card--react .framework-flow__legend-mark--process {
+  background: #f4fbfd;
+}
+
 .framework-card--vue .framework-flow__legend-mark {
   border-color: #42b883;
 }
 
 .framework-card--vue .framework-flow__legend-mark--component {
   background: #e7f8f0;
+}
+
+.framework-card--vue .framework-flow__legend-mark--process {
+  background: #f2fbf7;
 }
 
 .flow-card {
@@ -316,11 +338,54 @@ body {
 }
 
 .flow-card__canvas {
+  position: relative;
   display: grid;
   min-height: 17rem;
   place-items: center;
   padding: 0.75rem;
   background: var(--sl-color-gray-6);
+  cursor: zoom-in;
+}
+
+.flow-card__expand {
+  position: absolute;
+  z-index: 1;
+  top: 0.65rem;
+  right: 0.65rem;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--sl-color-gray-4);
+  border-radius: 0.55rem;
+  padding: 0;
+  color: var(--sl-color-gray-2);
+  background: rgb(255 255 255 / 90%);
+  box-shadow: 0 0.3rem 0.9rem rgb(22 34 51 / 9%);
+  cursor: zoom-in;
+  place-items: center;
+}
+
+.flow-card__expand:hover {
+  border-color: var(--sl-color-gray-3);
+  color: var(--sl-color-white);
+  background: var(--sl-color-black);
+}
+
+.flow-card__expand:focus-visible,
+.flow-lightbox button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--sl-color-accent) 25%, transparent);
+  outline-offset: 2px;
+}
+
+.flow-card__expand svg,
+.flow-lightbox__actions svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
 }
 
 .flow-card__canvas .mermaid {
@@ -349,6 +414,139 @@ body {
   color: var(--sl-color-gray-2);
   font-size: 0.75rem;
   line-height: 1.55;
+}
+
+.flow-lightbox {
+  width: min(72rem, calc(100vw - 2rem));
+  height: min(50rem, calc(100dvh - 2rem));
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  border: 0;
+  padding: 0;
+  color: var(--sl-color-white);
+  background: transparent;
+  overflow: visible;
+}
+
+.flow-lightbox[open] {
+  display: block;
+}
+
+.flow-lightbox::backdrop {
+  background: rgb(23 32 51 / 56%);
+  backdrop-filter: blur(3px);
+}
+
+.flow-lightbox__panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--sl-color-gray-4);
+  border-radius: 1rem;
+  background: var(--sl-color-black);
+  box-shadow: 0 1.5rem 5rem rgb(22 34 51 / 28%);
+}
+
+.flow-lightbox__header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.75rem;
+  padding: 0.7rem 0.85rem 0.7rem 1rem;
+  border-bottom: 1px solid var(--sl-color-gray-5);
+}
+
+.flow-lightbox__header > div {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.flow-lightbox__header strong {
+  font-size: 0.9rem;
+}
+
+.flow-lightbox__actions {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.flow-lightbox__actions button {
+  display: grid;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  padding: 0 0.55rem;
+  color: var(--sl-color-gray-1);
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  background: var(--sl-color-gray-6);
+  cursor: pointer;
+  place-items: center;
+}
+
+.flow-lightbox__actions button:hover {
+  border-color: var(--sl-color-gray-4);
+  background: var(--sl-color-black);
+}
+
+.flow-lightbox__actions .flow-lightbox__scale {
+  min-width: 3.75rem;
+  font-size: 0.72rem;
+}
+
+.flow-lightbox__divider {
+  width: 1px;
+  height: 1.5rem;
+  margin-inline: 0.15rem;
+  background: var(--sl-color-gray-5);
+}
+
+.flow-lightbox__viewport {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle, rgb(119 129 149 / 22%) 1px, transparent 1px) 0 0 / 18px 18px,
+    var(--sl-color-gray-6);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.flow-lightbox__viewport.is-dragging {
+  cursor: grabbing;
+}
+
+.flow-lightbox__stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max-content;
+  height: max-content;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.flow-lightbox__stage img {
+  display: block;
+  max-width: none;
+  pointer-events: none;
+}
+
+.flow-lightbox__help {
+  margin: 0;
+  padding: 0.65rem 1rem;
+  color: var(--sl-color-gray-3);
+  font-size: 0.7rem;
+  text-align: center;
 }
 
 .demo-stack {

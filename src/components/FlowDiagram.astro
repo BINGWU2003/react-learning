@@ -13,6 +13,7 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
 <article
   class:list={["flow-card", `flow-card--${tone}`]}
   aria-label={`${framework} 组件关系与数据流`}
+  data-flow-diagram
 >
   {
     showHeader && (
@@ -23,9 +24,64 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
     )
   }
   <div class="flow-card__canvas">
+    <button
+      class="flow-card__expand"
+      type="button"
+      aria-label={`放大查看 ${framework} 流程图`}
+      title="放大查看"
+      data-flow-expand
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" />
+      </svg>
+    </button>
     <pre class="mermaid">{chart.trim()}</pre>
   </div>
   <p class="flow-card__description">{description}</p>
+
+  <dialog
+    class="flow-lightbox"
+    aria-label={`${framework} 流程图放大视图`}
+    data-flow-lightbox
+  >
+    <div class="flow-lightbox__panel">
+      <header class="flow-lightbox__header">
+        <div>
+          <span class="flow-card__dot" aria-hidden="true"></span>
+          <strong>{framework} 流程图</strong>
+        </div>
+        <div class="flow-lightbox__actions" aria-label="流程图缩放控制">
+          <button type="button" aria-label="缩小流程图" title="缩小" data-flow-zoom-out>
+            −
+          </button>
+          <button
+            class="flow-lightbox__scale"
+            type="button"
+            aria-label="重置流程图大小和位置"
+            title="重置"
+            data-flow-reset
+          >
+            100%
+          </button>
+          <button type="button" aria-label="放大流程图" title="放大" data-flow-zoom-in>
+            +
+          </button>
+          <span class="flow-lightbox__divider" aria-hidden="true"></span>
+          <button type="button" aria-label="关闭流程图" title="关闭" data-flow-close>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m6 6 12 12M18 6 6 18" />
+            </svg>
+          </button>
+        </div>
+      </header>
+      <div class="flow-lightbox__viewport" data-flow-viewport>
+        <div class="flow-lightbox__stage" data-flow-stage>
+          <img alt={`${framework} 组件关系与数据流`} data-flow-image />
+        </div>
+      </div>
+      <p class="flow-lightbox__help">滚轮缩放 · 按住拖动 · 双击重置 · Esc 关闭</p>
+    </div>
+  </dialog>
 </article>
 
 <script>
@@ -76,6 +132,186 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
     }
   }
 
-  void renderFlowDiagrams();
-  document.addEventListener("astro:page-load", renderFlowDiagrams);
+  type ViewState = {
+    scale: number;
+    x: number;
+    y: number;
+  };
+
+  const clamp = (value: number, min: number, max: number) =>
+    Math.min(Math.max(value, min), max);
+
+  function enhanceFlowDiagrams() {
+    const diagrams = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-flow-diagram]:not([data-flow-enhanced])"),
+    );
+
+    diagrams.forEach((diagram) => {
+      diagram.dataset.flowEnhanced = "true";
+
+      const canvas = diagram.querySelector<HTMLElement>(".flow-card__canvas");
+      const expandButton = diagram.querySelector<HTMLButtonElement>("[data-flow-expand]");
+      const dialog = diagram.querySelector<HTMLDialogElement>("[data-flow-lightbox]");
+      const viewport = diagram.querySelector<HTMLElement>("[data-flow-viewport]");
+      const stage = diagram.querySelector<HTMLElement>("[data-flow-stage]");
+      const image = diagram.querySelector<HTMLImageElement>("[data-flow-image]");
+      const scaleLabel = diagram.querySelector<HTMLButtonElement>("[data-flow-reset]");
+      const zoomIn = diagram.querySelector<HTMLButtonElement>("[data-flow-zoom-in]");
+      const zoomOut = diagram.querySelector<HTMLButtonElement>("[data-flow-zoom-out]");
+      const closeButton = diagram.querySelector<HTMLButtonElement>("[data-flow-close]");
+
+      if (
+        !canvas ||
+        !expandButton ||
+        !dialog ||
+        !viewport ||
+        !stage ||
+        !image ||
+        !scaleLabel ||
+        !zoomIn ||
+        !zoomOut ||
+        !closeButton
+      ) {
+        return;
+      }
+
+      const state: ViewState = { scale: 1, x: 0, y: 0 };
+      let imageUrl: string | undefined;
+      let restoreFocus: HTMLElement | null = null;
+      let dragging = false;
+      let pointerId: number | undefined;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let dragOriginX = 0;
+      let dragOriginY = 0;
+
+      const applyTransform = () => {
+        stage.style.transform = `translate(-50%, -50%) translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+        scaleLabel.textContent = `${Math.round(state.scale * 100)}%`;
+      };
+
+      const resetView = () => {
+        state.scale = 1;
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      };
+
+      const setScale = (nextScale: number, clientX?: number, clientY?: number) => {
+        const previousScale = state.scale;
+        const scale = clamp(nextScale, 0.5, 4);
+
+        if (clientX !== undefined && clientY !== undefined) {
+          const rect = viewport.getBoundingClientRect();
+          const pointerX = clientX - rect.left - rect.width / 2;
+          const pointerY = clientY - rect.top - rect.height / 2;
+          const localX = (pointerX - state.x) / previousScale;
+          const localY = (pointerY - state.y) / previousScale;
+          state.x = pointerX - localX * scale;
+          state.y = pointerY - localY * scale;
+        }
+
+        state.scale = scale;
+        applyTransform();
+      };
+
+      const openDialog = () => {
+        const sourceSvg = canvas.querySelector<SVGSVGElement>(".mermaid svg");
+        if (!sourceSvg) return;
+
+        restoreFocus = document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : expandButton;
+        imageUrl = URL.createObjectURL(
+          new Blob([sourceSvg.outerHTML], { type: "image/svg+xml;charset=utf-8" }),
+        );
+        image.src = imageUrl;
+
+        const viewBox = sourceSvg.viewBox.baseVal;
+        const sourceRect = sourceSvg.getBoundingClientRect();
+        const sourceWidth = viewBox.width || sourceRect.width;
+        const sourceHeight = viewBox.height || sourceRect.height;
+
+        dialog.showModal();
+
+        const viewportRect = viewport.getBoundingClientRect();
+        const fitRatio = Math.min(
+          (viewportRect.width - 32) / sourceWidth,
+          (viewportRect.height - 32) / sourceHeight,
+        );
+        image.style.width = `${Math.max(sourceWidth * fitRatio, 1)}px`;
+        image.style.height = `${Math.max(sourceHeight * fitRatio, 1)}px`;
+        resetView();
+        closeButton.focus();
+      };
+
+      canvas.addEventListener("click", openDialog);
+      expandButton.addEventListener("click", (event) => event.stopPropagation());
+      expandButton.addEventListener("click", openDialog);
+      zoomIn.addEventListener("click", () => setScale(state.scale * 1.2));
+      zoomOut.addEventListener("click", () => setScale(state.scale / 1.2));
+      scaleLabel.addEventListener("click", resetView);
+      closeButton.addEventListener("click", () => dialog.close());
+
+      viewport.addEventListener(
+        "wheel",
+        (event) => {
+          event.preventDefault();
+          setScale(state.scale * (event.deltaY < 0 ? 1.12 : 1 / 1.12), event.clientX, event.clientY);
+        },
+        { passive: false },
+      );
+      viewport.addEventListener("dblclick", resetView);
+      viewport.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0) return;
+        dragging = true;
+        pointerId = event.pointerId;
+        dragStartX = event.clientX;
+        dragStartY = event.clientY;
+        dragOriginX = state.x;
+        dragOriginY = state.y;
+        viewport.setPointerCapture(event.pointerId);
+        viewport.classList.add("is-dragging");
+      });
+      viewport.addEventListener("pointermove", (event) => {
+        if (!dragging || event.pointerId !== pointerId) return;
+        state.x = dragOriginX + event.clientX - dragStartX;
+        state.y = dragOriginY + event.clientY - dragStartY;
+        applyTransform();
+      });
+
+      const stopDragging = (event: PointerEvent) => {
+        if (event.pointerId !== pointerId) return;
+        dragging = false;
+        pointerId = undefined;
+        viewport.classList.remove("is-dragging");
+      };
+
+      viewport.addEventListener("pointerup", stopDragging);
+      viewport.addEventListener("pointercancel", stopDragging);
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+      dialog.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape") return;
+        event.preventDefault();
+        dialog.close();
+      });
+      dialog.addEventListener("close", () => {
+        resetView();
+        image.removeAttribute("src");
+        if (imageUrl) URL.revokeObjectURL(imageUrl);
+        imageUrl = undefined;
+        restoreFocus?.focus();
+      });
+    });
+  }
+
+  async function initializeFlowDiagrams() {
+    await renderFlowDiagrams();
+    enhanceFlowDiagrams();
+  }
+
+  void initializeFlowDiagrams();
+  document.addEventListener("astro:page-load", initializeFlowDiagrams);
 </script>

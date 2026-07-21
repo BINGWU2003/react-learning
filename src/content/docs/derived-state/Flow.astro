@@ -1,0 +1,57 @@
+---
+import FrameworkFlow from "../../../components/FrameworkFlow.astro";
+
+type Props = { framework: "react" | "vue" };
+
+const flows = {
+  react: {
+    framework: "React" as const,
+    tone: "react" as const,
+    chart: `flowchart TB
+  accTitle: React 渲染期间直接派生
+  accDescr: query 或 inStockOnly 更新后 ReactDemo 函数重新执行，products filter 在每次 render 中直接运行并生成普通 visibleProducts 值。
+  filters(["query + inStockOnly state"]) --> render["ReactDemo 再次执行"]
+  products[("products")] --> render
+  render --> derive{{"每次 render 执行 filter"}}
+  derive --> result[("普通 visibleProducts 值")]
+  result --> list["商品列表 UI"]
+  class filters state
+  class render,list component
+  class derive process
+  class products,result resource`,
+    description:
+      "组件重新执行时直接 filter；visibleProducts 是本次 render 的普通值。",
+    focus: "没有缓存或订阅关系，派生计算跟随每次组件 render 执行。",
+  },
+  vue: {
+    framework: "Vue 3" as const,
+    tone: "vue" as const,
+    chart: `flowchart TB
+  accTitle: Vue computed 响应式派生
+  accDescr: computed 首次读取时自动收集 query 与 inStockOnly refs，依赖未变时返回缓存，依赖变化后重新计算 visibleProducts 并更新列表。
+  filters(["query + inStockOnly refs"]) --> tracking{{"computed 自动收集依赖"}}
+  products[("products")] --> tracking
+  tracking --> cache[("缓存 visibleProducts")]
+  cache -->|"依赖未变直接复用"| list["商品列表 UI"]
+  class filters state
+  class list component
+  class tracking process
+  class products,cache resource`,
+    description:
+      "computed 自动追踪响应式读取，并在依赖未变化时复用缓存。",
+    focus: "computed 是可缓存的响应式派生值，不依赖组件整体重新执行。",
+  },
+};
+
+const flow = flows[Astro.props.framework];
+---
+
+<FrameworkFlow
+  {...flow}
+  legend={[
+    { kind: "state", label: "State" },
+    { kind: "component", label: "Component" },
+    { kind: "process", label: "Derived" },
+    { kind: "resource", label: "Data" },
+  ]}
+/>

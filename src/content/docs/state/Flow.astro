@@ -1,0 +1,55 @@
+---
+import FrameworkFlow from "../../../components/FrameworkFlow.astro";
+
+type Props = { framework: "react" | "vue" };
+
+const flows = {
+  react: {
+    framework: "React" as const,
+    tone: "react" as const,
+    chart: `flowchart TB
+  accTitle: React useState 调度渲染
+  accDescr: 点击事件调用 setter 并创建新的状态值，React 将更新加入调度队列，随后重新执行 ReactDemo 函数组件并生成 UI。
+  event{{"button event"}} --> setter{{"setter 创建新值"}}
+  setter --> state(["count + profile state"])
+  state --> schedule{{"调度重新渲染"}}
+  schedule --> demo["重新执行 ReactDemo"]
+  demo -.->|"下一次点击"| event
+  class state state
+  class demo component
+  class event,setter,schedule process`,
+    description:
+      "setter 提交新状态后，React 调度并重新执行整个函数组件。",
+    focus: "状态更新依赖 setter，组件函数会再次执行。",
+  },
+  vue: {
+    framework: "Vue 3" as const,
+    tone: "vue" as const,
+    chart: `flowchart TB
+  accTitle: Vue 响应式依赖触发更新
+  accDescr: 点击事件直接修改 ref 和 reactive，响应式系统通知读取这些属性的模板依赖，只重新执行相关渲染更新。
+  event{{"button event"}} --> mutate{{"直接修改 .value / 属性"}}
+  mutate --> state(["count ref + profile reactive"])
+  state --> trigger{{"触发已收集的响应式依赖"}}
+  trigger --> demo["更新相关模板节点"]
+  demo -.->|"下一次点击"| event
+  class state state
+  class demo component
+  class event,mutate,trigger process`,
+    description:
+      "直接修改响应式值后，Vue 根据依赖关系更新相关模板节点。",
+    focus: "setup 不会因状态变化整体重跑，响应式依赖负责定向更新。",
+  },
+};
+
+const flow = flows[Astro.props.framework];
+---
+
+<FrameworkFlow
+  {...flow}
+  legend={[
+    { kind: "state", label: "State" },
+    { kind: "component", label: "Component" },
+    { kind: "process", label: "Action" },
+  ]}
+/>
