@@ -38,6 +38,8 @@ export default defineConfig({
             { label: "DOM 引用", slug: "ref" },
             { label: "状态管理", slug: "state" },
             { label: "派生状态", slug: "derived-state" },
+            { label: "计算缓存", slug: "memo" },
+            { label: "回调引用", slug: "callback" },
             { label: "样式隔离", slug: "css-modules" },
             { label: "动态样式", slug: "dynamic-styles" },
           ],

@@ -1,0 +1,34 @@
+---
+import FrameworkCard from "../../../components/FrameworkCard.astro";
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import reactSource from "./ReactDemo.tsx?raw";
+import reactListSource from "./ProductList.tsx?raw";
+import vueSource from "./VueDemo.vue?raw";
+import vueListSource from "./ProductList.vue?raw";
+---
+
+<div class="framework-comparison">
+  <FrameworkCard
+    framework="React"
+    tone="react"
+    summary="useCallback 稳定函数引用，让 memo 子组件跳过无关更新。"
+    sources={[
+      { code: reactSource, fileName: "ReactDemo.tsx", language: "tsx" },
+      { code: reactListSource, fileName: "ProductList.tsx", language: "tsx" },
+    ]}
+  >
+    <ReactDemo client:visible />
+  </FrameworkCard>
+  <FrameworkCard
+    framework="Vue 3"
+    tone="vue"
+    summary="setup 中的普通函数天然稳定，子组件通过 emit 通知父组件。"
+    sources={[
+      { code: vueSource, fileName: "VueDemo.vue", language: "vue" },
+      { code: vueListSource, fileName: "ProductList.vue", language: "vue" },
+    ]}
+  >
+    <VueDemo client:visible />
+  </FrameworkCard>
+</div>
