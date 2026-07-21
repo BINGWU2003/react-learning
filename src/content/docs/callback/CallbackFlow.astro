@@ -1,0 +1,70 @@
+---
+import FlowDiagram from "../../../components/FlowDiagram.astro";
+
+type Props = {
+  framework: "react" | "vue";
+};
+
+const { framework } = Astro.props;
+
+const reactChart = `flowchart TB
+  accTitle: React useCallback 组件关系
+  accDescr: selectedProduct 和 cartCount 属于 ReactDemo，ReactDemo 通过 selectedId 和 onSelect 向 ProductList 传递数据，ProductList 通过 onSelect product 通知 ReactDemo。
+  state(["selectedProduct"]) --> parent["ReactDemo"]
+  cart(["cartCount"]) --> parent
+  parent -->|"selectedId + onSelect"| child["ProductList (memo)"]
+  child -.->|"onSelect(product)"| parent
+  classDef reactState fill:#ffffff,stroke:#149eca,color:#172033,stroke-width:1.2px
+  classDef reactComponent fill:#e5f6fb,stroke:#149eca,color:#172033,stroke-width:2px,font-weight:600
+  class state,cart reactState
+  class parent,child reactComponent`;
+
+const vueChart = `flowchart TB
+  accTitle: Vue 普通函数组件关系
+  accDescr: selectedProduct 和 cartCount 属于 VueDemo，VueDemo 通过 selectedId 属性向 ProductList 传递数据，ProductList 通过 select product 事件通知 VueDemo。
+  state(["selectedProduct ref"]) --> parent["VueDemo"]
+  cart(["cartCount ref"]) --> parent
+  parent -->|"selectedId prop"| child["ProductList"]
+  child -.->|"emit select(product)"| parent
+  classDef vueState fill:#ffffff,stroke:#42b883,color:#172033,stroke-width:1.2px
+  classDef vueComponent fill:#e7f8f0,stroke:#42b883,color:#172033,stroke-width:2px,font-weight:600
+  class state,cart vueState
+  class parent,child vueComponent`;
+
+const isReact = framework === "react";
+---
+
+<section class="framework-flow" aria-label="组件关系与数据流">
+  <div class="framework-flow__intro">
+    <p class="framework-card__eyebrow">组件关系与数据流</p>
+    <div class="framework-flow__legend" aria-label="节点类型图例">
+      <span>
+        <i
+          class="framework-flow__legend-mark framework-flow__legend-mark--state"
+          aria-hidden="true"
+        ></i>
+        State
+      </span>
+      <span>
+        <i
+          class="framework-flow__legend-mark framework-flow__legend-mark--component"
+          aria-hidden="true"
+        ></i>
+        Component
+      </span>
+    </div>
+  </div>
+  <p class="framework-flow__hint">
+    实线表示数据向下传递，虚线表示子组件向父组件发出通知。
+  </p>
+
+  <FlowDiagram
+    framework={isReact ? "React" : "Vue 3"}
+    tone={isReact ? "react" : "vue"}
+    chart={isReact ? reactChart : vueChart}
+    description={isReact
+      ? "selectedProduct → selectedId / onSelect → ProductList → onSelect(product) → setSelectedProduct"
+      : "selectedProduct → selectedId prop → ProductList → emit select(product) → handleSelect"}
+    showHeader={false}
+  />
+</section>

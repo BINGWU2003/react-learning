@@ -1,0 +1,81 @@
+---
+type Props = {
+  chart: string;
+  description: string;
+  framework: "React" | "Vue 3";
+  showHeader?: boolean;
+  tone: "react" | "vue";
+};
+
+const { chart, description, framework, showHeader = true, tone } = Astro.props;
+---
+
+<article
+  class:list={["flow-card", `flow-card--${tone}`]}
+  aria-label={`${framework} 组件关系与数据流`}
+>
+  {
+    showHeader && (
+      <header class="flow-card__header">
+        <span class="flow-card__dot" aria-hidden="true" />
+        <h3>{framework}</h3>
+      </header>
+    )
+  }
+  <div class="flow-card__canvas">
+    <pre class="mermaid">{chart.trim()}</pre>
+  </div>
+  <p class="flow-card__description">{description}</p>
+</article>
+
+<script>
+  let mermaidInstance: (typeof import("mermaid"))["default"] | undefined;
+
+  async function getMermaid() {
+    if (mermaidInstance) return mermaidInstance;
+
+    const { default: mermaid } = await import("mermaid");
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: "base",
+      flowchart: {
+        curve: "basis",
+        htmlLabels: false,
+        useMaxWidth: true,
+      },
+      themeVariables: {
+        background: "#ffffff",
+        primaryColor: "#f3f5f8",
+        primaryTextColor: "#172033",
+        primaryBorderColor: "#c7ced9",
+        lineColor: "#778195",
+        secondaryColor: "#e8f1ff",
+        tertiaryColor: "#ffffff",
+        fontFamily:
+          'Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif',
+      },
+    });
+
+    mermaidInstance = mermaid;
+    return mermaid;
+  }
+
+  async function renderFlowDiagrams() {
+    const nodes = Array.from(
+      document.querySelectorAll<HTMLElement>(".flow-card .mermaid:not([data-processed])"),
+    );
+
+    if (nodes.length === 0) return;
+
+    try {
+      const mermaid = await getMermaid();
+      await mermaid.run({ nodes });
+    } catch (error) {
+      console.error("流程图渲染失败", error);
+    }
+  }
+
+  void renderFlowDiagrams();
+  document.addEventListener("astro:page-load", renderFlowDiagrams);
+</script>
