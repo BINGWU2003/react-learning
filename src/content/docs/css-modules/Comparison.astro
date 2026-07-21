@@ -1,0 +1,30 @@
+---
+import FrameworkCard from "../../../components/FrameworkCard.astro";
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import reactSource from "./ReactDemo.tsx?raw";
+import reactStyleSource from "./ReactDemo.module.css?raw";
+import vueSource from "./VueDemo.vue?raw";
+---
+
+<div class="framework-comparison">
+  <FrameworkCard
+    framework="React"
+    tone="react"
+    summary="样式作为模块导入，类名通过对象属性引用。"
+    sources={[
+      { code: reactSource, fileName: "ReactDemo.tsx", language: "tsx" },
+      { code: reactStyleSource, fileName: "ReactDemo.module.css", language: "css" },
+    ]}
+  >
+    <ReactDemo client:visible />
+  </FrameworkCard>
+  <FrameworkCard
+    framework="Vue 3"
+    tone="vue"
+    summary="样式写在 SFC 中，由 scoped 自动添加作用域。"
+    sources={[{ code: vueSource, fileName: "VueDemo.vue", language: "vue" }]}
+  >
+    <VueDemo client:visible />
+  </FrameworkCard>
+</div>

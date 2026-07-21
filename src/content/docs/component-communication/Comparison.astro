@@ -1,0 +1,30 @@
+---
+import FrameworkCard from "../../../components/FrameworkCard.astro";
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import reactSource from "./ReactDemo.tsx?raw";
+import vueSource from "./VueDemo.vue?raw";
+import messageInputSource from "./MessageInput.vue?raw";
+---
+
+<div class="framework-comparison">
+  <FrameworkCard
+    framework="React"
+    tone="react"
+    summary="回调函数作为 props，由子组件主动调用。"
+    sources={[{ code: reactSource, fileName: "ReactDemo.tsx", language: "tsx" }]}
+  >
+    <ReactDemo client:visible />
+  </FrameworkCard>
+  <FrameworkCard
+    framework="Vue 3"
+    tone="vue"
+    summary="父组件监听子组件通过 emit 发出的事件。"
+    sources={[
+      { code: vueSource, fileName: "VueDemo.vue", language: "vue" },
+      { code: messageInputSource, fileName: "MessageInput.vue", language: "vue" },
+    ]}
+  >
+    <VueDemo client:visible />
+  </FrameworkCard>
+</div>

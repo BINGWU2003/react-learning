@@ -1,0 +1,10 @@
+---
+title: Context 与 provide / inject
+description: 两种方案都能绕过逐层传递，让相隔较远的组件共享并更新同一份上下文。
+---
+
+import Comparison from "./Comparison.astro";
+
+资料卡和操作面板没有直接传值关系，但它们都读取同一个用户上下文。修改用户名或角色时，两个消费者会同步更新。
+
+<Comparison />

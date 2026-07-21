@@ -1,0 +1,34 @@
+---
+import FrameworkCard from "../../../components/FrameworkCard.astro";
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import reactSource from "./ReactDemo.tsx?raw";
+import vueSource from "./VueDemo.vue?raw";
+import profileSource from "./UserProfile.vue?raw";
+import actionsSource from "./UserActions.vue?raw";
+import keySource from "./userContext.ts?raw";
+---
+
+<div class="framework-comparison">
+  <FrameworkCard
+    framework="React"
+    tone="react"
+    summary="Provider 传入 value，消费者通过 useContext 读取。"
+    sources={[{ code: reactSource, fileName: "ReactDemo.tsx", language: "tsx" }]}
+  >
+    <ReactDemo client:visible />
+  </FrameworkCard>
+  <FrameworkCard
+    framework="Vue 3"
+    tone="vue"
+    summary="祖先 provide，后代组件使用类型安全的 key inject。"
+    sources={[
+      { code: vueSource, fileName: "VueDemo.vue", language: "vue" },
+      { code: profileSource, fileName: "UserProfile.vue", language: "vue" },
+      { code: actionsSource, fileName: "UserActions.vue", language: "vue" },
+      { code: keySource, fileName: "userContext.ts", language: "ts" },
+    ]}
+  >
+    <VueDemo client:visible />
+  </FrameworkCard>
+</div>

@@ -1,0 +1,10 @@
+---
+title: useRef 与模板 ref
+description: React 通过 useRef 和 forwardRef 暴露 DOM；Vue 使用模板 ref 与 defineExpose 访问子组件方法。
+---
+
+import Comparison from "./Comparison.astro";
+
+父组件控制子组件内部输入框：聚焦和全选都调用真实 DOM 方法，两边分别展示如何拿到这条命令式通道。
+
+<Comparison />
