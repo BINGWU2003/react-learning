@@ -1,5 +1,5 @@
 ---
-import { Code } from "@astrojs/starlight/components";
+import { Code, TabItem, Tabs } from "@astrojs/starlight/components";
 
 type SourceFile = {
   code: string;
@@ -15,6 +15,7 @@ type Props = {
 };
 
 const { framework, summary, tone, sources } = Astro.props;
+const hasFlow = Astro.slots.has("flow");
 ---
 
 <article class:list={["framework-card", `framework-card--${tone}`]}>
@@ -31,18 +32,26 @@ const { framework, summary, tone, sources } = Astro.props;
     <slot />
   </div>
 
+  {
+    hasFlow && (
+      <div class="framework-card__flow">
+        <slot name="flow" />
+      </div>
+    )
+  }
+
   <div class="framework-card__source" aria-label={`${framework} 源代码`}>
     <p class="framework-card__eyebrow">实际运行源码</p>
-    <div class="framework-card__code-list">
-      {
-        sources.map(({ code, fileName, language }) => (
-          <Code
-            code={code.trim()}
-            lang={language}
-            meta={`title="${fileName}"`}
-          />
-        ))
-      }
+    <div class="framework-card__code-list framework-card__code-list--tabs">
+      <Tabs>
+        {
+          sources.map(({ code, fileName, language }) => (
+            <TabItem label={fileName}>
+              <Code code={code.trim()} lang={language} />
+            </TabItem>
+          ))
+        }
+      </Tabs>
     </div>
   </div>
 </article>

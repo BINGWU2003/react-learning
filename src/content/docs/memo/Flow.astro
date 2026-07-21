@@ -1,0 +1,58 @@
+---
+import FrameworkFlow from "../../../components/FrameworkFlow.astro";
+
+type Props = { framework: "react" | "vue" };
+
+const flows = {
+  react: {
+    framework: "React" as const,
+    tone: "react" as const,
+    chart: `flowchart TB
+  accTitle: React useMemo 显式依赖缓存
+  accDescr: ReactDemo 每次状态更新都会重新执行，useMemo 手动比较 keyword 和 sortOrder 依赖数组，只有依赖变化才重新计算 result。
+  state(["keyword / sortOrder / cartCount"]) --> render["ReactDemo 每次 state 更新都执行"]
+  render --> deps[("手写 [keyword, sortOrder]")]
+  products[("5,000 products")] --> memo{{"useMemo 计算或复用 result"}}
+  deps --> memo
+  memo --> ui["结果 UI"]
+  class state state
+  class render,ui component
+  class memo process
+  class deps,products resource`,
+    description:
+      "组件仍会重新执行；useMemo 通过手写依赖数组决定计算还是复用。",
+    focus: "缓存正确性依赖开发者维护完整的依赖数组。",
+  },
+  vue: {
+    framework: "Vue 3" as const,
+    tone: "vue" as const,
+    chart: `flowchart TB
+  accTitle: Vue computed 自动依赖缓存
+  accDescr: computed 执行时自动记录 keyword 和 sortOrder refs，cartCount 未被读取因此不会使 result 失效，模板读取时复用缓存。
+  deps(["keyword + sortOrder refs"]) --> memo{{"computed 自动追踪读取"}}
+  products[("5,000 products")] --> memo
+  memo --> cache[("缓存 result")]
+  cache --> ui["结果 UI"]
+  cart(["cartCount ref"]) -->|"独立模板依赖"| ui
+  class deps,cart state
+  class ui component
+  class memo process
+  class products,cache resource`,
+    description:
+      "computed 自动收集 keyword / sortOrder；未读取 cartCount，因此缓存不失效。",
+    focus: "依赖来自运行时响应式读取，不需要手写依赖数组。",
+  },
+};
+
+const flow = flows[Astro.props.framework];
+---
+
+<FrameworkFlow
+  {...flow}
+  legend={[
+    { kind: "state", label: "State" },
+    { kind: "component", label: "Component" },
+    { kind: "process", label: "Cached Derived" },
+    { kind: "resource", label: "Data" },
+  ]}
+/>

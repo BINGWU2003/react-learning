@@ -1,0 +1,58 @@
+---
+import FrameworkFlow from "../../../components/FrameworkFlow.astro";
+
+type Props = { framework: "react" | "vue" };
+
+const flows = {
+  react: {
+    framework: "React" as const,
+    tone: "react" as const,
+    chart: `flowchart TB
+  accTitle: React useEffect 提交后同步机制
+  accDescr: roomId 更新先让 ReactDemo 重新渲染并提交 DOM，提交完成后 React 比较依赖数组，清理旧 Effect 再连接新房间。
+  room(["roomId state"]) --> demo["ReactDemo render"]
+  demo --> effect{{"commit 后比较 [roomId]"}}
+  effect -.->|"先执行 cleanup"| old[("旧 Connection")]
+  effect -->|"再 connect"| current[("新 Connection")]
+  current --> status(["status + events"])
+  class room,status state
+  class demo component
+  class effect process
+  class old,current resource`,
+    description:
+      "state 更新先完成 render/commit，再按依赖数组执行 cleanup 和新 Effect。",
+    focus: "useEffect 属于提交后的同步阶段，依赖必须手动列出。",
+  },
+  vue: {
+    framework: "Vue 3" as const,
+    tone: "vue" as const,
+    chart: `flowchart TB
+  accTitle: Vue watch 响应式监听机制
+  accDescr: watch 直接订阅 roomId ref，值变化时先执行 onCleanup，再运行回调创建新连接；无需等待整个组件重新执行。
+  room(["roomId ref"]) --> effect{{"watch 订阅响应式 source"}}
+  effect -.->|"onCleanup"| old[("旧 Connection")]
+  effect -->|"回调 connect"| current[("新 Connection")]
+  current --> status(["status + events refs"])
+  status --> demo["VueDemo template"]
+  class room,status state
+  class demo component
+  class effect process
+  class old,current resource`,
+    description:
+      "watch 订阅明确的响应式 source，变化时执行 cleanup 与回调。",
+    focus: "watch 直接监听 ref，依赖由响应式 source 表达。",
+  },
+};
+
+const flow = flows[Astro.props.framework];
+---
+
+<FrameworkFlow
+  {...flow}
+  legend={[
+    { kind: "state", label: "State" },
+    { kind: "component", label: "Component" },
+    { kind: "process", label: "Effect" },
+    { kind: "resource", label: "Connection" },
+  ]}
+/>

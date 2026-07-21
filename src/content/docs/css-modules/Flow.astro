@@ -1,0 +1,54 @@
+---
+import FrameworkFlow from "../../../components/FrameworkFlow.astro";
+
+type Props = { framework: "react" | "vue" };
+
+const flows = {
+  react: {
+    framework: "React" as const,
+    tone: "react" as const,
+    chart: `flowchart TB
+  accTitle: React CSS Modules 显式导入流程
+  accDescr: 独立 module CSS 文件在构建时生成唯一类名和 JavaScript 映射，ReactDemo 必须 import styles 并通过 className 显式读取映射。
+  source[("ReactDemo.module.css")] --> build{{"构建时生成局部类名"}}
+  build --> mapping[("styles 对象映射")]
+  mapping -->|"import styles"| demo["ReactDemo.tsx"]
+  demo -->|"className={styles.card}"| dom[("DOM 唯一类名")]
+  class demo component
+  class build process
+  class source,mapping,dom resource`,
+    description:
+      "样式文件与组件文件分离，通过 import 和 styles.* 显式绑定生成类名。",
+    focus: "CSS 以模块对象进入 JavaScript，类名引用是显式的。",
+  },
+  vue: {
+    framework: "Vue 3" as const,
+    tone: "vue" as const,
+    chart: `flowchart TB
+  accTitle: Vue SFC scoped 编译流程
+  accDescr: template 和 style scoped 位于同一个 Vue SFC，编译器同时改写模板属性与 CSS 选择器，普通 class 无需通过 JavaScript 导入。
+  sfc["VueDemo.vue SFC"] --> build{{"同时编译 template + style"}}
+  build --> template[("模板添加 data-v-*")]
+  build --> styles[("选择器追加 data-v-*")]
+  template --> dom[("匹配当前组件 DOM")]
+  styles --> dom
+  class sfc component
+  class build process
+  class template,styles,dom resource`,
+    description:
+      "SFC 编译器同时改写模板和 scoped 选择器，组件内继续使用普通 class。",
+    focus: "作用域由 SFC 编译器注入，无需在脚本中导入样式映射。",
+  },
+};
+
+const flow = flows[Astro.props.framework];
+---
+
+<FrameworkFlow
+  {...flow}
+  legend={[
+    { kind: "component", label: "Component" },
+    { kind: "process", label: "Build" },
+    { kind: "resource", label: "Style" },
+  ]}
+/>

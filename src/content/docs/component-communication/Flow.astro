@@ -1,0 +1,54 @@
+---
+import FrameworkFlow from "../../../components/FrameworkFlow.astro";
+
+type Props = { framework: "react" | "vue" };
+
+const flows = {
+  react: {
+    framework: "React" as const,
+    tone: "react" as const,
+    chart: `flowchart TB
+  accTitle: React 回调属性通信机制
+  accDescr: ReactDemo 把函数作为 onSend prop 传给 MessageInput，子组件直接调用函数，setMessage 调度父组件重新渲染。
+  parent["ReactDemo"] -->|"传入 onSend 函数 prop"| child["MessageInput"]
+  input(["value state"]) --> child
+  child -.->|"直接调用 onSend(message)"| setter{{"setMessage"}}
+  setter --> message(["message state"])
+  message -->|"重新渲染"| parent
+  class input,message state
+  class parent,child component
+  class setter process`,
+    description:
+      "函数作为 props 向下传递；子组件调用函数后，setter 调度父组件重新渲染。",
+    focus: "Callback 是普通函数 prop，子组件知道并直接调用它。",
+  },
+  vue: {
+    framework: "Vue 3" as const,
+    tone: "vue" as const,
+    chart: `flowchart TB
+  accTitle: Vue 声明式组件事件机制
+  accDescr: MessageInput 通过 defineEmits 声明 send 事件并 emit，VueDemo 使用事件监听器接收 payload 后修改 message ref。
+  input(["value ref"]) --> child["MessageInput"]
+  child --> contract{{"defineEmits 声明 send"}}
+  contract -.->|"emit send(message)"| listener{{"VueDemo @send 监听器"}}
+  listener --> message(["message ref"])
+  message --> parent["VueDemo"]
+  class input,message state
+  class child,parent component
+  class contract,listener process`,
+    description:
+      "子组件声明事件协议并 emit；父组件通过模板监听器接收 payload。",
+    focus: "emit 是显式事件协议，子组件不直接持有父组件函数。",
+  },
+};
+
+const flow = flows[Astro.props.framework];
+---
+
+<FrameworkFlow
+  {...flow}
+  legend={[
+    { kind: "state", label: "State" },
+    { kind: "component", label: "Component" },
+  ]}
+/>

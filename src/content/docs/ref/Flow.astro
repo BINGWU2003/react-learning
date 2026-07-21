@@ -1,0 +1,53 @@
+---
+import FrameworkFlow from "../../../components/FrameworkFlow.astro";
+
+type Props = { framework: "react" | "vue" };
+
+const flows = {
+  react: {
+    framework: "React" as const,
+    tone: "react" as const,
+    chart: `flowchart TB
+  accTitle: React forwardRef 命令式句柄
+  accDescr: SearchInput 必须通过 forwardRef 接收 ref，再用 useImperativeHandle 构造受控句柄；ReactDemo 调用句柄时最终操作 input DOM。
+  parent["ReactDemo"] -->|"ref prop"| child["SearchInput + forwardRef"]
+  child --> expose{{"useImperativeHandle 构造句柄"}}
+  expose --> handle[("SearchInputHandle")]
+  parent -.->|"focus() / select()"| handle
+  handle --> dom[("input DOM")]
+  class parent,child component
+  class expose process
+  class handle,dom resource`,
+    description:
+      "forwardRef 接收 ref，useImperativeHandle 显式构造父组件可调用的句柄。",
+    focus: "函数组件不会自动暴露实例，需要 forwardRef 和 useImperativeHandle。",
+  },
+  vue: {
+    framework: "Vue 3" as const,
+    tone: "vue" as const,
+    chart: `flowchart TB
+  accTitle: Vue template ref 与 defineExpose
+  accDescr: VueDemo 使用模板 ref 获取子组件公开实例，SearchInput 通过 defineExpose 限定公开方法，方法内部再操作 input 模板 ref。
+  child["SearchInput"] --> expose{{"defineExpose 限定公开方法"}}
+  expose --> instance[("组件公开实例")]
+  parent["VueDemo"] -.->|"template ref"| instance
+  instance -->|"focus() / select()"| inputRef[("input template ref")]
+  inputRef --> dom[("input DOM")]
+  class parent,child component
+  class expose process
+  class instance,inputRef,dom resource`,
+    description: "VueDemo → template ref → defineExpose → SearchInput → input DOM",
+    focus: "模板 ref 直接获得组件公开实例，defineExpose 决定暴露边界。",
+  },
+};
+
+const flow = flows[Astro.props.framework];
+---
+
+<FrameworkFlow
+  {...flow}
+  legend={[
+    { kind: "component", label: "Component" },
+    { kind: "resource", label: "Ref / DOM" },
+  ]}
+/>
