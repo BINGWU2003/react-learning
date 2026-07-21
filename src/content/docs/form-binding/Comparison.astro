@@ -1,0 +1,30 @@
+---
+import FrameworkCard from "../../../components/FrameworkCard.astro";
+import Flow from "./Flow.astro";
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import reactSource from "./ReactDemo.tsx?raw";
+import vueSource from "./VueDemo.vue?raw";
+---
+
+<div class="framework-comparison">
+  <FrameworkCard
+    framework="React"
+    tone="react"
+    summary="用 value 和 onChange 显式实现受控表单。"
+    sources={[{ code: reactSource, fileName: "ReactDemo.tsx", language: "tsx" }]}
+  >
+    <ReactDemo client:visible />
+    <Flow slot="flow" framework="react" />
+  </FrameworkCard>
+  <FrameworkCard
+    framework="Vue 3"
+    tone="vue"
+    summary="用 v-model 连接表单控件与响应式 ref。"
+    sources={[{ code: vueSource, fileName: "VueDemo.vue", language: "vue" }]}
+  >
+    <VueDemo client:visible />
+    <Flow slot="flow" framework="vue" />
+  </FrameworkCard>
+</div>
+

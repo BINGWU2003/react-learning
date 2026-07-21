@@ -1,0 +1,12 @@
+---
+title: Custom Hook 与 Composable
+description: React Hook 在组件 render 中按规则调用；Vue composable 在 setup 中组合并返回响应式状态。
+---
+
+import Comparison from "./Comparison.astro";
+
+两个 Demo 都复用“监听窗口尺寸”的逻辑。调整窗口宽度时都会更新，但复用函数参与组件生命周期的方式不同。
+
+<Comparison />
+
+> 本站同时运行 React Fast Refresh 与 Vue HMR，因此 Vue Demo 使用中性别名调用 composable，避免开发环境把 `use*` 调用误判成 React Hook；普通 Vue 项目可以直接调用 `useViewportSize()`。
