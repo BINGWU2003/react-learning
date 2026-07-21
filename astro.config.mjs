@@ -32,6 +32,10 @@ export default defineConfig({
         {
           label: "差异笔记",
           items: [
+            { label: "渲染模型", slug: "render-setup" },
+            { label: "表单双向绑定", slug: "form-binding" },
+            { label: "逻辑复用", slug: "logic-reuse" },
+            { label: "内容分发", slug: "children-slots" },
             { label: "组件通信", slug: "component-communication" },
             { label: "跨组件状态", slug: "context" },
             { label: "副作用", slug: "effect" },
@@ -46,7 +50,7 @@ export default defineConfig({
         },
       ],
     }),
-    react(),
+    react({ include: [/\.[jt]sx$/] }),
     vue(),
   ],
 });

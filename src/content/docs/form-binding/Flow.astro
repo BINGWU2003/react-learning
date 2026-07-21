@@ -1,0 +1,58 @@
+---
+import FrameworkFlow from "../../../components/FrameworkFlow.astro";
+
+type Props = { framework: "react" | "vue" };
+
+const flows = {
+  react: {
+    framework: "React" as const,
+    tone: "react" as const,
+    chart: `flowchart TB
+  accTitle: React 受控表单数据流
+  accDescr: input 事件读取 DOM value，onChange 调用 setter 更新 state，组件重新渲染后再通过 value prop 把状态写回表单控件。
+  input[("input / select DOM")] -.->|"onChange event"| handler{{"读取 event.target.value"}}
+  handler --> setter{{"调用 setter"}}
+  setter --> state(["name / direction state"])
+  state --> demo["ReactDemo render"]
+  demo -->|"value prop"| input
+  class state state
+  class demo component
+  class handler,setter process
+  class input resource`,
+    description:
+      "事件把 DOM 值提交给 state，下一次 render 再用 value prop 控制表单。",
+    focus: "读取、更新和回写都是显式代码，state 是唯一数据源。",
+  },
+  vue: {
+    framework: "Vue 3" as const,
+    tone: "vue" as const,
+    chart: `flowchart TB
+  accTitle: Vue v-model 表单双向绑定
+  accDescr: v-model 编译为表单属性绑定和更新事件，用户输入时写入 ref，响应式更新又把最新值同步到表单与预览模板。
+  input[("input / select DOM")] <--> model{{"v-model 编译绑定"}}
+  model <--> state(["name / direction refs"])
+  state --> trigger{{"响应式依赖更新"}}
+  trigger --> template["表单 + 预览模板"]
+  class state state
+  class template component
+  class model,trigger process
+  class input resource`,
+    description:
+      "v-model 组合属性绑定和更新事件，把 DOM 控件与响应式 ref 连接起来。",
+    focus: "模板只声明绑定目标，事件读取和属性回写由编译结果完成。",
+  },
+};
+
+const flow = flows[Astro.props.framework];
+---
+
+<FrameworkFlow
+  {...flow}
+  legend={[
+    { kind: "state", label: "Form State" },
+    { kind: "component", label: "Component" },
+    { kind: "process", label: "Binding" },
+    { kind: "resource", label: "DOM Control" },
+  ]}
+/>
+

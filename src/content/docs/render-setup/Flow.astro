@@ -1,0 +1,58 @@
+---
+import FrameworkFlow from "../../../components/FrameworkFlow.astro";
+
+type Props = { framework: "react" | "vue" };
+
+const flows = {
+  react: {
+    framework: "React" as const,
+    tone: "react" as const,
+    chart: `flowchart TB
+  accTitle: React 函数组件重新执行模型
+  accDescr: 事件调用 setter 后更新 state，React 调度一次新的 render，重新执行 ReactDemo 函数并生成下一棵 UI。
+  event{{"点击事件"}} --> setter{{"调用 state setter"}}
+  setter --> state(["count / compact state"])
+  state --> schedule{{"调度新的 render"}}
+  schedule --> demo["重新执行 ReactDemo"]
+  demo -.->|"创建下一次事件处理函数"| event
+  class state state
+  class demo component
+  class event,setter,schedule process`,
+    description:
+      "任意本地 state 更新都会调度 render，ReactDemo 函数从头再次执行。",
+    focus: "组件函数是 render 过程，不是只运行一次的初始化函数。",
+  },
+  vue: {
+    framework: "Vue 3" as const,
+    tone: "vue" as const,
+    chart: `flowchart TB
+  accTitle: Vue setup 与响应式更新模型
+  accDescr: setup 创建 refs 和事件函数一次，点击后直接修改 ref，响应式系统只调度读取该值的模板更新。
+  setup{{"setup 创建一次"}} --> state(["count / compact refs"])
+  setup --> handlers[("稳定的事件函数")]
+  handlers -.->|"直接修改 ref"| state
+  state --> trigger{{"触发响应式依赖"}}
+  trigger --> template["更新相关模板节点"]
+  class state state
+  class template component
+  class setup,trigger process
+  class handlers resource`,
+    description:
+      "setup 保留 refs 和事件函数，状态变化后按响应式依赖更新模板。",
+    focus: "状态变化不会让 setup 从头执行，已有闭包和响应式引用继续复用。",
+  },
+};
+
+const flow = flows[Astro.props.framework];
+---
+
+<FrameworkFlow
+  {...flow}
+  legend={[
+    { kind: "state", label: "State" },
+    { kind: "component", label: "Component" },
+    { kind: "process", label: "Render / Setup" },
+    { kind: "resource", label: "Handler" },
+  ]}
+/>
+

@@ -1,0 +1,38 @@
+---
+import FrameworkCard from "../../../components/FrameworkCard.astro";
+import Flow from "./Flow.astro";
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import profileCardReactSource from "./ProfileCard.tsx?raw";
+import profileCardVueSource from "./ProfileCard.vue?raw";
+import reactDemoSource from "./ReactDemo.tsx?raw";
+import vueDemoSource from "./VueDemo.vue?raw";
+---
+
+<div class="framework-comparison">
+  <FrameworkCard
+    framework="React"
+    tone="react"
+    summary="嵌套内容作为 children，具名区域继续使用普通 prop。"
+    sources={[
+      { code: reactDemoSource, fileName: "ReactDemo.tsx", language: "tsx" },
+      { code: profileCardReactSource, fileName: "ProfileCard.tsx", language: "tsx" },
+    ]}
+  >
+    <ReactDemo client:visible />
+    <Flow slot="flow" framework="react" />
+  </FrameworkCard>
+  <FrameworkCard
+    framework="Vue 3"
+    tone="vue"
+    summary="默认和具名 slot 为模板提供不同的内容出口。"
+    sources={[
+      { code: vueDemoSource, fileName: "VueDemo.vue", language: "vue" },
+      { code: profileCardVueSource, fileName: "ProfileCard.vue", language: "vue" },
+    ]}
+  >
+    <VueDemo client:visible />
+    <Flow slot="flow" framework="vue" />
+  </FrameworkCard>
+</div>
+

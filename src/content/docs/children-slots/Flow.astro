@@ -1,0 +1,55 @@
+---
+import FrameworkFlow from "../../../components/FrameworkFlow.astro";
+
+type Props = { framework: "react" | "vue" };
+
+const flows = {
+  react: {
+    framework: "React" as const,
+    tone: "react" as const,
+    chart: `flowchart TB
+  accTitle: React children 与元素 prop
+  accDescr: ReactDemo 在每次 render 中创建正文和按钮 React 元素，分别作为 children 与 footer prop 传给 ProfileCard，子组件直接把 props 放进自己的 JSX。
+  parent["ReactDemo render"] --> elements[("创建 React elements")]
+  elements -->|"children prop"| card["ProfileCard"]
+  elements -->|"footer prop"| card
+  card --> output[("组合后的元素树")]
+  output -.->|"按钮事件更新父 state"| parent
+  class parent,card component
+  class elements,output resource`,
+    description:
+      "嵌套 JSX 最终也是 children prop，具名区域通常再设计一个普通 prop。",
+    focus: "内容是父组件创建的 React 元素对象，并随 props 一起传递。",
+  },
+  vue: {
+    framework: "Vue 3" as const,
+    tone: "vue" as const,
+    chart: `flowchart TB
+  accTitle: Vue 默认与具名插槽
+  accDescr: VueDemo 模板为 default 和 footer 提供内容，编译器生成 slot functions，ProfileCard 渲染到 slot outlet 时调用对应函数。
+  parent["VueDemo template"] --> slots[("default / footer slot functions")]
+  slots --> outlet{{"ProfileCard 调用 slot outlets"}}
+  outlet --> card["ProfileCard template"]
+  card --> output[("组合后的 VNodes")]
+  output -.->|"按钮事件修改父 ref"| parent
+  class parent,card component
+  class outlet process
+  class slots,output resource`,
+    description:
+      "父模板提供插槽函数，子组件通过默认或具名 slot outlet 决定插入位置。",
+    focus: "插槽是模板级内容出口，具名和作用域能力由框架直接提供。",
+  },
+};
+
+const flow = flows[Astro.props.framework];
+---
+
+<FrameworkFlow
+  {...flow}
+  legend={[
+    { kind: "component", label: "Component" },
+    { kind: "process", label: "Content Outlet" },
+    { kind: "resource", label: "Content" },
+  ]}
+/>
+

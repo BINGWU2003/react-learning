@@ -1,0 +1,59 @@
+---
+import FrameworkFlow from "../../../components/FrameworkFlow.astro";
+
+type Props = { framework: "react" | "vue" };
+
+const flows = {
+  react: {
+    framework: "React" as const,
+    tone: "react" as const,
+    chart: `flowchart TB
+  accTitle: React Custom Hook 运行机制
+  accDescr: ReactDemo 每次 render 都按固定顺序调用 useViewportSize，Hook 的 effect 管理窗口监听，resize 时 setter 更新 Hook state 并重新执行组件。
+  demo["ReactDemo render"] --> hookLogic{{"调用 Custom Hook"}}
+  hookLogic --> effect{{"useEffect 注册与清理"}}
+  effect --> windowResource[("window resize")]
+  windowResource -.->|"setSize"| state(["size state"])
+  state -->|"调度下一次 render"| demo
+  class state state
+  class demo component
+  class hookLogic,effect process
+  class windowResource resource`,
+    description:
+      "Hook 随组件 render 调用，通过 Hook 顺序关联保存的 state 和 effect。",
+    focus: "Custom Hook 必须遵守 Hooks 调用规则，它不是独立运行的组件实例。",
+  },
+  vue: {
+    framework: "Vue 3" as const,
+    tone: "vue" as const,
+    chart: `flowchart TB
+  accTitle: Vue Composable 运行机制
+  accDescr: VueDemo setup 调用 useViewportSize 一次，Composable 创建 refs 并登记挂载与卸载回调，resize 时直接修改 refs。
+  demo["VueDemo setup"] --> composable{{"调用 Composable 一次"}}
+  composable --> lifecycle{{"登记 onMounted / onUnmounted"}}
+  lifecycle --> windowResource[("window resize")]
+  windowResource -.->|"直接修改 refs"| state(["width / height refs"])
+  state -->|"响应式更新"| template["VueDemo template"]
+  class state state
+  class demo,template component
+  class composable,lifecycle process
+  class windowResource resource`,
+    description:
+      "Composable 在 setup 中创建并返回 refs，生命周期钩子跟随调用它的组件。",
+    focus: "普通组合函数可以使用控制流组织逻辑，依赖通过响应式引用连接。",
+  },
+};
+
+const flow = flows[Astro.props.framework];
+---
+
+<FrameworkFlow
+  {...flow}
+  legend={[
+    { kind: "state", label: "Reusable State" },
+    { kind: "component", label: "Consumer" },
+    { kind: "process", label: "Hook / Composable" },
+    { kind: "resource", label: "Browser API" },
+  ]}
+/>
+
