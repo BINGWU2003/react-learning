@@ -1,0 +1,32 @@
+---
+import FrameworkCard from "../../../components/FrameworkCard.astro";
+import Flow from "./Flow.astro";
+import { QueryDemo } from "./QueryDemo";
+import demoSource from "./QueryDemo.tsx?raw";
+import optionsSource from "./queryOptions.ts?raw";
+import apiSource from "./api.ts?raw";
+import endpointSource from "../../../pages/api/learning-resources.ts?raw";
+import storeSource from "../../../lib/learning-resources/store.ts?raw";
+import typeSource from "../../../lib/learning-resources/types.ts?raw";
+import styleSource from "./QueryDemo.css?raw";
+---
+
+<div class="framework-comparison practice-example">
+  <FrameworkCard
+    framework="React"
+    tone="react"
+    summary="TanStack Query 管理服务端状态，Astro Endpoint 提供真实 HTTP API。"
+    sources={[
+      { code: demoSource, fileName: "QueryDemo.tsx", language: "tsx" },
+      { code: optionsSource, fileName: "queryOptions.ts", language: "ts" },
+      { code: apiSource, fileName: "api.ts", language: "ts" },
+      { code: endpointSource, fileName: "pages/api/learning-resources.ts", language: "ts" },
+      { code: storeSource, fileName: "learning-resources/store.ts", language: "ts" },
+      { code: typeSource, fileName: "types.ts", language: "ts" },
+      { code: styleSource, fileName: "QueryDemo.css", language: "css" },
+    ]}
+  >
+    <QueryDemo client:visible />
+    <Flow slot="flow" />
+  </FrameworkCard>
+</div>

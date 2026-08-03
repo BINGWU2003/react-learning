@@ -70,7 +70,7 @@ export function FormDemo() {
         },
       }}
     >
-      <div className="antd-form-demo">
+      <div className="antd-form-demo not-content">
         <div className="antd-form-demo__panel">
           <form onSubmit={handleSubmit(submit)} noValidate>
             <Form component={false} layout="vertical">

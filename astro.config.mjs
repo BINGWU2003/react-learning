@@ -1,9 +1,11 @@
 import { defineConfig } from "astro/config";
+import netlify from "@astrojs/netlify";
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import vue from "@astrojs/vue";
 
 export default defineConfig({
+  adapter: netlify(),
   redirects: {
     "/": "/component-communication/",
   },
@@ -52,6 +54,7 @@ export default defineConfig({
           label: "React 生态实践",
           items: [
             { label: "表单与数据校验", slug: "form-validation" },
+            { label: "服务端状态与缓存", slug: "react-query" },
           ],
         },
       ],

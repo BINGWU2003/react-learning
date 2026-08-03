@@ -25,3 +25,6 @@ dist-ssr
 *.sw?
 
 *.tsbuildinfo
+
+# Local Netlify folder
+.netlify
