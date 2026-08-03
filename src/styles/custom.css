@@ -41,6 +41,14 @@ body {
   margin-top: 1.75rem;
 }
 
+.framework-comparison.practice-example {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.practice-example .framework-card__preview {
+  min-height: 0;
+}
+
 .framework-card {
   display: flex;
   flex-direction: column;

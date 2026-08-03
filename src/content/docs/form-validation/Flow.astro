@@ -1,0 +1,37 @@
+---
+import FrameworkFlow from "../../../components/FrameworkFlow.astro";
+
+const chart = `flowchart TB
+  accTitle: antd、React Hook Form 与 Zod 表单数据流
+  accDescr: antd 控件通过 Controller 把值写入 React Hook Form，失焦或提交时 zodResolver 调用 Zod schema。校验失败时错误返回 Form.Item，成功时生成有类型保障的数据并交给提交函数。
+  controls["antd 表单控件"] --> controller{{"Controller 适配值与事件"}}
+  controller --> state(["React Hook Form 状态"])
+  state -->|"onBlur / submit"| resolver{{"zodResolver"}}
+  resolver --> schema[("Zod schema")]
+  schema --> result{{"校验结果"}}
+  result -->|"失败"| errors(["fieldState.error"])
+  errors --> feedback["Form.Item 错误反馈"]
+  feedback -.->|"用户修正"| controls
+  result -->|"通过"| values(["ProfileFormValues"])
+  values --> submit["submit(values) / API"]
+  class state,errors,values state
+  class controls,feedback,submit component
+  class controller,resolver,result process
+  class schema resource`;
+---
+
+<FrameworkFlow
+  framework="React"
+  tone="react"
+  chart={chart}
+  description="RHF 维护字段状态，Zod 返回校验结果；只有通过校验的数据才会进入提交函数。"
+  focusLabel="协作焦点"
+  focus="Controller 负责适配 antd 受控组件；Checkbox 需要把 event.target.checked 转换成布尔值。"
+  hint="实线表示值、状态或校验结果的传递，虚线表示用户修正错误后的再次输入。"
+  legend={[
+    { kind: "state", label: "Form State / Data" },
+    { kind: "component", label: "UI / Submit" },
+    { kind: "process", label: "Adapter / Validation" },
+    { kind: "resource", label: "Schema" },
+  ]}
+/>

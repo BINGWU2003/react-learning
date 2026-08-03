@@ -48,6 +48,12 @@ export default defineConfig({
             { label: "动态样式", slug: "dynamic-styles" },
           ],
         },
+        {
+          label: "React 生态实践",
+          items: [
+            { label: "表单与数据校验", slug: "form-validation" },
+          ],
+        },
       ],
     }),
     react({ include: [/\.[jt]sx$/] }),
