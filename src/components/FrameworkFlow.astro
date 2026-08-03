@@ -12,6 +12,7 @@ type Props = {
   chart: string;
   description: string;
   focus: string;
+  focusLabel?: string;
   framework: "React" | "Vue 3";
   hint?: string;
   legend: FlowLegendItem[];
@@ -22,6 +23,7 @@ const {
   chart,
   description,
   focus,
+  focusLabel = "差异焦点",
   framework,
   hint = "实线表示依赖、数据或命令传递，虚线表示事件、回调或清理路径。",
   legend,
@@ -63,7 +65,7 @@ const themedChart = `${chart.trim()}\n  ${classDefinitions}`;
     </div>
   </div>
   <p class="framework-flow__focus">
-    <span>差异焦点</span>
+    <span>{focusLabel}</span>
     {focus}
   </p>
   <p class="framework-flow__hint">{hint}</p>
