@@ -1,0 +1,251 @@
+.immer-demo {
+  display: grid;
+  gap: 1rem;
+}
+
+.immer-demo__header,
+.immer-demo__editor,
+.immer-demo__progress,
+.immer-demo__module,
+.immer-demo__add {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.8rem;
+}
+
+.immer-demo__header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem;
+  background: var(--sl-color-gray-6);
+}
+
+.immer-demo__header h2,
+.immer-demo__header p,
+.immer-demo__module h3,
+.immer-demo__progress p {
+  margin: 0;
+}
+
+.immer-demo__header h2 {
+  margin-top: 0.65rem;
+  color: var(--sl-color-white);
+  font-size: 1rem;
+}
+
+.immer-demo__header p {
+  margin-top: 0.25rem;
+  color: var(--sl-color-gray-3);
+  font-size: 0.76rem;
+}
+
+.immer-demo__editor {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 0.7rem;
+  padding: 0.85rem;
+}
+
+.immer-demo label {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--sl-color-gray-2);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.immer-demo input:not([type="checkbox"]),
+.immer-demo select {
+  min-width: 0;
+  min-height: 2.35rem;
+  border: 1px solid var(--sl-color-gray-4);
+  border-radius: 0.5rem;
+  padding: 0.42rem 0.62rem;
+  color: var(--sl-color-white);
+  font: inherit;
+  background: var(--sl-color-black);
+}
+
+.immer-demo input:focus,
+.immer-demo select:focus,
+.immer-demo button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--sl-color-accent) 20%, transparent);
+  outline-offset: 1px;
+}
+
+.immer-demo__button,
+.immer-demo__text-button,
+.immer-demo__remove {
+  border-radius: 0.5rem;
+  padding: 0.42rem 0.65rem;
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.immer-demo__button {
+  border: 1px solid var(--sl-color-gray-4);
+  color: var(--sl-color-gray-1);
+  background: var(--sl-color-black);
+}
+
+.immer-demo__button--primary {
+  border-color: color-mix(in srgb, var(--sl-color-accent) 35%, transparent);
+  color: var(--sl-color-accent-high);
+  background: var(--sl-color-accent-low);
+}
+
+.immer-demo button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.immer-demo__progress {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.8rem 0.9rem;
+  background: var(--sl-color-gray-6);
+}
+
+.immer-demo__progress > div:first-child {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--sl-color-gray-2);
+  font-size: 0.75rem;
+}
+
+.immer-demo__progress strong {
+  color: var(--sl-color-white);
+}
+
+.immer-demo__progress-track {
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--sl-color-gray-5);
+}
+
+.immer-demo__progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #149eca;
+  transition: width 180ms ease;
+}
+
+.immer-demo__modules {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.immer-demo__module {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.immer-demo__module > header {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0.8rem;
+  border-bottom: 1px solid var(--sl-color-gray-5);
+  background: var(--sl-color-gray-6);
+}
+
+.immer-demo__module h3 {
+  color: var(--sl-color-white);
+  font-size: 0.82rem;
+}
+
+.immer-demo__module header span {
+  color: var(--sl-color-gray-3);
+  font-size: 0.68rem;
+}
+
+.immer-demo__text-button {
+  border: 0;
+  color: var(--sl-color-accent);
+  background: transparent;
+}
+
+.immer-demo__module ul {
+  display: grid;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.immer-demo__module li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid var(--sl-color-gray-5);
+}
+
+.immer-demo__module li:last-child {
+  border-bottom: 0;
+}
+
+.immer-demo__module li.is-completed .immer-demo__task-title {
+  color: var(--sl-color-gray-3);
+  text-decoration: line-through;
+}
+
+.immer-demo__task-title {
+  min-height: 2rem !important;
+  border-color: transparent !important;
+  padding-block: 0.25rem !important;
+}
+
+.immer-demo__task-title:hover,
+.immer-demo__task-title:focus {
+  border-color: var(--sl-color-gray-4) !important;
+}
+
+.immer-demo__remove {
+  border: 0;
+  color: #c43f3f;
+  background: transparent;
+}
+
+.immer-demo__empty {
+  margin: 0;
+  padding: 1rem;
+  color: var(--sl-color-gray-3);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.immer-demo__add {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(8rem, 0.4fr) auto;
+  gap: 0.7rem;
+  align-items: end;
+  padding: 0.85rem;
+}
+
+.immer-demo__add .immer-demo__button {
+  min-height: 2.35rem;
+}
+
+@media (max-width: 42rem) {
+  .immer-demo__editor,
+  .immer-demo__modules,
+  .immer-demo__add {
+    grid-template-columns: 1fr;
+  }
+
+  .immer-demo__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

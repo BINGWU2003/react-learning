@@ -55,6 +55,7 @@ export default defineConfig({
           items: [
             { label: "表单与数据校验", slug: "form-validation" },
             { label: "服务端状态与缓存", slug: "react-query" },
+            { label: "复杂状态更新", slug: "use-immer" },
           ],
         },
       ],
