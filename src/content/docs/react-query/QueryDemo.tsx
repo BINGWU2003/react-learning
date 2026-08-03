@@ -92,7 +92,7 @@ function ResourcePanel() {
     : "尚未获取";
 
   return (
-    <div className="query-demo">
+    <div className="query-demo not-content">
       <div className="query-demo__toolbar">
         <Segmented options={topicOptions} value={topic} onChange={changeTopic} />
         <div className="query-demo__status">
