@@ -14,6 +14,10 @@ export default defineConfig({
       title: "React × Vue",
       description: "用同一个可运行 Demo 对照 React 与 Vue 的实现差异。",
       favicon: "/favicon.svg",
+      logo: {
+        src: "./src/assets/logo.svg",
+        alt: "React 与 Vue 的对照学习图标",
+      },
       defaultLocale: "root",
       locales: {
         root: {
