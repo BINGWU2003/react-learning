@@ -1,30 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
-  <title id="title">React 与 Vue 的并读篇章图标</title>
-  <desc id="desc">两本颜色不同的学习笔记向中心翻开，共享同一条知识脊线。</desc>
+  <title id="title">React 与 Vue 对照书页</title>
+  <desc id="desc">打开的左右书页分别带有代码符号，表示同一主题的 React 与 Vue 实现对照。</desc>
   <style>
-    .page { transform-box: fill-box; transform-origin: center bottom; animation: turn 5.6s cubic-bezier(.4, 0, .2, 1) infinite; }
-    .right { animation-delay: .22s; }
-    .spine { animation: glow 5.6s ease-in-out infinite; }
-    @keyframes turn {
-      0%, 16%, 76%, 100% { transform: rotate(0); }
-      34%, 56% { transform: rotate(var(--tilt)); }
+    .stroke {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      opacity: 0;
+      animation: write 7.2s cubic-bezier(.65, 0, .35, 1) infinite;
     }
-    @keyframes glow {
-      0%, 18%, 78%, 100% { opacity: .76; }
-      36%, 58% { opacity: 1; }
+
+    .stroke-2 { animation-delay: .16s; }
+    .stroke-3 { animation-delay: .3s; }
+    .stroke-4 { animation-delay: .42s; }
+
+    @keyframes write {
+      0% { opacity: 0; stroke-dashoffset: 1; }
+      5% { opacity: 1; }
+      35%, 82% { opacity: 1; stroke-dashoffset: 0; }
+      96% { opacity: 0; stroke-dashoffset: 0; }
+      100% { opacity: 0; stroke-dashoffset: 1; }
     }
+
     @media (prefers-reduced-motion: reduce) {
-      .page, .spine { animation: none; opacity: 1; }
+      .stroke {
+        animation: none;
+        opacity: 1;
+        stroke-dashoffset: 0;
+      }
     }
   </style>
-  <path d="M103 115c63-25 116-12 153 28v244c-37-40-90-53-153-28V115Z" fill="#e5f6fb" stroke="#149eca" stroke-linejoin="round" stroke-width="28"/>
-  <path d="M409 115c-63-25-116-12-153 28v244c37-40 90-53 153-28V115Z" fill="#e7f8f0" stroke="#42b883" stroke-linejoin="round" stroke-width="28"/>
-  <g class="page" style="--tilt: -2deg">
-    <path d="M136 166c30-8 58-3 87 16M136 222c30-8 58-3 87 16" fill="none" stroke="#149eca" stroke-linecap="round" stroke-width="19"/>
+  <g fill="none" stroke="#172033" stroke-linecap="round" stroke-linejoin="round">
+    <path class="stroke stroke-1" pathLength="1" stroke-width="24" d="M68 122 C137 105 205 119 256 163 V418 C205 374 137 360 68 377 Z" />
+    <path class="stroke stroke-2" pathLength="1" stroke-width="24" d="M444 122 C375 105 307 119 256 163 V418 C307 374 375 360 444 377 Z" />
+    <path class="stroke stroke-3" pathLength="1" stroke-width="25" d="M198 222 L154 270 L198 318" />
+    <path class="stroke stroke-4" pathLength="1" stroke-width="25" d="M314 222 L358 270 L314 318" />
   </g>
-  <g class="page right" style="--tilt: 2deg">
-    <path d="M376 166c-30-8-58-3-87 16M376 222c-30-8-58-3-87 16" fill="none" stroke="#42b883" stroke-linecap="round" stroke-width="19"/>
-  </g>
-  <path class="spine" d="M256 143v244" fill="none" stroke="#1769d2" stroke-linecap="round" stroke-width="28"/>
-  <circle class="spine" cx="256" cy="143" r="16" fill="#1769d2"/>
 </svg>

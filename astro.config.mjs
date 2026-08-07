@@ -16,7 +16,7 @@ export default defineConfig({
       favicon: "/favicon.svg",
       logo: {
         src: "./src/assets/logo.svg",
-        alt: "React 与 Vue 的对照学习图标",
+        alt: "",
       },
       defaultLocale: "root",
       locales: {

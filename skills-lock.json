@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "design-site-icon": {
+      "source": "BINGWU2003/skills",
+      "sourceType": "github",
+      "skillPath": "skills/design-site-icon/SKILL.md",
+      "computedHash": "bd372760d3954564c4711d0e1c3f094321b5f47cd1f11ea746fe6fe97aa8c480"
+    }
+  }
+}
