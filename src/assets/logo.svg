@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">React 与 Vue 的并读篇章图标</title>
+  <desc id="desc">两本颜色不同的学习笔记向中心翻开，共享同一条知识脊线。</desc>
+  <style>
+    .page { transform-box: fill-box; transform-origin: center bottom; animation: turn 5.6s cubic-bezier(.4, 0, .2, 1) infinite; }
+    .right { animation-delay: .22s; }
+    .spine { animation: glow 5.6s ease-in-out infinite; }
+    @keyframes turn {
+      0%, 16%, 76%, 100% { transform: rotate(0); }
+      34%, 56% { transform: rotate(var(--tilt)); }
+    }
+    @keyframes glow {
+      0%, 18%, 78%, 100% { opacity: .76; }
+      36%, 58% { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .page, .spine { animation: none; opacity: 1; }
+    }
+  </style>
+  <path d="M103 115c63-25 116-12 153 28v244c-37-40-90-53-153-28V115Z" fill="#e5f6fb" stroke="#149eca" stroke-linejoin="round" stroke-width="28"/>
+  <path d="M409 115c-63-25-116-12-153 28v244c37-40 90-53 153-28V115Z" fill="#e7f8f0" stroke="#42b883" stroke-linejoin="round" stroke-width="28"/>
+  <g class="page" style="--tilt: -2deg">
+    <path d="M136 166c30-8 58-3 87 16M136 222c30-8 58-3 87 16" fill="none" stroke="#149eca" stroke-linecap="round" stroke-width="19"/>
+  </g>
+  <g class="page right" style="--tilt: 2deg">
+    <path d="M376 166c-30-8-58-3-87 16M376 222c-30-8-58-3-87 16" fill="none" stroke="#42b883" stroke-linecap="round" stroke-width="19"/>
+  </g>
+  <path class="spine" d="M256 143v244" fill="none" stroke="#1769d2" stroke-linecap="round" stroke-width="28"/>
+  <circle class="spine" cx="256" cy="143" r="16" fill="#1769d2"/>
+</svg>
