@@ -3,9 +3,16 @@ import netlify from "@astrojs/netlify";
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import vue from "@astrojs/vue";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   adapter: netlify(),
+  vite: {
+    plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: ["mermaid"],
+    },
+  },
   redirects: {
     "/": "/component-communication/",
   },
@@ -29,7 +36,10 @@ export default defineConfig({
       expressiveCode: {
         themes: ["one-dark-pro"],
       },
-      customCss: ["./src/styles/custom.css"],
+      customCss: [
+        "./src/styles/global.css",
+        "./src/styles/custom.css",
+      ],
       components: {
         ThemeProvider: "./src/components/LightTheme.astro",
         ThemeSelect: "./src/components/Empty.astro",

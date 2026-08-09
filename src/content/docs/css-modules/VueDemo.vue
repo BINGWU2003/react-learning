@@ -13,9 +13,10 @@
   gap: 0.75rem;
   padding: 1.1rem;
   border: 1px solid #83d7b1;
-  border-radius: 0.85rem;
-  color: #174331;
-  background: #ecfff5;
+  border-left: 3px solid #2f9d6b;
+  border-radius: 0.25rem;
+  color: #25221d;
+  background: #f2f8f4;
 }
 
 .card h2,
@@ -36,7 +37,7 @@
 .button {
   width: max-content;
   border: 0;
-  border-radius: 0.55rem;
+  border-radius: 0.25rem;
   padding: 0.55rem 0.75rem;
   color: #fff;
   font: inherit;

@@ -10,7 +10,6 @@ import {
 import {
   Alert,
   Button,
-  ConfigProvider,
   Empty,
   Input,
   Segmented,
@@ -19,7 +18,7 @@ import {
   Switch,
   Tag,
 } from "antd";
-import zhCN from "antd/locale/zh_CN";
+import { SiteAntdProvider } from "../../../components/SiteAntdProvider";
 import { createResource } from "./api";
 import { resourceKeys, resourceListOptions } from "./queryOptions";
 import type {
@@ -94,7 +93,12 @@ function ResourcePanel() {
   return (
     <div className="query-demo not-content">
       <div className="query-demo__toolbar">
-        <Segmented options={topicOptions} value={topic} onChange={changeTopic} />
+        <Segmented
+          className="query-demo__topic-filter"
+          options={topicOptions}
+          value={topic}
+          onChange={changeTopic}
+        />
         <div className="query-demo__status">
           <Tag color="cyan">Astro API · Netlify Function</Tag>
           <Tag
@@ -168,12 +172,14 @@ function ResourcePanel() {
         <h3 id="create-title">Mutation：新增学习资料</h3>
         <form className="query-demo__create-form" onSubmit={submit}>
           <Input
+            className="query-demo__title-input"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             placeholder="输入资料标题"
             aria-label="资料标题"
           />
           <Select
+            className="query-demo__topic-select"
             value={createTopic}
             options={createTopicOptions}
             aria-label="资料所属方向"
@@ -210,19 +216,10 @@ export function QueryDemo() {
   const [queryClient] = useState(createQueryClient);
 
   return (
-    <ConfigProvider
-      locale={zhCN}
-      theme={{
-        token: {
-          colorPrimary: "#1769d2",
-          borderRadius: 8,
-          fontFamily: "inherit",
-        },
-      }}
-    >
+    <SiteAntdProvider>
       <QueryClientProvider client={queryClient}>
         <ResourcePanel />
       </QueryClientProvider>
-    </ConfigProvider>
+    </SiteAntdProvider>
   );
 }

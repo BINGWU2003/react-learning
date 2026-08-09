@@ -6,12 +6,11 @@ import {
   Alert,
   Button,
   Checkbox,
-  ConfigProvider,
   Form,
   Input,
   Select,
 } from "antd";
-import zhCN from "antd/locale/zh_CN";
+import { SiteAntdProvider } from "../../../components/SiteAntdProvider";
 import { profileSchema } from "./formSchema";
 import type { ProfileFormValues } from "./formSchema";
 import "./FormDemo.css";
@@ -60,16 +59,7 @@ export function FormDemo() {
   }
 
   return (
-    <ConfigProvider
-      locale={zhCN}
-      theme={{
-        token: {
-          colorPrimary: "#1769d2",
-          borderRadius: 8,
-          fontFamily: "inherit",
-        },
-      }}
-    >
+    <SiteAntdProvider>
       <div className="antd-form-demo not-content">
         <div className="antd-form-demo__panel">
           <form onSubmit={handleSubmit(submit)} noValidate>
@@ -139,6 +129,7 @@ export function FormDemo() {
                 control={control}
                 render={({ field, fieldState }) => (
                   <Form.Item
+                    className="antd-form-demo__agreement"
                     validateStatus={fieldState.error ? "error" : undefined}
                     help={fieldState.error?.message}
                   >
@@ -190,6 +181,6 @@ export function FormDemo() {
           )}
         </div>
       </div>
-    </ConfigProvider>
+    </SiteAntdProvider>
   );
 }
