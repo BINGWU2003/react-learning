@@ -21,6 +21,9 @@ const hasFlow = Astro.slots.has("flow");
 <article class:list={["framework-card", `framework-card--${tone}`]}>
   <header class="framework-card__header">
     <div>
+      <span class="framework-card__index" aria-hidden="true">
+        {tone === "react" ? "01" : "02"}
+      </span>
       <span class="framework-card__dot" aria-hidden="true"></span>
       <strong>{framework}</strong>
     </div>

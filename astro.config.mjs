@@ -9,6 +9,9 @@ export default defineConfig({
   adapter: netlify(),
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: ["mermaid"],
+    },
   },
   redirects: {
     "/": "/component-communication/",
