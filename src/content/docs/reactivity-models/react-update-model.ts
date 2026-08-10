@@ -1,29 +1,35 @@
 type SetStateAction<T> = T | ((previous: T) => T);
+type StateSetter<T> = (action: SetStateAction<T>) => void;
+type HookPair<T> = [state: T, setState: StateSetter<T>];
 
-// 当前组件实例拥有的 Hook 槽位（教学模型）
+// 当前组件实例拥有的一维 Hook 槽位表（教学模型）
 const componentHooks: unknown[] = [];
 let currentHookIndex = 0;
 let renderScheduled = false;
 
-function useState<T>(initialState: T) {
-  const hookIndex = currentHookIndex;
+function useState<T>(initialState: T): HookPair<T> {
+  let pair = componentHooks[currentHookIndex] as HookPair<T> | undefined;
 
-  if (componentHooks[hookIndex] === undefined) {
-    componentHooks[hookIndex] = initialState;
+  if (pair) {
+    // 后续 render：按 Hook 调用顺序返回原来的 pair
+    currentHookIndex += 1;
+    return pair;
   }
 
-  const state = componentHooks[hookIndex] as T;
+  // 首次 render：创建并保存 [state, setter]
   function setState(action: SetStateAction<T>) {
-    const previous = componentHooks[hookIndex] as T;
-    componentHooks[hookIndex] =
+    const previous = pair![0];
+    pair![0] =
       typeof action === "function"
         ? (action as (value: T) => T)(previous)
         : action;
     scheduleRender();
   }
 
+  pair = [initialState, setState];
+  componentHooks[currentHookIndex] = pair;
   currentHookIndex += 1;
-  return [state, setState] as const;
+  return pair;
 }
 
 function scheduleRender() {
