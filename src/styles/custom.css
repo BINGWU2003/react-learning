@@ -261,6 +261,17 @@ main > .content-panel:nth-child(2) {
   max-width: 48rem;
 }
 
+.sl-markdown-content > .wide-chapter {
+  max-width: none;
+}
+
+.wide-chapter > p:first-child {
+  max-width: 64rem;
+  color: var(--ui-ink-muted);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
 .sl-markdown-content > p:first-child,
 .framework-intro {
   max-width: 48rem;
@@ -664,6 +675,10 @@ main > .content-panel:nth-child(2) {
   --framework-color: var(--ui-vue);
 }
 
+.flow-card--compare {
+  --framework-color: var(--ui-accent);
+}
+
 .flow-card__header {
   display: flex;
   gap: 0.55rem;
@@ -1034,6 +1049,51 @@ main > .content-panel:nth-child(2) {
   border-top: 1px solid var(--ui-line);
 }
 
+.demo-trace {
+  padding: 0;
+  margin: 0;
+  border-block: 1px solid var(--ui-line);
+  list-style: none;
+}
+
+.demo-trace li {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.58rem 0.1rem;
+}
+
+.demo-trace li + li {
+  border-top: 1px solid var(--ui-line);
+}
+
+.demo-trace span {
+  color: var(--framework-color, var(--ui-accent));
+  font-family: var(--__sl-font-mono);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.demo-trace :is(code, strong, p) {
+  min-width: 0;
+  margin: 0;
+  color: var(--ui-ink);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.demo-trace code {
+  font-family: var(--__sl-font-mono);
+}
+
+.demo-trace p {
+  color: var(--ui-ink-muted);
+}
+
 .demo-muted {
   color: var(--ui-ink-muted);
 }
@@ -1134,6 +1194,11 @@ main > .content-panel:nth-child(2) {
 
   .framework-flow__focus {
     display: grid;
+  }
+
+  .demo-trace li {
+    grid-template-columns: 1fr;
+    gap: 0.22rem;
   }
 
   .flow-lightbox {

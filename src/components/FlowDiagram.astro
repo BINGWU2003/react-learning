@@ -2,9 +2,9 @@
 type Props = {
   chart: string;
   description: string;
-  framework: "React" | "Vue 3";
+  framework: "React" | "Vue 3" | "Vue 3 × React";
   showHeader?: boolean;
-  tone: "react" | "vue";
+  tone: "compare" | "react" | "vue";
 };
 
 const { chart, description, framework, showHeader = true, tone } = Astro.props;

@@ -49,6 +49,8 @@ export default defineConfig({
           label: "差异笔记",
           items: [
             { label: "渲染模型", slug: "render-setup" },
+            { label: "响应式 vs 状态更新", slug: "reactivity-models" },
+            { label: "状态 API", slug: "state" },
             { label: "表单双向绑定", slug: "form-binding" },
             { label: "逻辑复用", slug: "logic-reuse" },
             { label: "内容分发", slug: "children-slots" },
@@ -56,7 +58,6 @@ export default defineConfig({
             { label: "跨组件状态", slug: "context" },
             { label: "副作用", slug: "effect" },
             { label: "DOM 引用", slug: "ref" },
-            { label: "状态管理", slug: "state" },
             { label: "派生状态", slug: "derived-state" },
             { label: "计算缓存", slug: "memo" },
             { label: "回调引用", slug: "callback" },

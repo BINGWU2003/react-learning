@@ -10,7 +10,7 @@ import vueSource from "./VueDemo.vue?raw";
   <FrameworkCard
     framework="React"
     tone="react"
-    summary="调用 setter 并创建新的对象状态。"
+    summary="setter 请求更新；下一次 render 得到新的 state snapshot。"
     sources={[{ code: reactSource, fileName: "ReactDemo.tsx", language: "tsx" }]}
   >
     <ReactDemo client:visible />
@@ -18,7 +18,7 @@ import vueSource from "./VueDemo.vue?raw";
   <FrameworkCard
     framework="Vue 3"
     tone="vue"
-    summary="修改 ref.value 或 reactive 对象属性。"
+    summary="读取时 track，赋值时 trigger 订阅了该属性的 effect。"
     sources={[{ code: vueSource, fileName: "VueDemo.vue", language: "vue" }]}
   >
     <VueDemo client:visible />
