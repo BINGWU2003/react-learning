@@ -1,4 +1,3 @@
-import { navigate } from "astro:transitions/client";
 import type { AstroProviderProps } from "fumadocs-core/framework/astro";
 import type { Root } from "fumadocs-core/page-tree";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
@@ -50,7 +49,6 @@ export function Docs({
     <RootProvider
       pathname={pathname}
       params={params}
-      navigate={navigate}
       theme={{
         defaultTheme: "system",
         enableSystem: true,
