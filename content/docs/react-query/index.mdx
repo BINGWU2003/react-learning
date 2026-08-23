@@ -5,6 +5,16 @@ description: 使用 TanStack Query 管理异步服务端状态，并通过 Astro
 
 import { QueryDemo } from "./QueryDemo";
 import Flow from "./Flow.astro";
+import { SourceCodeTabs } from "@/components/SourceCodeTabs";
+import queryDemoSource from "./QueryDemo.tsx?raw";
+import queryOptionsSource from "./queryOptions.ts?raw";
+import queryApiSource from "./api.ts?raw";
+import queryStylesSource from "./QueryDemo.css?raw";
+import endpointSource from "../../../src/pages/api/learning-resources.ts?raw";
+import storeSource from "../../../src/lib/learning-resources/store.ts?raw";
+import resourceTypesSource from "../../../src/lib/learning-resources/types.ts?raw";
+import antdProviderSource from "../../../src/components/SiteAntdProvider.tsx?raw";
+import antdThemeSource from "../../../src/styles/antdTheme.ts?raw";
 
 ## 核心结论
 
@@ -16,24 +26,27 @@ import Flow from "./Flow.astro";
   <Flow />
 </div>
 
-## 最小配置
+## 完整 Demo 源码
 
-```ts title="查询键包含全部筛选条件"
-export const resourceListOptions = (topic: TopicFilter) =>
-  queryOptions({
-    queryKey: ["resources", "list", { topic }],
-    queryFn: ({ signal }) => fetchResources(topic, signal),
-    staleTime: 10_000,
-  });
-```
+以下代码直接读取在线 Demo、API Endpoint 与本地数据层，没有省略或改写。
 
-```tsx title="Mutation 成功后让相关列表重新同步"
-const mutation = useMutation({
-  mutationFn: createResource,
-  onSuccess: () =>
-    queryClient.invalidateQueries({ queryKey: ["resources", "list"] }),
-});
-```
+**React 与 API 源码**
+
+<SourceCodeTabs
+  client:load
+  label="React Query 与 API 源码"
+  files={[
+    { title: "QueryDemo.tsx", lang: "tsx", code: queryDemoSource },
+    { title: "queryOptions.ts", lang: "ts", code: queryOptionsSource },
+    { title: "api.ts", lang: "ts", code: queryApiSource },
+    { title: "QueryDemo.css", lang: "css", code: queryStylesSource },
+    { title: "learning-resources.ts", lang: "ts", code: endpointSource },
+    { title: "store.ts", lang: "ts", code: storeSource },
+    { title: "types.ts", lang: "ts", code: resourceTypesSource },
+    { title: "SiteAntdProvider.tsx", lang: "tsx", code: antdProviderSource },
+    { title: "antdTheme.ts", lang: "ts", code: antdThemeSource },
+  ]}
+/>
 
 ## 在线 Demo
 

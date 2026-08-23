@@ -5,6 +5,12 @@ description: 使用 antd 构建表单界面、React Hook Form 管理状态，并
 
 import { FormDemo } from "./FormDemo";
 import Flow from "./Flow.astro";
+import { SourceCodeTabs } from "@/components/SourceCodeTabs";
+import formDemoSource from "./FormDemo.tsx?raw";
+import formSchemaSource from "./formSchema.ts?raw";
+import formStylesSource from "./FormDemo.css?raw";
+import antdProviderSource from "../../../src/components/SiteAntdProvider.tsx?raw";
+import antdThemeSource from "../../../src/styles/antdTheme.ts?raw";
 
 ## 职责分层
 
@@ -14,25 +20,23 @@ antd、React Hook Form 和 Zod 不应重复做同一件事：antd 负责控件�
   <Flow />
 </div>
 
-## 最小连接代码
+## 完整 Demo 源码
 
-```tsx title="RHF 以 Zod schema 为校验源"
-const form = useForm<ProfileFormValues>({
-  resolver: zodResolver(profileSchema),
-  defaultValues,
-  mode: "onBlur",
-});
+以下代码直接读取在线 Demo 及其本地依赖，没有省略或改写。
 
-<Controller
-  name="email"
-  control={form.control}
-  render={({ field, fieldState }) => (
-    <Form.Item validateStatus={fieldState.error ? "error" : undefined}>
-      <Input {...field} />
-    </Form.Item>
-  )}
+**React 源码**
+
+<SourceCodeTabs
+  client:load
+  label="React 表单源码"
+  files={[
+    { title: "FormDemo.tsx", lang: "tsx", code: formDemoSource },
+    { title: "formSchema.ts", lang: "ts", code: formSchemaSource },
+    { title: "FormDemo.css", lang: "css", code: formStylesSource },
+    { title: "SiteAntdProvider.tsx", lang: "tsx", code: antdProviderSource },
+    { title: "antdTheme.ts", lang: "ts", code: antdThemeSource },
+  ]}
 />
-```
 
 ## 在线 Demo
 

@@ -6,6 +6,11 @@ description: React 通过 useRef 和 ref prop 暴露 DOM；Vue 使用模板 ref 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
 import Flow from "./Flow.astro";
+import { SourceCodeBlock } from "@/components/SourceCodeBlock";
+import { SourceCodeTabs } from "@/components/SourceCodeTabs";
+import reactDemoSource from "./ReactDemo.tsx?raw";
+import vueDemoSource from "./VueDemo.vue?raw";
+import vueSearchInputSource from "./SearchInput.vue?raw";
 
 ## 核心结论
 
@@ -18,26 +23,26 @@ Ref 是逃生口：它保存一个不会直接参与声明式渲染的可变引�
   <Flow framework="vue" />
 </div>
 
-## 最小代码
+## 完整 Demo 源码
 
-```tsx title="React：forwardRef 与命令式句柄"
-const SearchInput = forwardRef<SearchHandle>((_props, ref) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  useImperativeHandle(ref, () => ({
-    focus: () => inputRef.current?.focus(),
-  }));
-  return <input ref={inputRef} />;
-});
-```
+以下代码直接读取在线 Demo 使用的源文件，没有省略或改写。
 
-```vue title="Vue：template ref 与 defineExpose"
-<script setup lang="ts">
-const input = useTemplateRef("input");
-defineExpose({ focus: () => input.value?.focus() });
-</script>
+**React 源码**
 
-<template><input ref="input" /></template>
-```
+<SourceCodeBlock client:load lang="tsx" code={reactDemoSource} title="ReactDemo.tsx" />
+
+---
+
+**Vue 3 源码**
+
+<SourceCodeTabs
+  client:load
+  label="Vue 3 源码"
+  files={[
+    { title: "VueDemo.vue", lang: "vue", code: vueDemoSource },
+    { title: "SearchInput.vue", lang: "vue", code: vueSearchInputSource },
+  ]}
+/>
 
 ## 在线观察
 

@@ -6,6 +6,9 @@ description: React 在渲染期间从现有状态计算结果；Vue 使用 compu
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
 import Flow from "./Flow.astro";
+import { SourceCodeBlock } from "@/components/SourceCodeBlock";
+import reactDemoSource from "./ReactDemo.tsx?raw";
+import vueDemoSource from "./VueDemo.vue?raw";
 
 ## 核心结论
 
@@ -18,19 +21,19 @@ import Flow from "./Flow.astro";
   <Flow framework="vue" />
 </div>
 
-## 最小代码
+## 完整 Demo 源码
 
-```tsx title="React：render 中直接派生"
-const visibleProducts = products.filter((product) =>
-  product.name.includes(query),
-);
-```
+以下代码直接读取在线 Demo 使用的源文件，没有省略或改写。
 
-```ts title="Vue：computed 声明派生关系"
-const visibleProducts = computed(() =>
-  products.value.filter((product) => product.name.includes(query.value)),
-);
-```
+**React 源码**
+
+<SourceCodeBlock client:load lang="tsx" code={reactDemoSource} title="ReactDemo.tsx" />
+
+---
+
+**Vue 3 源码**
+
+<SourceCodeBlock client:load lang="vue" code={vueDemoSource} title="VueDemo.vue" />
 
 ## 在线观察
 

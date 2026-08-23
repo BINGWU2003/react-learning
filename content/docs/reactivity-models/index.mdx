@@ -6,6 +6,11 @@ description: 对比 Vue 3 的属性级依赖追踪与 React 的状态快照、se
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
 import ComparisonFlow from "./ComparisonFlow.astro";
+import { SourceCodeTabs } from "@/components/SourceCodeTabs";
+import reactDemoSource from "./ReactDemo.tsx?raw";
+import reactModelSource from "./react-update-model.ts?raw";
+import vueDemoSource from "./VueDemo.vue?raw";
+import vueModelSource from "./vue-reactivity-model.ts?raw";
 
 ## 核心结论
 
@@ -21,34 +26,33 @@ import ComparisonFlow from "./ComparisonFlow.astro";
   <ComparisonFlow />
 </div>
 
-## 教学模型
+## 完整 Demo 源码
 
-下面是刻意压缩的模型，不是 React Fiber、Hooks 或 Vue 响应式系统的真实源码。
+以下代码直接读取在线 Demo 与教学模型使用的源文件，没有省略或改写。教学模型用于解释更新机制，不是 React Fiber、Hooks 或 Vue 响应式系统的框架源码。
 
-```ts title="Vue：读取时追踪，写入时触发"
-function reactive(target) {
-  return new Proxy(target, {
-    get(object, key) {
-      track(object, key, activeEffect);
-      return Reflect.get(object, key);
-    },
-    set(object, key, value) {
-      Reflect.set(object, key, value);
-      trigger(object, key);
-      return true;
-    },
-  });
-}
-```
+**React 源码**
 
-```ts title="React：按顺序读取槽位，setter 排队更新"
-function useState(initialValue) {
-  const hook = hooks[currentHook] ?? createHook(initialValue);
-  const setState = (update) => scheduleRender(hook, update);
-  currentHook += 1;
-  return [hook.state, setState];
-}
-```
+<SourceCodeTabs
+  client:load
+  label="React 源码"
+  files={[
+    { title: "ReactDemo.tsx", lang: "tsx", code: reactDemoSource },
+    { title: "react-update-model.ts", lang: "ts", code: reactModelSource },
+  ]}
+/>
+
+---
+
+**Vue 3 源码**
+
+<SourceCodeTabs
+  client:load
+  label="Vue 3 源码"
+  files={[
+    { title: "VueDemo.vue", lang: "vue", code: vueDemoSource },
+    { title: "vue-reactivity-model.ts", lang: "ts", code: vueModelSource },
+  ]}
+/>
 
 ## 在线观察
 

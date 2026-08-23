@@ -5,6 +5,10 @@ description: 使用 useImmer 通过 Draft 更新嵌套对象和数组，同时�
 
 import { ImmerDemo } from "./ImmerDemo";
 import Flow from "./Flow.astro";
+import { SourceCodeTabs } from "@/components/SourceCodeTabs";
+import immerDemoSource from "./ImmerDemo.tsx?raw";
+import initialPlanSource from "./initialPlan.ts?raw";
+import immerStylesSource from "./ImmerDemo.css?raw";
 
 ## 核心结论
 
@@ -16,37 +20,21 @@ import Flow from "./Flow.astro";
   <Flow />
 </div>
 
-## 与普通 useState 对比
+## 完整 Demo 源码
 
-普通 `useState` 需要逐层复制对象和数组：
+以下代码直接读取在线 Demo 使用的源文件，没有省略或改写。
 
-```tsx title="不可变复制"
-setPlan((current) => ({
-  ...current,
-  modules: current.modules.map((module) =>
-    module.id === moduleId
-      ? {
-          ...module,
-          tasks: module.tasks.map((task) =>
-            task.id === taskId
-              ? { ...task, completed: !task.completed }
-              : task,
-          ),
-        }
-      : module,
-  ),
-}));
-```
+**React 源码**
 
-`useImmer` 允许直接描述目标位置的变化：
-
-```tsx title="Draft 更新"
-updatePlan((draft) => {
-  const module = draft.modules.find((item) => item.id === moduleId);
-  const task = module?.tasks.find((item) => item.id === taskId);
-  if (task) task.completed = !task.completed;
-});
-```
+<SourceCodeTabs
+  client:load
+  label="React useImmer 源码"
+  files={[
+    { title: "ImmerDemo.tsx", lang: "tsx", code: immerDemoSource },
+    { title: "initialPlan.ts", lang: "ts", code: initialPlanSource },
+    { title: "ImmerDemo.css", lang: "css", code: immerStylesSource },
+  ]}
+/>
 
 ## 在线 Demo
 

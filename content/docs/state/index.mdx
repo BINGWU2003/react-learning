@@ -5,6 +5,9 @@ description: 聚焦 React useState 与 Vue ref、reactive 更新数字和对象�
 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
+import { SourceCodeBlock } from "@/components/SourceCodeBlock";
+import reactDemoSource from "./ReactDemo.tsx?raw";
+import vueDemoSource from "./VueDemo.vue?raw";
 
 ## 核心结论
 
@@ -20,24 +23,19 @@ flowchart LR
   vue --> deps["触发读取该属性的依赖"]
 ```
 
-## 最小代码
+## 完整 Demo 源码
 
-```tsx title="React：使用函数式 setter 创建新对象"
-const [profile, setProfile] = useState({ name: "小明", score: 0 });
+以下代码直接读取在线 Demo 使用的源文件，没有省略或改写。
 
-setProfile((current) => ({
-  ...current,
-  score: current.score + 1,
-}));
-```
+**React 源码**
 
-```ts title="Vue：修改响应式容器"
-const count = ref(0);
-const profile = reactive({ name: "小明", score: 0 });
+<SourceCodeBlock client:load lang="tsx" code={reactDemoSource} title="ReactDemo.tsx" />
 
-count.value += 1;
-profile.score += 1;
-```
+---
+
+**Vue 3 源码**
+
+<SourceCodeBlock client:load lang="vue" code={vueDemoSource} title="VueDemo.vue" />
 
 ## 在线观察
 

@@ -6,6 +6,9 @@ description: React 显式连接 value 和事件处理函数；Vue 使用 v-model
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
 import Flow from "./Flow.astro";
+import { SourceCodeBlock } from "@/components/SourceCodeBlock";
+import reactDemoSource from "./ReactDemo.tsx?raw";
+import vueDemoSource from "./VueDemo.vue?raw";
 
 ## 核心结论
 
@@ -18,24 +21,19 @@ import Flow from "./Flow.astro";
   <Flow framework="vue" />
 </div>
 
-## 最小代码
+## 完整 Demo 源码
 
-```tsx title="React：显式受控输入"
-const [name, setName] = useState("");
+以下代码直接读取在线 Demo 使用的源文件，没有省略或改写。
 
-<input
-  value={name}
-  onChange={(event) => setName(event.target.value)}
-/>
-```
+**React 源码**
 
-```vue title="Vue：v-model 双向绑定"
-<script setup lang="ts">
-const name = ref("");
-</script>
+<SourceCodeBlock client:load lang="tsx" code={reactDemoSource} title="ReactDemo.tsx" />
 
-<template><input v-model="name" /></template>
-```
+---
+
+**Vue 3 源码**
+
+<SourceCodeBlock client:load lang="vue" code={vueDemoSource} title="VueDemo.vue" />
 
 ## 在线观察
 

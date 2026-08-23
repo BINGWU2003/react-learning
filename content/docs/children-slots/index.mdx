@@ -6,6 +6,11 @@ description: React 把嵌套内容作为 props.children 传递；Vue 通过默�
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
 import Flow from "./Flow.astro";
+import { SourceCodeTabs } from "@/components/SourceCodeTabs";
+import reactDemoSource from "./ReactDemo.tsx?raw";
+import reactProfileCardSource from "./ProfileCard.tsx?raw";
+import vueDemoSource from "./VueDemo.vue?raw";
+import vueProfileCardSource from "./ProfileCard.vue?raw";
 
 ## 核心结论
 
@@ -18,29 +23,33 @@ import Flow from "./Flow.astro";
   <Flow framework="vue" />
 </div>
 
-## 最小代码
+## 完整 Demo 源码
 
-```tsx title="React：children 加具名元素 prop"
-function Card({ children, footer }: CardProps) {
-  return <article>{children}<footer>{footer}</footer></article>;
-}
+以下代码直接读取在线 Demo 使用的源文件，没有省略或改写。
 
-<Card footer={<button>关注</button>}>个人简介</Card>
-```
+**React 源码**
 
-```vue title="Vue：默认与具名 slot"
-<!-- ProfileCard.vue -->
-<article>
-  <slot />
-  <footer><slot name="footer" /></footer>
-</article>
+<SourceCodeTabs
+  client:load
+  label="React 源码"
+  files={[
+    { title: "ReactDemo.tsx", lang: "tsx", code: reactDemoSource },
+    { title: "ProfileCard.tsx", lang: "tsx", code: reactProfileCardSource },
+  ]}
+/>
 
-<!-- 调用方 -->
-<ProfileCard>
-  个人简介
-  <template #footer><button>关注</button></template>
-</ProfileCard>
-```
+---
+
+**Vue 3 源码**
+
+<SourceCodeTabs
+  client:load
+  label="Vue 3 源码"
+  files={[
+    { title: "VueDemo.vue", lang: "vue", code: vueDemoSource },
+    { title: "ProfileCard.vue", lang: "vue", code: vueProfileCardSource },
+  ]}
+/>
 
 ## 在线观察
 

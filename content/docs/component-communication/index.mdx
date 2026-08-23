@@ -6,6 +6,11 @@ description: React 通过 props 传值并用回调向上传递事件；Vue 使�
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
 import Flow from "./Flow.astro";
+import { SourceCodeBlock } from "@/components/SourceCodeBlock";
+import { SourceCodeTabs } from "@/components/SourceCodeTabs";
+import reactDemoSource from "./ReactDemo.tsx?raw";
+import vueDemoSource from "./VueDemo.vue?raw";
+import vueMessageInputSource from "./MessageInput.vue?raw";
 
 ## 核心结论
 
@@ -18,26 +23,26 @@ import Flow from "./Flow.astro";
   <Flow framework="vue" />
 </div>
 
-## 最小代码
+## 完整 Demo 源码
 
-```tsx title="React：子组件调用回调 prop"
-function MessageInput({ onSend }: { onSend: (value: string) => void }) {
-  return <button onClick={() => onSend("hello")}>发送</button>;
-}
+以下代码直接读取在线 Demo 使用的源文件，没有省略或改写。
 
-<MessageInput onSend={setMessage} />;
-```
+**React 源码**
 
-```vue title="Vue：子组件声明并触发事件"
-<script setup lang="ts">
-const emit = defineEmits<{ send: [value: string] }>();
-</script>
+<SourceCodeBlock client:load lang="tsx" code={reactDemoSource} title="ReactDemo.tsx" />
 
-<template><button @click="emit('send', 'hello')">发送</button></template>
+---
 
-<!-- 父组件 -->
-<MessageInput @send="message = $event" />
-```
+**Vue 3 源码**
+
+<SourceCodeTabs
+  client:load
+  label="Vue 3 源码"
+  files={[
+    { title: "VueDemo.vue", lang: "vue", code: vueDemoSource },
+    { title: "MessageInput.vue", lang: "vue", code: vueMessageInputSource },
+  ]}
+/>
 
 ## 在线观察
 
