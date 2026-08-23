@@ -4,20 +4,15 @@ description: 使用 antd 构建表单界面、React Hook Form 管理状态，并
 ---
 
 import { FormDemo } from "./FormDemo";
+import Flow from "./Flow.astro";
 
 ## 职责分层
 
 antd、React Hook Form 和 Zod 不应重复做同一件事：antd 负责控件与反馈，RHF 保存字段状态并组织提交，Zod 是校验与类型的唯一事实来源。
 
-```mermaid
-flowchart LR
-  controls["antd 控件"] --> controller["Controller"]
-  controller --> rhf["React Hook Form 状态"]
-  rhf --> resolver["zodResolver"]
-  resolver --> schema["Zod schema"]
-  schema -->|"失败"| errors["Form.Item 错误"]
-  schema -->|"通过"| submit["类型安全的提交数据"]
-```
+<div class="not-prose my-6">
+  <Flow />
+</div>
 
 ## 最小连接代码
 

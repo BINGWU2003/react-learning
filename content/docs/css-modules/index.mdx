@@ -5,6 +5,7 @@ description: CSS Modules 通过生成后的类名隔离样式；Vue scoped 为�
 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
 
 ## 核心结论
 
@@ -12,13 +13,10 @@ import VueDemo from "./VueDemo.vue";
 
 ## 构建流程
 
-```mermaid
-flowchart TB
-  module["*.module.css"] --> map["生成唯一类名映射"]
-  map --> react["styles.card → className"]
-  sfc["Vue SFC + style scoped"] --> rewrite["改写选择器与 data-v-* 属性"]
-  rewrite --> vue["普通 class → 作用域 DOM"]
-```
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
 
 ## 最小代码
 

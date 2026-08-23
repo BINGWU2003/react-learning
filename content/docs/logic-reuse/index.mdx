@@ -5,6 +5,7 @@ description: React Hook 在组件 render 中按规则调用；Vue composable 在
 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
 
 ## 核心结论
 
@@ -12,15 +13,10 @@ Custom Hook 和 Composable 都复用有状态逻辑，而不是共享一份组�
 
 ## 复用边界
 
-```mermaid
-flowchart TB
-  source["window resize"] --> reactHook["useViewportSize"]
-  source --> vueComposable["useViewportSize"]
-  reactHook --> reactState["React state"]
-  vueComposable --> vueRefs["Vue refs"]
-  reactState --> reactUI["React 组件"]
-  vueRefs --> vueUI["Vue 组件"]
-```
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
 
 ## 最小代码
 

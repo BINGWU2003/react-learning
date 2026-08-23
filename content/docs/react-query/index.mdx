@@ -4,6 +4,7 @@ description: 使用 TanStack Query 管理异步服务端状态，并通过 Astro
 ---
 
 import { QueryDemo } from "./QueryDemo";
+import Flow from "./Flow.astro";
 
 ## 核心结论
 
@@ -11,18 +12,9 @@ import { QueryDemo } from "./QueryDemo";
 
 ## 查询与 Mutation 流程
 
-```mermaid
-flowchart LR
-  ui["列表 UI"] --> query["useQuery(queryKey)"]
-  query --> cache["Query Cache"]
-  cache -->|"fresh"| ui
-  cache -->|"missing / stale"| api["Astro API Endpoint"]
-  api --> cache
-  form["新增表单"] -.-> mutation["useMutation"]
-  mutation -.-> api
-  mutation -.-> invalidate["invalidateQueries"]
-  invalidate -.-> cache
-```
+<div class="not-prose my-6">
+  <Flow />
+</div>
 
 ## 最小配置
 

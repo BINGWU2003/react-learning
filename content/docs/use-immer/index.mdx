@@ -4,6 +4,7 @@ description: 使用 useImmer 通过 Draft 更新嵌套对象和数组，同时�
 ---
 
 import { ImmerDemo } from "./ImmerDemo";
+import Flow from "./Flow.astro";
 
 ## 核心结论
 
@@ -11,16 +12,9 @@ import { ImmerDemo } from "./ImmerDemo";
 
 ## Draft 到新状态
 
-```mermaid
-flowchart LR
-  event["用户操作"] --> producer["updatePlan(producer)"]
-  current["Current State"] --> draft["Proxy Draft"]
-  producer --> draft
-  draft --> changes["记录变化路径"]
-  changes --> next["Next State"]
-  current -.->|"复用未变化分支"| next
-  next --> render["React render"]
-```
+<div class="not-prose my-6">
+  <Flow />
+</div>
 
 ## 与普通 useState 对比
 

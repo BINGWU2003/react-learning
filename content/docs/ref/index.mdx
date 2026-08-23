@@ -5,6 +5,7 @@ description: React 通过 useRef 和 ref prop 暴露 DOM；Vue 使用模板 ref 
 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
 
 ## 核心结论
 
@@ -12,12 +13,10 @@ Ref 是逃生口：它保存一个不会直接参与声明式渲染的可变引�
 
 ## 命令式通道
 
-```mermaid
-flowchart LR
-  parent["父组件"] -.-> handle["公开句柄"]
-  handle --> child["子组件"]
-  child --> dom["input DOM"]
-```
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
 
 ## 最小代码
 

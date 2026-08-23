@@ -5,6 +5,7 @@ description: 对比 Vue 3 的属性级依赖追踪与 React 的状态快照、se
 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
+import ComparisonFlow from "./ComparisonFlow.astro";
 
 ## 核心结论
 
@@ -16,19 +17,9 @@ import VueDemo from "./VueDemo.vue";
 
 ## 两条更新链
 
-```mermaid
-flowchart TB
-  subgraph React
-    hook["按 Hook 顺序读取 state snapshot"] --> render["执行组件 render"]
-    render --> setter["事件调用 setter"]
-    setter -. "调度下一次 render" .-> hook
-  end
-  subgraph Vue
-    setup["setup 创建 ref / reactive"] --> track["effect 读取属性并 track"]
-    track --> trigger["赋值时 trigger 订阅者"]
-    trigger -. "进入下一轮更新" .-> track
-  end
-```
+<div class="not-prose my-6">
+  <ComparisonFlow />
+</div>
 
 ## 教学模型
 

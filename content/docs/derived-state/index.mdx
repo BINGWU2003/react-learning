@@ -5,6 +5,7 @@ description: React 在渲染期间从现有状态计算结果；Vue 使用 compu
 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
 
 ## 核心结论
 
@@ -12,12 +13,10 @@ import VueDemo from "./VueDemo.vue";
 
 ## 单一事实来源
 
-```mermaid
-flowchart LR
-  source["商品 + 搜索条件"] --> derive["filter 派生"]
-  derive --> visible["可见商品"]
-  source -. "变化后重新派生" .-> derive
-```
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
 
 ## 最小代码
 

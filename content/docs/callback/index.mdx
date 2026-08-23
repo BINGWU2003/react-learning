@@ -5,6 +5,7 @@ description: React 使用 useCallback 稳定回调引用；Vue setup 中声明�
 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
+import CallbackFlow from "./CallbackFlow.astro";
 
 ## 核心结论
 
@@ -12,13 +13,10 @@ React 组件每次 render 都会创建新的函数对象，`useCallback` 可以�
 
 ## 引用比较
 
-```mermaid
-flowchart LR
-  parent["父组件无关状态更新"] --> callback["回调引用"]
-  callback --> compare{"子组件会浅比较 props？"}
-  compare -->|"引用相同"| skip["跳过子组件更新"]
-  compare -->|"引用变化"| render["子组件更新"]
-```
+<div class="not-prose flow-comparison-grid">
+  <CallbackFlow framework="react" />
+  <CallbackFlow framework="vue" />
+</div>
 
 ## 最小代码
 

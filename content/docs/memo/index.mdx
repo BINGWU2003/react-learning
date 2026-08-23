@@ -5,6 +5,7 @@ description: React 使用 useMemo 缓存昂贵计算；Vue 使用 computed 声�
 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
 
 ## 核心结论
 
@@ -12,14 +13,10 @@ import VueDemo from "./VueDemo.vue";
 
 ## 缓存是否可复用
 
-```mermaid
-flowchart LR
-  deps["输入依赖"] --> compare{"依赖变化？"}
-  compare -->|"是"| calculate["重新计算"]
-  compare -->|"否"| cache["复用缓存"]
-  calculate --> cache
-  cache --> ui["渲染结果"]
-```
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
 
 ## 最小代码
 

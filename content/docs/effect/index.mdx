@@ -5,6 +5,7 @@ description: React 使用 useEffect 同步外部系统；Vue 使用 watch、watc
 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
 
 ## 核心结论
 
@@ -12,13 +13,10 @@ Effect 不是“状态变化后的通用代码区”，而是把组件状态与�
 
 ## 连接与清理
 
-```mermaid
-flowchart LR
-  state["roomId 变化"] --> cleanup["清理旧连接"]
-  cleanup --> connect["建立新连接"]
-  connect --> external["外部聊天室系统"]
-  external -. "组件卸载或 roomId 再次变化" .-> cleanup
-```
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
 
 ## 最小代码
 

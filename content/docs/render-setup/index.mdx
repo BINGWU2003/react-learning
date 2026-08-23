@@ -5,6 +5,7 @@ description: React 函数组件会随状态更新重新执行；Vue setup 通常
 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
 
 ## 核心结论
 
@@ -16,15 +17,10 @@ React 重新执行组件函数，不代表整棵真实 DOM 都会重建；Vue �
 
 ## 更新流程
 
-```mermaid
-flowchart LR
-  event["用户事件"] --> reactSetter["React setter"]
-  reactSetter --> reactRender["重新执行组件"]
-  reactRender --> reactUI["提交必要 DOM 变化"]
-  event --> vueRef["修改 Vue ref"]
-  vueRef --> vueEffect["触发相关响应式 effect"]
-  vueEffect --> vueUI["更新相关模板"]
-```
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
 
 ## 最小代码
 

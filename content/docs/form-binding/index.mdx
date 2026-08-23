@@ -5,6 +5,7 @@ description: React 显式连接 value 和事件处理函数；Vue 使用 v-model
 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
 
 ## 核心结论
 
@@ -12,13 +13,10 @@ import VueDemo from "./VueDemo.vue";
 
 ## 表单数据流
 
-```mermaid
-flowchart LR
-  dom["输入控件"] -.->|"用户输入"| event["更新事件"]
-  event --> state["组件状态"]
-  state -->|"value / v-model"| dom
-  state --> preview["实时预览"]
-```
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
 
 ## 最小代码
 

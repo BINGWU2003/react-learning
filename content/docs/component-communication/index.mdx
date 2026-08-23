@@ -5,6 +5,7 @@ description: React 通过 props 传值并用回调向上传递事件；Vue 使�
 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
 
 ## 核心结论
 
@@ -12,12 +13,10 @@ import VueDemo from "./VueDemo.vue";
 
 ## 数据流
 
-```mermaid
-flowchart TB
-  parent["父组件状态"] -->|"props"| child["子组件"]
-  child -.->|"React: callback prop"| parent
-  child -.->|"Vue: emit event"| parent
-```
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
 
 ## 最小代码
 

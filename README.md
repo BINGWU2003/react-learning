@@ -38,7 +38,7 @@ pnpm preview
 - `ReactDemo.tsx`：实际运行的 React 示例。
 - `VueDemo.vue`：实际运行的 Vue 示例。
 
-普通代码使用 fenced code block；流程图使用 `mermaid` fenced code block。React/Vue Demo 直接在 MDX 的独立小节中挂载，避免为每篇笔记增加展示包装器。
+普通代码使用 fenced code block；主题流程图由对应的 `Flow.astro` 提供 Mermaid 数据，并统一通过 `FlowDiagram.astro` 渲染卡片、暗色主题和放大视图。React/Vue Demo 仍直接在 MDX 的独立小节中挂载。
 
 新增主题后，在 `content/docs/meta.json` 中加入页面 slug。Fumadocs 提供默认文档宽度、右侧目录、侧边栏、全文搜索、前后页导航、代码高亮和明暗主题。
 

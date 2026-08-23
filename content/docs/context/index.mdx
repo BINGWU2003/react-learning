@@ -5,6 +5,7 @@ description: 两种方案都能绕过逐层传递，让相隔较远的组件共�
 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
 
 ## 核心结论
 
@@ -12,12 +13,10 @@ Context 和 provide/inject 都用于把依赖提供给后代组件，而不是�
 
 ## 依赖注入关系
 
-```mermaid
-flowchart TB
-  provider["祖先 Provider / provide"] --> profile["资料消费者"]
-  provider --> actions["操作消费者"]
-  actions -.->|"更新共享状态"| provider
-```
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
 
 ## 最小代码
 

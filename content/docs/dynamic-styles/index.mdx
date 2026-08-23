@@ -5,6 +5,7 @@ description: 两边都可以把运行时数据映射到 CSS 自定义属性，�
 
 import { ReactDemo } from "./ReactDemo";
 import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
 
 ## 核心结论
 
@@ -12,13 +13,10 @@ import VueDemo from "./VueDemo.vue";
 
 ## 状态到样式
 
-```mermaid
-flowchart LR
-  state["主题状态"] --> styleNode["生成 style 对象"]
-  styleNode --> vars["--accent / --radius"]
-  vars --> css["静态 CSS 规则"]
-  css --> ui["最终卡片"]
-```
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
 
 ## 最小代码
 
