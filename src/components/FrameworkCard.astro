@@ -1,11 +1,5 @@
 ---
-import { Code, TabItem, Tabs } from "@astrojs/starlight/components";
-
-type SourceFile = {
-  code: string;
-  fileName: string;
-  language: string;
-};
+import { SourceTabs, type SourceFile } from "./SourceTabs";
 
 type Props = {
   framework: "React" | "Vue 3";
@@ -46,15 +40,7 @@ const hasFlow = Astro.slots.has("flow");
   <div class="framework-card__source" aria-label={`${framework} 源代码`}>
     <p class="framework-card__eyebrow">实际运行源码</p>
     <div class="framework-card__code-list framework-card__code-list--tabs">
-      <Tabs>
-        {
-          sources.map(({ code, fileName, language }) => (
-            <TabItem label={fileName}>
-              <Code code={code.trim()} lang={language} />
-            </TabItem>
-          ))
-        }
-      </Tabs>
+      <SourceTabs sources={sources} client:visible />
     </div>
   </div>
 </article>

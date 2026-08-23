@@ -86,11 +86,43 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
 
 <script>
   let mermaidInstance: (typeof import("mermaid"))["default"] | undefined;
+  let themeObserver: MutationObserver | undefined;
 
   async function getMermaid() {
     if (mermaidInstance) return mermaidInstance;
 
     const { default: mermaid } = await import("mermaid");
+    mermaidInstance = mermaid;
+    return mermaid;
+  }
+
+  function resolveChartForTheme(chart: string, isDark: boolean) {
+    if (!isDark) return chart;
+
+    const darkColors: Record<string, string> = {
+      "#fffdf8": "#18181b",
+      "#fbfdfe": "#111827",
+      "#fbfdfb": "#111a16",
+      "#f4fafb": "#10252d",
+      "#f2f8f4": "#10231a",
+      "#e4f5fa": "#12313d",
+      "#e4f4eb": "#123124",
+      "#eee9df": "#27272a",
+      "#f8e4d8": "#3f2a22",
+      "#25221d": "#f4f4f5",
+      "#817a70": "#a1a1aa",
+    };
+
+    return Object.entries(darkColors).reduce(
+      (result, [light, dark]) => result.replaceAll(light, dark),
+      chart,
+    );
+  }
+
+  function initializeMermaid(
+    mermaid: (typeof import("mermaid"))["default"],
+    isDark: boolean,
+  ) {
     mermaid.initialize({
       startOnLoad: false,
       securityLevel: "strict",
@@ -101,20 +133,17 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
         useMaxWidth: true,
       },
       themeVariables: {
-        background: "#fffdf8",
-        primaryColor: "#eee9df",
-        primaryTextColor: "#25221d",
-        primaryBorderColor: "#cfc7ba",
-        lineColor: "#817a70",
-        secondaryColor: "#f8e4d8",
-        tertiaryColor: "#fffdf8",
+        background: isDark ? "#09090b" : "#ffffff",
+        primaryColor: isDark ? "#27272a" : "#f4f4f5",
+        primaryTextColor: isDark ? "#fafafa" : "#18181b",
+        primaryBorderColor: isDark ? "#52525b" : "#d4d4d8",
+        lineColor: isDark ? "#a1a1aa" : "#71717a",
+        secondaryColor: isDark ? "#27272a" : "#f4f4f5",
+        tertiaryColor: isDark ? "#18181b" : "#ffffff",
         fontFamily:
           'Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif',
       },
     });
-
-    mermaidInstance = mermaid;
-    return mermaid;
   }
 
   async function renderFlowDiagrams() {
@@ -126,6 +155,12 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
 
     try {
       const mermaid = await getMermaid();
+      const isDark = document.documentElement.classList.contains("dark");
+      initializeMermaid(mermaid, isDark);
+      nodes.forEach((node) => {
+        node.dataset.chart ??= node.textContent ?? "";
+        node.textContent = resolveChartForTheme(node.dataset.chart, isDark);
+      });
       await mermaid.run({ nodes });
     } catch (error) {
       console.error("流程图渲染失败", error);
@@ -312,6 +347,23 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
     enhanceFlowDiagrams();
   }
 
+  function watchThemeChanges() {
+    if (themeObserver) return;
+
+    themeObserver = new MutationObserver(() => {
+      document.querySelectorAll<HTMLElement>(".flow-card .mermaid").forEach((node) => {
+        node.removeAttribute("data-processed");
+        node.textContent = node.dataset.chart ?? "";
+      });
+      void renderFlowDiagrams();
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  }
+
   void initializeFlowDiagrams();
+  watchThemeChanges();
   document.addEventListener("astro:page-load", initializeFlowDiagrams);
 </script>

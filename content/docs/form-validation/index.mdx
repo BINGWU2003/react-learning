@@ -1,0 +1,20 @@
+---
+title: antd、React Hook Form 与 Zod
+description: 使用 antd 构建表单界面、React Hook Form 管理状态，并通过 Zod 统一运行时校验和 TypeScript 类型。
+full: true
+---
+
+import Example from "./Example.astro";
+
+这个示例把表单拆成三层职责：antd 提供控件和错误反馈，React Hook Form 保存字段状态并处理提交，Zod schema 则同时定义校验规则与 TypeScript 类型。
+
+填写表单并提交，可以观察必填、格式和勾选校验。校验通过后，页面会展示提交处理函数实际收到的数据。
+
+<Example />
+
+## 组合原则
+
+- 使用 `zodResolver` 把 schema 接入 `useForm`，避免手动同步两套校验结果。
+- antd 受控组件通过 `Controller` 连接 RHF；`Checkbox` 需要显式转换 `checked`。
+- `Form.Item` 只负责布局与错误展示，不再配置 `rules`，避免 antd 和 Zod 重复校验。
+- 通过 `z.infer` 从 schema 推导表单类型，让校验规则和 TypeScript 数据结构保持一致。

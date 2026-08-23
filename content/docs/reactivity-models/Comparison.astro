@@ -1,0 +1,26 @@
+---
+import FrameworkCard from "@/components/FrameworkCard.astro";
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import reactSource from "./ReactDemo.tsx?raw";
+import vueSource from "./VueDemo.vue?raw";
+---
+
+<div class="framework-comparison">
+  <FrameworkCard
+    framework="React"
+    tone="react"
+    summary="setter 请求更新；下一次 render 得到新的 state snapshot。"
+    sources={[{ code: reactSource, fileName: "ReactDemo.tsx", language: "tsx" }]}
+  >
+    <ReactDemo client:visible />
+  </FrameworkCard>
+  <FrameworkCard
+    framework="Vue 3"
+    tone="vue"
+    summary="读取时 track，赋值时 trigger 订阅了该属性的 effect。"
+    sources={[{ code: vueSource, fileName: "VueDemo.vue", language: "vue" }]}
+  >
+    <VueDemo client:visible />
+  </FrameworkCard>
+</div>

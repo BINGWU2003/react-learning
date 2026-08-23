@@ -1,0 +1,13 @@
+---
+title: 状态 API：useState 与 ref / reactive
+description: 聚焦 React useState 与 Vue ref、reactive 更新数字和对象状态时的 API 写法。
+full: true
+---
+
+import Comparison from "./Comparison.astro";
+
+本章只聚焦 API 写法：两个计数器维护相同的数字和对象状态，React 使用 setter 创建新值，Vue 修改 `ref.value` 或 `reactive` 属性。
+
+如果你想先理解它们为什么会更新，请阅读[Vue 3 响应式系统 vs React 状态更新模型](/reactivity-models/)。
+
+<Comparison />

@@ -1,0 +1,54 @@
+---
+title: useImmer 与复杂状态更新
+description: 使用 useImmer 通过 Draft 更新嵌套对象和数组，同时保持 React state 的不可变性。
+full: true
+---
+
+import Example from "./Example.astro";
+
+这个学习计划包含用户信息、模块和多层任务数组。尝试修改标题、编辑任务、批量完成或增删任务，可以观察 `useImmer` 如何让嵌套更新保持简洁。
+
+新增任务的输入值仍使用普通 `useState`：它们只是提交前的临时 UI 状态；真正具有嵌套结构、需要多种业务操作的学习计划才交给 `useImmer`。
+
+<Example />
+
+## 与普通 useState 对比
+
+普通 `useState` 需要逐层复制对象和数组：
+
+```tsx
+setPlan((current) => ({
+  ...current,
+  modules: current.modules.map((module) =>
+    module.id === moduleId
+      ? {
+          ...module,
+          tasks: module.tasks.map((task) =>
+            task.id === taskId
+              ? { ...task, completed: !task.completed }
+              : task,
+          ),
+        }
+      : module,
+  ),
+}));
+```
+
+`useImmer` 允许在 updater 中描述目标位置的变化：
+
+```tsx
+updatePlan((draft) => {
+  const module = draft.modules.find((item) => item.id === moduleId);
+  const task = module?.tasks.find((item) => item.id === taskId);
+
+  if (task) task.completed = !task.completed;
+});
+```
+
+## 使用边界
+
+- 只能修改 updater 回调收到的 `draft`，不要直接修改当前 React state。
+- 一次 updater 中选择“修改 Draft”或“返回替代状态”，不要同时使用两种方式。
+- 简单布尔值或单层对象通常不需要 Immer，普通 `useState` 更直接。
+- 操作逐渐演变为明确的业务事件时，可以进一步使用 `useImmerReducer`。
+- `useImmer` 管理本地客户端状态；远程服务端状态仍然更适合交给 TanStack Query。

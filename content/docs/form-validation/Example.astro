@@ -1,0 +1,24 @@
+---
+import FrameworkCard from "@/components/FrameworkCard.astro";
+import Flow from "./Flow.astro";
+import { FormDemo } from "./FormDemo";
+import demoSource from "./FormDemo.tsx?raw";
+import schemaSource from "./formSchema.ts?raw";
+import styleSource from "./FormDemo.css?raw";
+---
+
+<div class="framework-comparison practice-example">
+  <FrameworkCard
+    framework="React"
+    tone="react"
+    summary="RHF 管理状态，Zod 统一校验，antd 负责控件和反馈。"
+    sources={[
+      { code: demoSource, fileName: "FormDemo.tsx", language: "tsx" },
+      { code: schemaSource, fileName: "formSchema.ts", language: "ts" },
+      { code: styleSource, fileName: "FormDemo.css", language: "css" },
+    ]}
+  >
+    <FormDemo client:visible />
+    <Flow slot="flow" />
+  </FrameworkCard>
+</div>
