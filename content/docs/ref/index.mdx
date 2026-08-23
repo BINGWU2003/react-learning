@@ -1,11 +1,62 @@
 ---
 title: useRef 与模板 ref
-description: React 通过 useRef 和 forwardRef 暴露 DOM；Vue 使用模板 ref 与 defineExpose 访问子组件方法。
-full: true
+description: React 通过 useRef 和 ref prop 暴露 DOM；Vue 使用模板 ref 与 defineExpose 访问子组件方法。
 ---
 
-import Comparison from "./Comparison.astro";
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
 
-父组件控制子组件内部输入框：聚焦和全选都调用真实 DOM 方法，两边分别展示如何拿到这条命令式通道。
+## 核心结论
 
-<Comparison />
+Ref 是逃生口：它保存一个不会直接参与声明式渲染的可变引用，常用于聚焦、测量或对接第三方命令式 API。对子组件暴露能力时，应只公开必要方法。
+
+## 命令式通道
+
+```mermaid
+flowchart LR
+  parent["父组件"] -.-> handle["公开句柄"]
+  handle --> child["子组件"]
+  child --> dom["input DOM"]
+```
+
+## 最小代码
+
+```tsx title="React：forwardRef 与命令式句柄"
+const SearchInput = forwardRef<SearchHandle>((_props, ref) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  useImperativeHandle(ref, () => ({
+    focus: () => inputRef.current?.focus(),
+  }));
+  return <input ref={inputRef} />;
+});
+```
+
+```vue title="Vue：template ref 与 defineExpose"
+<script setup lang="ts">
+const input = useTemplateRef("input");
+defineExpose({ focus: () => input.value?.focus() });
+</script>
+
+<template><input ref="input" /></template>
+```
+
+## 在线观察
+
+父组件调用子组件公开的“聚焦”和“全选”方法，最终操作真实 DOM。
+
+### React
+
+<div class="not-prose"><ReactDemo client:visible /></div>
+
+### Vue 3
+
+<div class="not-prose"><VueDemo client:visible /></div>
+
+## 使用边界
+
+- 能通过 props 描述的 UI 状态，不要改成 ref 命令。
+- 不要在 render 期间读写 DOM ref；DOM 只在提交或挂载后存在。
+- 公开 `focus()` 比公开整个内部 DOM 更稳定，也更容易重构。
+- ref 中保存的普通值发生变化时不会自动触发 React render；Vue template ref 本身是响应式 ref，但 DOM 操作仍是命令式的。
+
+声明式父子通信见[组件通信](/component-communication/)。

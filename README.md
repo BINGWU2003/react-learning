@@ -1,6 +1,16 @@
 # React × Vue 差异笔记
 
-基于 Astro 与官方 Fumadocs UI 的个人学习笔记。每个主题使用同一个 Demo 分别实现 React 与 Vue 版本，并在页面中同时运行和展示真实源码。
+基于 Astro 与 Fumadocs UI 的 React × Vue 对照知识库。内容按知识关系组织，每篇笔记通过心智模型、Mermaid 流程图、最小代码和在线 Demo 解释一个明确主题。
+
+## 内容结构
+
+- 渲染与响应式：render、setup、状态与副作用。
+- 组件边界：通信、内容分发、上下文与 ref。
+- 复用与性能：Custom Hook、Composable、派生与缓存。
+- 表单与样式：表单数据流、样式隔离与 CSS 变量。
+- React 生态实践：表单校验、服务端状态和复杂本地状态。
+
+笔记借鉴 Obsidian 的原子主题与关联式组织方式，但 MDX 是唯一内容源。内部链接、Callout、代码块和流程图均使用 Fumadocs 能直接构建与搜索的语法。
 
 ## 本地运行
 
@@ -24,12 +34,13 @@ pnpm preview
 
 每篇笔记独立放在 `content/docs/<topic>/` 中：
 
-- `index.mdx`：标题、说明和对比组件入口。
+- `index.mdx`：完整知识正文，包含流程图、最小代码、Demo 入口和相关主题链接。
 - `ReactDemo.tsx`：实际运行的 React 示例。
 - `VueDemo.vue`：实际运行的 Vue 示例。
-- `Comparison.astro`：同时挂载示例，并通过 `?raw` 读取同一份源码。
 
-新增主题后，在 `content/docs/meta.json` 中加入页面 slug。Fumadocs 提供侧边栏、全文搜索、前后页导航、代码高亮和明暗主题。
+普通代码使用 fenced code block；流程图使用 `mermaid` fenced code block。React/Vue Demo 直接在 MDX 的独立小节中挂载，避免为每篇笔记增加展示包装器。
+
+新增主题后，在 `content/docs/meta.json` 中加入页面 slug。Fumadocs 提供默认文档宽度、右侧目录、侧边栏、全文搜索、前后页导航、代码高亮和明暗主题。
 
 ## 部署
 

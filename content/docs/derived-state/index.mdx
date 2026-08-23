@@ -1,11 +1,56 @@
 ---
 title: 派生状态与 computed
 description: React 在渲染期间从现有状态计算结果；Vue 使用 computed 声明缓存的派生值。
-full: true
 ---
 
-import Comparison from "./Comparison.astro";
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
 
-输入搜索词并切换“仅显示有库存”，两个 Demo 都从原始商品与筛选条件推导可见列表，不额外同步一份列表状态。
+## 核心结论
 
-<Comparison />
+可以从现有 props/state 推导的值，不要再存一份可变状态。React 通常在 render 中直接计算；Vue 通常用 `computed` 表达响应式派生关系。
+
+## 单一事实来源
+
+```mermaid
+flowchart LR
+  source["商品 + 搜索条件"] --> derive["filter 派生"]
+  derive --> visible["可见商品"]
+  source -. "变化后重新派生" .-> derive
+```
+
+## 最小代码
+
+```tsx title="React：render 中直接派生"
+const visibleProducts = products.filter((product) =>
+  product.name.includes(query),
+);
+```
+
+```ts title="Vue：computed 声明派生关系"
+const visibleProducts = computed(() =>
+  products.value.filter((product) => product.name.includes(query.value)),
+);
+```
+
+## 在线观察
+
+输入搜索词并切换“仅显示有库存”，两个 Demo 都只保存原始商品与筛选条件。
+
+### React
+
+<div class="not-prose"><ReactDemo client:visible /></div>
+
+### Vue 3
+
+<div class="not-prose"><VueDemo client:visible /></div>
+
+## 为什么不再存一份列表
+
+如果把 `visibleProducts` 也放进 state，就必须在每次来源变化时保持同步，容易产生过期数据和多余 Effect。派生值应尽量保持纯函数关系。
+
+<Callout title="派生不等于缓存" type="tip">
+React 中直接计算首先解决数据一致性；只有计算成本已经成为问题时，才进一步使用 `useMemo`。Vue 的 `computed` 同时表达派生关系并提供缓存。
+</Callout>
+
+昂贵计算继续阅读[useMemo 与 computed](/memo/)；状态更新基础见[useState 与 ref/reactive](/state/)。

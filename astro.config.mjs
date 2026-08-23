@@ -10,6 +10,7 @@ import {
   rehypeCode,
   remarkCodeTab,
   remarkHeading,
+  remarkMdxMermaid,
   remarkNpm,
   remarkStructure,
 } from "fumadocs-core/mdx-plugins";
@@ -17,6 +18,7 @@ import {
 /** @type {import("@astrojs/markdown-remark").RemarkPlugins} */
 const remarkPlugins = [
   remarkHeading,
+  remarkMdxMermaid,
   remarkCodeTab,
   remarkNpm,
   [remarkStructure, { exportAs: "structuredData" }],

@@ -1,22 +1,32 @@
 ---
 title: useImmer 与复杂状态更新
 description: 使用 useImmer 通过 Draft 更新嵌套对象和数组，同时保持 React state 的不可变性。
-full: true
 ---
 
-import Example from "./Example.astro";
+import { ImmerDemo } from "./ImmerDemo";
 
-这个学习计划包含用户信息、模块和多层任务数组。尝试修改标题、编辑任务、批量完成或增删任务，可以观察 `useImmer` 如何让嵌套更新保持简洁。
+## 核心结论
 
-新增任务的输入值仍使用普通 `useState`：它们只是提交前的临时 UI 状态；真正具有嵌套结构、需要多种业务操作的学习计划才交给 `useImmer`。
+`useImmer` 允许业务代码修改临时 Draft，Immer 再生成不可变的下一份 state，并复用没有变化的分支。它改善的是复杂本地状态的更新表达，不会改变 React 的 state snapshot 模型。
 
-<Example />
+## Draft 到新状态
+
+```mermaid
+flowchart LR
+  event["用户操作"] --> producer["updatePlan(producer)"]
+  current["Current State"] --> draft["Proxy Draft"]
+  producer --> draft
+  draft --> changes["记录变化路径"]
+  changes --> next["Next State"]
+  current -.->|"复用未变化分支"| next
+  next --> render["React render"]
+```
 
 ## 与普通 useState 对比
 
 普通 `useState` 需要逐层复制对象和数组：
 
-```tsx
+```tsx title="不可变复制"
 setPlan((current) => ({
   ...current,
   modules: current.modules.map((module) =>
@@ -34,21 +44,26 @@ setPlan((current) => ({
 }));
 ```
 
-`useImmer` 允许在 updater 中描述目标位置的变化：
+`useImmer` 允许直接描述目标位置的变化：
 
-```tsx
+```tsx title="Draft 更新"
 updatePlan((draft) => {
   const module = draft.modules.find((item) => item.id === moduleId);
   const task = module?.tasks.find((item) => item.id === taskId);
-
   if (task) task.completed = !task.completed;
 });
 ```
 
+## 在线 Demo
+
+修改计划、编辑任务、批量完成或增删任务，观察多层对象与数组如何保持易读的更新代码。
+
+<div class="not-prose"><ImmerDemo client:visible /></div>
+
 ## 使用边界
 
-- 只能修改 updater 回调收到的 `draft`，不要直接修改当前 React state。
-- 一次 updater 中选择“修改 Draft”或“返回替代状态”，不要同时使用两种方式。
+- 只能修改 updater 收到的 `draft`，不要直接修改当前 React state。
+- 一次 updater 中选择“修改 Draft”或“返回替代状态”，不要混用。
 - 简单布尔值或单层对象通常不需要 Immer，普通 `useState` 更直接。
-- 操作逐渐演变为明确的业务事件时，可以进一步使用 `useImmerReducer`。
-- `useImmer` 管理本地客户端状态；远程服务端状态仍然更适合交给 TanStack Query。
+- 业务操作逐渐形成明确事件时，可以进一步使用 `useImmerReducer`。
+- `useImmer` 管理本地客户端状态；远程服务端状态应交给[TanStack Query](/react-query/)。

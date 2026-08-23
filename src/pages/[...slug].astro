@@ -1,10 +1,16 @@
 ---
 import { Docs } from "@/components/docs";
 import Layout from "@/components/layout.astro";
+import Mermaid from "@/components/Mermaid.astro";
 import { getPageImageUrl, source } from "@/lib/source";
 import "@/styles/global.css";
 import { render, type CollectionEntry } from "astro:content";
 import type { TOCItemType } from "fumadocs-core/toc";
+import {
+  DocsBody,
+  DocsDescription,
+  DocsTitle,
+} from "fumadocs-ui/layouts/docs/page";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 
 interface Props {
@@ -40,19 +46,17 @@ const toc: TOCItemType[] = headings.map((heading) => ({
     tree={source.getPageTree()}
     pathname={Astro.url.pathname}
     params={Astro.params}
-    page={{ toc, full: page.data.full }}
+    page={{ toc }}
     client:load
   >
-    <h1 class="text-3xl font-semibold">{page.data.title}</h1>
+    <DocsTitle>{page.data.title}</DocsTitle>
     {
       page.data.description && (
-        <p class="mb-8 text-lg text-fd-muted-foreground">
-          {page.data.description}
-        </p>
+        <DocsDescription>{page.data.description}</DocsDescription>
       )
     }
-    <div class="prose flex-1">
-      <Content components={{ ...defaultMdxComponents }} />
-    </div>
+    <DocsBody>
+      <Content components={{ ...defaultMdxComponents, Mermaid }} />
+    </DocsBody>
   </Docs>
 </Layout>

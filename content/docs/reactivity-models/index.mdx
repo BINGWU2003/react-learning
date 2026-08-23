@@ -1,57 +1,86 @@
 ---
 title: Vue 3 响应式系统 vs React 状态更新模型
-description: 用相同的最小 Demo 对比 Vue 3 的属性级依赖追踪与 React 的状态快照、setter 和重新渲染模型。
-full: true
+description: 对比 Vue 3 的属性级依赖追踪与 React 的状态快照、setter 和重新渲染模型。
 ---
 
-import Comparison from "./Comparison.astro";
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
 
-两边都能做到“状态变化，界面更新”，但完整链路需要回答两个问题：**状态怎样跨更新保存并被再次找到**，以及**状态变化后谁负责计算下一次 UI**。
+## 核心结论
 
-Vue 3 通过 `setup` 创建稳定的响应式引用，再追踪哪个 effect 读取了哪个属性；React 把 state 保存在组件对应的 Hook 槽位中，按 Hook 调用顺序找回它，再通过 setter 调度下一次 render。
+两边都能做到“状态变化，界面更新”，但保存状态和发现更新的方式不同：Vue 保留稳定的响应式引用并追踪属性读取；React 按 Hook 顺序找回 state，通过 setter 调度下一次 render。
 
-<Callout title="React 算不算“响应式”？" type="info">
-广义上，React UI 会响应状态变化；但在框架原理对比中，不宜把它称为与 Vue 3 同类的“响应式系统”。更准确的说法是：**Vue 3 使用响应式依赖追踪，React 使用状态驱动的声明式更新模型。**
+<Callout title="React 算不算响应式？" type="info">
+广义上，React UI 会响应状态变化；但在原理对比中，更准确的说法是：**Vue 使用响应式依赖追踪，React 使用状态驱动的声明式更新模型。**
 </Callout>
 
-## 先观察真实框架
+## 两条更新链
 
-两个 Demo 都维护 `count` 和一个无关的 `theme`。先分别点击“count + 1”和“切换无关状态”，观察执行次数：
+```mermaid
+flowchart TB
+  subgraph React
+    hook["按 Hook 顺序读取 state snapshot"] --> render["执行组件 render"]
+    render --> setter["事件调用 setter"]
+    setter -. "调度下一次 render" .-> hook
+  end
+  subgraph Vue
+    setup["setup 创建 ref / reactive"] --> track["effect 读取属性并 track"]
+    track --> trigger["赋值时 trigger 订阅者"]
+    trigger -. "进入下一轮更新" .-> track
+  end
+```
 
-- React 不记录组件函数读取了哪个 state；任一 setter 产生有效更新，都可能让 `ReactDemo` 再执行一次。
-- Vue 的 `watchEffect` 只读取 `count`，所以修改 `theme` 不会重跑这个 effect；组件模板仍会因为自己读取了 `theme` 而更新。
+## 教学模型
 
-<Comparison />
+下面是刻意压缩的模型，不是 React Fiber、Hooks 或 Vue 响应式系统的真实源码。
 
-### Vue 3：setup 保存引用，属性读取建立关系
+```ts title="Vue：读取时追踪，写入时触发"
+function reactive(target) {
+  return new Proxy(target, {
+    get(object, key) {
+      track(object, key, activeEffect);
+      return Reflect.get(object, key);
+    },
+    set(object, key, value) {
+      Reflect.set(object, key, value);
+      trigger(object, key);
+      return true;
+    },
+  });
+}
+```
 
-`setup` 通常只在组件创建时执行一次。它创建的 ref、reactive 对象和事件函数由组件实例及闭包继续持有，所以模板更新时不需要从头重建这组状态。
+```ts title="React：按顺序读取槽位，setter 排队更新"
+function useState(initialValue) {
+  const hook = hooks[currentHook] ?? createHook(initialValue);
+  const setState = (update) => scheduleRender(hook, update);
+  currentHook += 1;
+  return [hook.state, setState];
+}
+```
 
-Vue 3 使用 `Proxy` 拦截属性读取和赋值。effect（组件的 render effect、`watchEffect`、`computed` 等）执行并读取属性时，`track` 建立依赖；属性变化时，`trigger` 找到订阅者并交给调度器。
+## 在线观察
 
-组件场景里，被触发的通常是组件的 render effect。Vue 随后重新运行组件更新函数并 patch DOM，编译器还能帮助缩小需要比较的范围。因此，“Vue 永远只修改一个精准 DOM 节点”也是过度简化；准确重点是**属性级依赖追踪决定谁需要更新**。
+两个 Demo 都维护 `count` 和无关的 `theme`。React 不记录组件函数读取了哪个 state；Vue 的 `watchEffect` 只会重新运行读取了变更属性的 effect。
 
-### React：Hook 顺序找回 state，setter 提交更新
+### React
 
-React state 不保存在函数的局部变量里，而是由 React 与对应的组件实例关联保存。每次 render，Hook 按稳定的调用顺序读取对应槽位，因此组件函数再次执行后，`useState` 仍能找回正确的 state。
+<div class="not-prose"><ReactDemo client:visible /></div>
 
-React 不追踪组件函数在执行期间读取了 `state.count` 还是 `state.theme`。setter 把更新加入队列，React 调度下一次 render，再次调用相关组件函数；这一次调用从 Hook 槽位读取一份新的 state snapshot，并据此计算 UI。
+### Vue 3
 
-同一事件中的多次更新通常会被批处理；如果新旧状态满足 React 的相等判断，也可能跳过后续工作。因此，“调用 setter 就一定立刻同步重跑整个应用”同样不准确。
+<div class="not-prose"><VueDemo client:visible /></div>
 
 ## 一张表记住差异
 
 | 观察维度 | Vue 3 | React |
 | --- | --- | --- |
 | 核心抽象 | 稳定响应式引用与 effect 依赖图 | Hook 槽位、state snapshot 与 render 调度 |
-| 状态保存在哪里 | `setup` 创建的 ref/reactive 由组件实例和闭包持有 | React 在组件实例对应的数据结构中保存 Hook state |
-| 再次执行时怎样找到状态 | `setup` 不重跑，继续使用原来的响应式引用 | Hook 按稳定调用顺序读取对应的 state 槽位 |
-| 如何感知变化 | `ref` / `reactive` 的读取与赋值被拦截 | 必须调用 state setter 提交更新 |
-| 是否追踪属性读取 | 是，`track` 记录当前 effect | 否，不记录组件读过哪个 state 属性 |
-| 更新时主要重做什么 | 触发订阅该属性的 effect；组件 render effect 负责更新 | 重新执行相关函数组件，计算下一棵 UI |
-| 组件初始化逻辑 | `setup` 通常只执行一次 | 函数组件本身就是 render，会再次执行 |
-| 批处理与跳过 | 调度器合并任务，按依赖触发 | 批处理 setter；相同值可能跳过工作 |
+| 状态保存 | `setup` 创建的引用由组件实例持有 | React 在组件对应的数据结构中保存 Hook state |
+| 如何感知变化 | 拦截 ref/reactive 的读取与赋值 | 必须调用 setter 提交更新 |
+| 是否追踪属性读取 | 是，`track` 记录当前 effect | 否，不记录组件读取了哪个 state 属性 |
+| 更新工作 | 触发订阅该属性的 effect | 重新执行相关函数组件并计算 UI |
 
-> **一句话心智模型：**Vue 3 是“**setup 留住响应式引用，我记得谁读过属性，变化时通知它**”；React 是“**我按 Hook 顺序找回 state，你用 setter 提交更新，我再用新快照执行组件**”。
+> **一句话心智模型：**Vue 是“我记得谁读过属性，变化时通知它”；React 是“你用 setter 提交更新，我用新的 state snapshot 再执行组件”。
 
-下一步可以回到[状态 API：useState 与 ref / reactive](/state/)，专门比较两边更新数字和对象状态时的写法。
+下一步阅读[状态 API](/state/)比较日常更新写法，或回到[render 与 setup](/render-setup/)复习组件执行边界。

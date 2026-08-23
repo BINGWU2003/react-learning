@@ -1,0 +1,63 @@
+---
+type Props = {
+  chart: string;
+};
+
+const { chart } = Astro.props;
+---
+
+<div class="not-prose my-6 overflow-x-auto rounded-xl border bg-fd-card p-4">
+  <pre class="m-0 min-w-max bg-transparent p-0 text-center" data-mermaid>{chart}</pre>
+</div>
+
+<script>
+  let renderCounter = 0;
+  let themeObserver: MutationObserver | undefined;
+
+  async function renderCharts() {
+    const nodes = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-mermaid]"),
+    );
+    if (nodes.length === 0) return;
+
+    const { default: mermaid } = await import("mermaid");
+    const dark = document.documentElement.classList.contains("dark");
+    const theme = dark ? "dark" : "default";
+
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme,
+      flowchart: { curve: "basis", htmlLabels: false, useMaxWidth: true },
+    });
+
+    for (const node of nodes) {
+      if (node.dataset.mermaidTheme === theme) continue;
+      const source = node.dataset.mermaidSource ?? node.textContent ?? "";
+      node.dataset.mermaidSource = source;
+
+      try {
+        renderCounter += 1;
+        const { svg } = await mermaid.render(`mermaid-${renderCounter}`, source);
+        node.innerHTML = svg;
+        node.dataset.mermaidTheme = theme;
+      } catch (error) {
+        node.textContent = source;
+        console.error("Mermaid 流程图渲染失败", error);
+      }
+    }
+  }
+
+  function watchTheme() {
+    if (themeObserver) return;
+    themeObserver = new MutationObserver(() => void renderCharts());
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  }
+
+  void renderCharts();
+  watchTheme();
+  document.addEventListener("astro:page-load", () => void renderCharts());
+</script>

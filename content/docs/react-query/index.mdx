@@ -1,21 +1,64 @@
 ---
 title: TanStack Query 服务端状态与缓存
 description: 使用 TanStack Query 管理异步服务端状态，并通过 Astro API Endpoint 处理真实的查询、错误和 Mutation 请求。
-full: true
 ---
 
-import Example from "./Example.astro";
+import { QueryDemo } from "./QueryDemo";
 
-这个示例用 `queryKey` 区分不同学习方向的缓存，并通过 `staleTime` 设置十秒的新鲜期。浏览器会向 Astro API Endpoint 发出真实 HTTP 请求；部署到 Netlify 后，该 Endpoint 由 Netlify Function 运行。
+## 核心结论
 
-新增资料由 Mutation 完成。请求成功后不手动修改列表，而是调用 `invalidateQueries` 让所有列表缓存失效，由查询重新同步服务端数据。
+服务端状态拥有缓存、新鲜度、并发请求和重新同步等生命周期，不适合只用 `useEffect + useState` 手写。TanStack Query 用 `queryKey` 标识资源，用 `staleTime` 表达何时需要重新获取。
 
-<Example />
+## 查询与 Mutation 流程
+
+```mermaid
+flowchart LR
+  ui["列表 UI"] --> query["useQuery(queryKey)"]
+  query --> cache["Query Cache"]
+  cache -->|"fresh"| ui
+  cache -->|"missing / stale"| api["Astro API Endpoint"]
+  api --> cache
+  form["新增表单"] -.-> mutation["useMutation"]
+  mutation -.-> api
+  mutation -.-> invalidate["invalidateQueries"]
+  invalidate -.-> cache
+```
+
+## 最小配置
+
+```ts title="查询键包含全部筛选条件"
+export const resourceListOptions = (topic: TopicFilter) =>
+  queryOptions({
+    queryKey: ["resources", "list", { topic }],
+    queryFn: ({ signal }) => fetchResources(topic, signal),
+    staleTime: 10_000,
+  });
+```
+
+```tsx title="Mutation 成功后让相关列表重新同步"
+const mutation = useMutation({
+  mutationFn: createResource,
+  onSuccess: () =>
+    queryClient.invalidateQueries({ queryKey: ["resources", "list"] }),
+});
+```
+
+## 在线 Demo
+
+切换主题过滤、使缓存失效、模拟接口错误或新增资料。浏览器会向真实 Astro API Endpoint 发出 HTTP 请求。
+
+<div class="not-prose"><QueryDemo client:visible /></div>
 
 ## 观察重点
 
-- `isPending` 表示当前还没有可展示的数据，`isFetching` 表示查询函数正在运行，包含后台更新。
-- 查询参数必须进入 `queryKey`，否则不同筛选条件可能错误地共享同一份缓存。
-- `queryFn` 接收 TanStack Query 提供的 `AbortSignal`，过期请求可以被及时取消。
-- API Route 设置 `prerender = false`，只有该路由按需执行，其余 Fumadocs 页面继续静态生成。
-- Demo 数据只保存在 Function 进程内存中，重启、冷启动或切换实例后可能恢复初始状态；正式数据应使用持久化存储。
+- `isPending` 表示还没有可展示的数据；`isFetching` 表示查询函数正在运行，也包含后台更新。
+- 所有查询参数都必须进入 `queryKey`，否则不同筛选条件会错误共享缓存。
+- `queryFn` 接收 `AbortSignal`，过期请求可以被及时取消。
+- Mutation 成功后让查询失效，由资源自己的查询逻辑负责重新同步。
+- API Route 设置 `prerender = false`；其他 Fumadocs 页面仍然静态生成。
+
+<Callout title="Demo 存储边界" type="warning">
+示例数据只保存在 Function 进程内存中，冷启动或切换实例后可能恢复。正式数据必须使用持久化存储。
+</Callout>
+
+组件与外部系统同步的基础见[useEffect 与 watch](/effect/)。

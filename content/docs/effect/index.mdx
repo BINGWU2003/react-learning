@@ -1,24 +1,68 @@
 ---
 title: useEffect 与 watch
 description: React 使用 useEffect 同步外部系统；Vue 使用 watch、watchEffect 或生命周期 API 处理对应场景。
-full: true
 ---
 
-import Comparison from "./Comparison.astro";
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
 
-切换聊天室时，需要先断开旧连接再建立新连接。这个 Demo 对比两边如何执行副作用、声明依赖并注册清理函数。
+## 核心结论
 
-<Comparison />
+Effect 不是“状态变化后的通用代码区”，而是把组件状态与网络连接、浏览器 API、订阅等外部系统同步。能够在 render 或 `computed` 中得到的值，不应再用 Effect 保存一份。
+
+## 连接与清理
+
+```mermaid
+flowchart LR
+  state["roomId 变化"] --> cleanup["清理旧连接"]
+  cleanup --> connect["建立新连接"]
+  connect --> external["外部聊天室系统"]
+  external -. "组件卸载或 roomId 再次变化" .-> cleanup
+```
+
+## 最小代码
+
+```tsx title="React：提交后按依赖同步"
+useEffect(() => {
+  const connection = connect(roomId);
+  return () => connection.disconnect();
+}, [roomId]);
+```
+
+```ts title="Vue：监听明确的响应式 source"
+watch(
+  roomId,
+  (id, _oldId, onCleanup) => {
+    const connection = connect(id);
+    onCleanup(() => connection.disconnect());
+  },
+  { immediate: true },
+);
+```
+
+## 在线观察
+
+切换聊天室，观察旧连接总是在新连接建立前清理。这个示例依赖浏览器运行环境，因此使用纯客户端加载。
+
+### React
+
+<div class="not-prose"><ReactDemo client:only="react" /></div>
+
+### Vue 3
+
+<div class="not-prose"><VueDemo client:only="vue" /></div>
 
 ## API 对照
 
 | React | Vue | 适用场景 |
 | --- | --- | --- |
-| `useEffect(fn, [roomId])` | `watch(roomId, fn, { immediate: true })` | 明确监听某个状态 |
-| `useEffect(fn, [])` | `onMounted` + `onUnmounted` | 只关心挂载和卸载 |
-| `useEffect` 读取多个依赖 | `watchEffect` | Vue 自动追踪回调中读取的响应式状态 |
-| `return cleanup` | `onCleanup` | 下次执行或组件卸载前清理 |
+| `useEffect(fn, [source])` | `watch(source, fn)` | 明确监听某个状态 |
+| `useEffect(fn, [])` | `onMounted` / `onUnmounted` | 组件生命周期 |
+| 手动列出多个依赖 | `watchEffect` 自动追踪读取 | 同步依赖较多的副作用 |
+| `return cleanup` | `onCleanup` | 下次执行或卸载前清理 |
 
-React 把副作用统一为“渲染后与外部系统同步”，依赖需要显式列出；Vue 则按意图拆分为 `watch`、`watchEffect` 和生命周期 API。
+<Callout title="React Strict Mode" type="warning">
+开发模式可能额外执行一次“连接 → 清理 → 再连接”，用于检查清理逻辑是否完整。正确的 Effect 应能安全地重复建立和销毁。
+</Callout>
 
-> **开发模式：**React 的 Strict Mode 可能额外执行一次“连接 → 清理 → 再连接”，用于检查清理逻辑是否完整。
+服务端数据请求通常交给[TanStack Query](/react-query/)；纯派生计算应回到[派生状态](/derived-state/)。
