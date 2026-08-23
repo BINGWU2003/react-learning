@@ -1,0 +1,19 @@
+---
+import { Card } from "fumadocs-ui/components/card";
+
+type Props = {
+  framework: "React" | "Vue 3" | "原理说明";
+  summary?: string;
+  tone: "react" | "vue" | "compare";
+};
+
+const { framework, summary, tone } = Astro.props;
+---
+
+<Card
+  title={framework}
+  description={summary}
+  className={`chapter-card chapter-card--${tone}`}
+>
+  <slot />
+</Card>

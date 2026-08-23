@@ -48,7 +48,7 @@ const chart = `flowchart LR
 <section class="comparison-flow" aria-label="Vue 3 与 React 状态更新流程对比">
   <header class="comparison-flow__header">
     <div>
-      <p class="framework-card__eyebrow">一张图连起完整链路</p>
+      <p class="framework-flow__eyebrow">一张图连起完整链路</p>
       <h3>状态如何保存、被找到，并驱动下一次 UI</h3>
     </div>
     <div class="comparison-flow__legend" aria-label="流程图颜色图例">
@@ -67,7 +67,7 @@ const chart = `flowchart LR
     framework="Vue 3 × React"
     tone="compare"
     chart={chart}
-    description="绿色泳道从 setup 与响应式属性出发；蓝色泳道从组件实例与 Hook 槽位出发。点击图表可进入放大视图。"
+    description="绿色泳道从 setup 与响应式属性出发；蓝色泳道从组件实例与 Hook 槽位出发。使用右上角的放大按钮可进入放大视图。"
     showHeader={false}
   />
 </section>
@@ -76,10 +76,10 @@ const chart = `flowchart LR
   .comparison-flow {
     margin-top: 1.25rem;
     overflow: hidden;
-    border: 1px solid var(--ui-ink);
+    border: 1px solid var(--color-fd-border);
     border-radius: var(--ui-radius-lg);
     background: var(--ui-surface);
-    box-shadow: 4px 4px 0 var(--ui-line);
+    box-shadow: none;
   }
 
   .comparison-flow__header {
@@ -88,11 +88,10 @@ const chart = `flowchart LR
     align-items: flex-start;
     justify-content: space-between;
     padding: 1rem 1.1rem;
-    border-top: 3px solid var(--ui-accent);
     border-bottom: 1px solid var(--ui-line);
   }
 
-  .comparison-flow__header :global(.framework-card__eyebrow) {
+  .comparison-flow__header :global(.framework-flow__eyebrow) {
     margin-bottom: 0.5rem;
   }
 
@@ -118,7 +117,7 @@ const chart = `flowchart LR
     gap: 0.35rem;
     align-items: center;
     color: var(--ui-ink-muted);
-    font-family: var(--__sl-font-mono);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.65rem;
     font-weight: 700;
   }

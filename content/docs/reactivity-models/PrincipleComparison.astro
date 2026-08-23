@@ -1,21 +1,18 @@
 ---
 import { SourceTabs } from "@/components/SourceTabs";
+import { Card } from "fumadocs-ui/components/card";
+import { Step, Steps } from "fumadocs-ui/components/steps";
 import reactModel from "./react-update-model.ts?raw";
 import vueModel from "./vue-reactivity-model.ts?raw";
 ---
 
 <div class="principle-comparison">
-  <article class="principle-card principle-card--vue">
-    <header>
-      <span>Vue 3 / STABLE REFS + PROPERTY GRAPH</span>
-      <h3>setup 保存引用，属性读取建立依赖</h3>
-      <p>setup 创建一次状态；effect 读取时 track，属性赋值时 trigger。</p>
-    </header>
-    <ol class="principle-steps" aria-label="Vue 响应式教学流程">
-      <li><b>01</b><span>setup</span><strong>store</strong></li>
-      <li><b>02</b><span>读取属性</span><strong>track</strong></li>
-      <li><b>03</b><span>写入属性</span><strong>trigger → effect</strong></li>
-    </ol>
+  <Card title="Vue 3" description="setup 保存引用，属性读取建立依赖" className="principle-card principle-card--vue">
+    <Steps>
+      <Step><h4>setup</h4><p>创建并保存响应式引用。</p></Step>
+      <Step><h4>track</h4><p>effect 读取属性时建立依赖。</p></Step>
+      <Step><h4>trigger</h4><p>属性写入后通知对应 effect。</p></Step>
+    </Steps>
     <div class="principle-code">
       <SourceTabs
         sources={[{
@@ -26,19 +23,14 @@ import vueModel from "./vue-reactivity-model.ts?raw";
         client:visible
       />
     </div>
-  </article>
+  </Card>
 
-  <article class="principle-card principle-card--react">
-    <header>
-      <span>React / HOOK SLOTS + RENDER PIPELINE</span>
-      <h3>按 Hook 顺序找回 state，再调度 render</h3>
-      <p>Hook 槽位回答“哪份 state”；setter 与调度回答“何时再执行”。</p>
-    </header>
-    <ol class="principle-steps" aria-label="React 状态更新教学流程">
-      <li><b>01</b><span>useState</span><strong>Hook slot</strong></li>
-      <li><b>02</b><span>setter</span><strong>enqueue</strong></li>
-      <li><b>03</b><span>重新渲染</span><strong>reset → render</strong></li>
-    </ol>
+  <Card title="React" description="按 Hook 顺序找回 state，再调度 render" className="principle-card principle-card--react">
+    <Steps>
+      <Step><h4>Hook slot</h4><p>useState 按调用顺序找到状态。</p></Step>
+      <Step><h4>enqueue</h4><p>setter 把更新加入队列。</p></Step>
+      <Step><h4>render</h4><p>重置 Hook 索引并重新执行组件。</p></Step>
+    </Steps>
     <div class="principle-code">
       <SourceTabs
         sources={[{
@@ -49,7 +41,7 @@ import vueModel from "./vue-reactivity-model.ts?raw";
         client:visible
       />
     </div>
-  </article>
+  </Card>
 </div>
 
 <style>
@@ -64,14 +56,8 @@ import vueModel from "./vue-reactivity-model.ts?raw";
   .principle-card {
     --principle-color: var(--ui-accent);
     min-width: 0;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
     margin: 0;
-    border: 1px solid var(--ui-ink);
-    border-radius: var(--ui-radius-lg);
-    background: var(--ui-surface);
-    box-shadow: 3px 3px 0 var(--ui-line);
+    box-shadow: none;
   }
 
   .principle-card--vue {
@@ -82,80 +68,12 @@ import vueModel from "./vue-reactivity-model.ts?raw";
     --principle-color: var(--ui-react);
   }
 
-  .principle-card header {
-    min-height: 9.4rem;
-    padding: 1rem 1.1rem;
-    border-top: 3px solid var(--principle-color);
-    border-bottom: 1px solid var(--ui-line);
-  }
-
-  .principle-card header span {
-    color: var(--ui-ink-muted);
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 0.62rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-  }
-
-  .principle-card h3 {
-    margin: 0.6rem 0 0;
-    color: var(--ui-ink);
-    font-size: 1rem;
-  }
-
-  .principle-card header p {
-    margin: 0.45rem 0 0;
-    color: var(--ui-ink-muted);
-    font-size: 0.78rem;
-    line-height: 1.55;
-  }
-
-  .principle-steps {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    padding: 0;
-    margin: 0;
-    border-bottom: 1px solid var(--ui-line);
-    list-style: none;
-  }
-
-  .principle-steps li {
-    display: grid;
-    gap: 0.18rem;
-    min-width: 0;
-    padding: 0.7rem;
-  }
-
-  .principle-steps li + li {
-    border-inline-start: 1px solid var(--ui-line);
-  }
-
-  .principle-steps b,
-  .principle-steps strong {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 0.62rem;
-  }
-
-  .principle-steps b {
-    color: var(--principle-color);
-  }
-
-  .principle-steps span {
-    overflow: hidden;
-    color: var(--ui-ink-muted);
-    font-size: 0.7rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .principle-steps strong {
-    color: var(--ui-ink);
+  .principle-card :global(.fd-steps) {
+    margin-top: 1rem;
   }
 
   .principle-code {
-    flex: 1;
-    padding: 0.85rem;
-    background: var(--ui-surface-muted);
+    margin-top: 1rem;
   }
 
   .principle-code :global(figure) {
@@ -165,29 +83,10 @@ import vueModel from "./vue-reactivity-model.ts?raw";
     box-shadow: none;
   }
 
-  @media (max-width: 72rem) {
+  @media (max-width: 63.999rem) {
     .principle-comparison {
       grid-template-columns: 1fr;
     }
 
-    .principle-card header {
-      min-height: 0;
-    }
-  }
-
-  @media (max-width: 30rem) {
-    .principle-comparison {
-      margin-inline: -1rem;
-    }
-
-    .principle-card {
-      border-inline: 0;
-      border-radius: 0;
-      box-shadow: none;
-    }
-
-    .principle-steps li {
-      padding-inline: 0.55rem;
-    }
   }
 </style>

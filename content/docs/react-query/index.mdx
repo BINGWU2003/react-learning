@@ -17,5 +17,5 @@ import Example from "./Example.astro";
 - `isPending` 表示当前还没有可展示的数据，`isFetching` 表示查询函数正在运行，包含后台更新。
 - 查询参数必须进入 `queryKey`，否则不同筛选条件可能错误地共享同一份缓存。
 - `queryFn` 接收 TanStack Query 提供的 `AbortSignal`，过期请求可以被及时取消。
-- API Route 设置 `prerender = false`，只有该路由按需执行，Starlight 文档继续静态生成。
+- API Route 设置 `prerender = false`，只有该路由按需执行，其余 Fumadocs 页面继续静态生成。
 - Demo 数据只保存在 Function 进程内存中，重启、冷启动或切换实例后可能恢复初始状态；正式数据应使用持久化存储。

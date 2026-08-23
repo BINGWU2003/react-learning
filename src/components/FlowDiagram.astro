@@ -146,10 +146,10 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
     });
   }
 
-  async function renderFlowDiagrams() {
+  async function renderFlowDiagrams(root: ParentNode = document) {
     const nodes = Array.from(
-      document.querySelectorAll<HTMLElement>(".flow-card .mermaid:not([data-processed])"),
-    );
+      root.querySelectorAll<HTMLElement>(".flow-card .mermaid:not([data-processed])"),
+    ).filter((node) => !node.closest("[hidden]"));
 
     if (nodes.length === 0) return;
 
@@ -161,9 +161,19 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
         node.dataset.chart ??= node.textContent ?? "";
         node.textContent = resolveChartForTheme(node.dataset.chart, isDark);
       });
-      await mermaid.run({ nodes });
+      for (const node of nodes) {
+        try {
+          await mermaid.run({ nodes: [node] });
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          node.textContent = node.dataset.chart ?? "";
+          node.dataset.flowError = "true";
+          console.error(`流程图渲染失败：${message}`);
+        }
+      }
     } catch (error) {
-      console.error("流程图渲染失败", error);
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`流程图初始化失败：${message}`);
     }
   }
 
@@ -280,8 +290,6 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
         closeButton.focus();
       };
 
-      canvas.addEventListener("click", openDialog);
-      expandButton.addEventListener("click", (event) => event.stopPropagation());
       expandButton.addEventListener("click", openDialog);
       zoomIn.addEventListener("click", () => setScale(state.scale * 1.2));
       zoomOut.addEventListener("click", () => setScale(state.scale / 1.2));
@@ -351,8 +359,9 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
     if (themeObserver) return;
 
     themeObserver = new MutationObserver(() => {
-      document.querySelectorAll<HTMLElement>(".flow-card .mermaid").forEach((node) => {
+      document.querySelectorAll<HTMLElement>(".flow-card .mermaid[data-chart]").forEach((node) => {
         node.removeAttribute("data-processed");
+        node.removeAttribute("data-flow-error");
         node.textContent = node.dataset.chart ?? "";
       });
       void renderFlowDiagrams();
@@ -366,4 +375,9 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
   void initializeFlowDiagrams();
   watchThemeChanges();
   document.addEventListener("astro:page-load", initializeFlowDiagrams);
+  document.addEventListener("chapter-tab-change", (event) => {
+    if (!(event instanceof CustomEvent) || event.detail?.value !== "flow") return;
+    const root = event.detail.root;
+    if (root instanceof HTMLElement) void renderFlowDiagrams(root);
+  });
 </script>

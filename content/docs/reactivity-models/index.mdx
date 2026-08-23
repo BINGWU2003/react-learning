@@ -5,18 +5,14 @@ full: true
 ---
 
 import Comparison from "./Comparison.astro";
-import ComparisonFlow from "./ComparisonFlow.astro";
-import PrincipleComparison from "./PrincipleComparison.astro";
-
-<div className="wide-chapter">
 
 两边都能做到“状态变化，界面更新”，但完整链路需要回答两个问题：**状态怎样跨更新保存并被再次找到**，以及**状态变化后谁负责计算下一次 UI**。
 
 Vue 3 通过 `setup` 创建稳定的响应式引用，再追踪哪个 effect 读取了哪个属性；React 把 state 保存在组件对应的 Hook 槽位中，按 Hook 调用顺序找回它，再通过 setter 调度下一次 render。
 
-:::note[React 算不算“响应式”？]
+<Callout title="React 算不算“响应式”？" type="info">
 广义上，React UI 会响应状态变化；但在框架原理对比中，不宜把它称为与 Vue 3 同类的“响应式系统”。更准确的说法是：**Vue 3 使用响应式依赖追踪，React 使用状态驱动的声明式更新模型。**
-:::
+</Callout>
 
 ## 先观察真实框架
 
@@ -26,20 +22,6 @@ Vue 3 通过 `setup` 创建稳定的响应式引用，再追踪哪个 effect 读
 - Vue 的 `watchEffect` 只读取 `count`，所以修改 `theme` 不会重跑这个 effect；组件模板仍会因为自己读取了 `theme` 而更新。
 
 <Comparison />
-
-## 把两条链连起来
-
-真实 Demo 展示的是结果，下面的双泳道把“保存状态”和“触发更新”连成一圈。虚线表示进入下一次交互或 render，而不是同步递归调用。
-
-<ComparisonFlow />
-
-## 再拆核心原理
-
-下面两段是刻意压缩的**教学模型**，用于保留最关键的数据流，不是 Vue、React、Fiber 或 Hooks 的真实源码。
-
-React 模型的 Hook 槽位部分受官方文档 [React 如何知道返回哪个 state？](https://zh-hans.react.dev/learn/state-a-components-memory#how-does-react-know-which-state-to-return) 启发；这里额外接上了简化的调度步骤，以说明 setter 如何产生下一次 render。官方示例和这里的代码都不是 React 内部源码。
-
-<PrincipleComparison />
 
 ### Vue 3：setup 保存引用，属性读取建立关系
 
@@ -70,10 +52,6 @@ React 不追踪组件函数在执行期间读取了 `state.count` 还是 `state.
 | 组件初始化逻辑 | `setup` 通常只执行一次 | 函数组件本身就是 render，会再次执行 |
 | 批处理与跳过 | 调度器合并任务，按依赖触发 | 批处理 setter；相同值可能跳过工作 |
 
-:::tip[一句话心智模型]
-Vue 3 是“**setup 留住响应式引用，我记得谁读过属性，变化时通知它**”；React 是“**我按 Hook 顺序找回 state，你用 setter 提交更新，我再用新快照执行组件**”。
-:::
+> **一句话心智模型：**Vue 3 是“**setup 留住响应式引用，我记得谁读过属性，变化时通知它**”；React 是“**我按 Hook 顺序找回 state，你用 setter 提交更新，我再用新快照执行组件**”。
 
 下一步可以回到[状态 API：useState 与 ref / reactive](/state/)，专门比较两边更新数字和对象状态时的写法。
-
-</div>

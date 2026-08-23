@@ -36,7 +36,15 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     optimizeDeps: {
-      include: ["mermaid"],
+      include: [
+        "@hookform/resolvers/zod",
+        "@tanstack/react-query",
+        "antd",
+        "mermaid",
+        "react-hook-form",
+        "use-immer",
+        "zod",
+      ],
     },
   },
   integrations: [

@@ -21,10 +21,6 @@ import Comparison from "./Comparison.astro";
 
 `useCallback(fn, deps)` 可以理解为 `useMemo(() => fn, deps)`：它缓存的是函数本身，不是函数执行后的结果。
 
-:::tip[什么时候使用]
-只有回调传给 `memo` 子组件，或作为其他 Hook 的依赖时，稳定引用通常才有价值。不要为了“看起来优化”而包装每个事件函数。
-:::
+> **什么时候使用：**只有回调传给 `memo` 子组件，或作为其他 Hook 的依赖时，稳定引用通常才有价值。不要为了“看起来优化”而包装每个事件函数。
 
-:::note[Vue 没有直接对应的 Hook]
-Vue 通常使用组件事件和 `setup` 中的普通函数。不要用 `computed(() => function)` 模拟 `useCallback`，这只会增加不必要的复杂度。
-:::
+**Vue 没有直接对应的 Hook：**Vue 通常使用组件事件和 `setup` 中的普通函数。不要用 `computed(() => function)` 模拟 `useCallback`，这只会增加不必要的复杂度。

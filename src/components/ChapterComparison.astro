@@ -1,0 +1,73 @@
+---
+import ChapterTabs from "./ChapterTabs.astro";
+import FrameworkPanel from "./FrameworkPanel.astro";
+import { Callout } from "fumadocs-ui/components/callout";
+import {
+  FrameworkSourceTabs,
+  type SourceGroup,
+} from "./FrameworkSourceTabs";
+import type { SourceFile } from "./SourceTabs";
+
+type FrameworkDefinition = {
+  framework: "React" | "Vue 3";
+  summary: string;
+  tone: "react" | "vue";
+  sources: SourceFile[];
+};
+
+type Props = {
+  react: FrameworkDefinition;
+  vue?: FrameworkDefinition;
+};
+
+const { react, vue } = Astro.props;
+const hasFlow = Astro.slots.has("react-flow") || Astro.slots.has("vue-flow");
+const groups: SourceGroup[] = [
+  { label: react.framework, sources: react.sources },
+  ...(vue ? [{ label: vue.framework, sources: vue.sources }] : []),
+];
+---
+
+<Callout title={vue ? "对比重点" : "实践重点"} type="info">
+  {
+    vue
+      ? `${react.framework}：${react.summary} ${vue.framework}：${vue.summary}`
+      : react.summary
+  }
+</Callout>
+
+<ChapterTabs hasFlow={hasFlow} previewLabel={vue ? "在线对比" : "在线演示"}>
+  <div slot="preview" class:list={["chapter-grid", !vue && "chapter-grid--single"]}>
+    <FrameworkPanel {...react}>
+      <slot name="react-preview" />
+    </FrameworkPanel>
+    {
+      vue && (
+        <FrameworkPanel {...vue}>
+          <slot name="vue-preview" />
+        </FrameworkPanel>
+      )
+    }
+  </div>
+
+  {
+    hasFlow && (
+      <div slot="flow" class:list={["chapter-grid", !vue && "chapter-grid--single"]}>
+        {Astro.slots.has("react-flow") && (
+          <FrameworkPanel framework={react.framework} tone={react.tone}>
+            <slot name="react-flow" />
+          </FrameworkPanel>
+        )}
+        {vue && Astro.slots.has("vue-flow") && (
+          <FrameworkPanel framework={vue.framework} tone={vue.tone}>
+            <slot name="vue-flow" />
+          </FrameworkPanel>
+        )}
+      </div>
+    )
+  }
+
+  <div slot="source" class="chapter-source">
+    <FrameworkSourceTabs groups={groups} client:visible />
+  </div>
+</ChapterTabs>

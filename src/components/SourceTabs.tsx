@@ -26,7 +26,7 @@ export function SourceTabs({ sources }: { sources: SourceFile[] }) {
       {sources.map((source) => (
         <Tab
           key={source.fileName}
-          value={source.fileName.toLowerCase().replace(/\s/, "-")}
+          value={source.fileName.toLowerCase().replace(/\s/g, "-")}
         >
           <DynamicCodeBlock
             code={source.code.trim()}

@@ -21,10 +21,6 @@ import Comparison from "./Comparison.astro";
 
 两者的计算函数都应该保持纯粹，不要在其中请求接口、修改状态或操作 DOM。
 
-:::tip[先直接计算]
-小数组或简单算式通常不需要 `useMemo`。先像[派生状态](/derived-state/)示例一样在渲染期间直接计算，确认存在明显开销后再缓存。
-:::
+> **先直接计算：**小数组或简单算式通常不需要 `useMemo`。先像[派生状态](/derived-state/)示例一样在渲染期间直接计算，确认存在明显开销后再缓存。
 
-:::note[`v-memo` 不是对应 API]
-Vue 的 `v-memo` 缓存模板子树，更接近组件渲染优化；与 React `useMemo` 直接对应的是 `computed`。
-:::
+**`v-memo` 不是对应 API：**Vue 的 `v-memo` 缓存模板子树，更接近组件渲染优化；与 React `useMemo` 直接对应的是 `computed`。

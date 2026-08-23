@@ -21,6 +21,4 @@ import Comparison from "./Comparison.astro";
 
 React 把副作用统一为“渲染后与外部系统同步”，依赖需要显式列出；Vue 则按意图拆分为 `watch`、`watchEffect` 和生命周期 API。
 
-:::note[开发模式]
-React 的 Strict Mode 可能额外执行一次“连接 → 清理 → 再连接”，用于检查清理逻辑是否完整。
-:::
+> **开发模式：**React 的 Strict Mode 可能额外执行一次“连接 → 清理 → 再连接”，用于检查清理逻辑是否完整。
