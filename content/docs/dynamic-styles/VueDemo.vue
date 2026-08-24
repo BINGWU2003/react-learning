@@ -26,7 +26,7 @@ const cardStyle = computed(() => ({
       <button
         v-for="(item, index) in themes"
         :key="item.name"
-        class="demo-button"
+        class="d-btn d-btn-primary d-btn-sm"
         type="button"
         @click="themeIndex = index"
       >

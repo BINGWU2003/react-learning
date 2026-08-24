@@ -23,7 +23,7 @@ export function ReactDemo() {
       <label className="demo-field">
         搜索商品
         <input
-          className="demo-input"
+          className="d-input d-input-sm w-full"
           value={query}
           placeholder="例如 Apple"
           onChange={(event) => setQuery(event.target.value)}

@@ -34,10 +34,18 @@ export function ReactDemo() {
         <p>score：{profile.score}</p>
       </div>
       <div className="demo-actions">
-        <button className="demo-button" type="button" onClick={increment}>
+        <button
+          className="d-btn d-btn-primary d-btn-sm"
+          type="button"
+          onClick={increment}
+        >
           同时加一
         </button>
-        <button className="demo-button" type="button" onClick={reset}>
+        <button
+          className="d-btn d-btn-primary d-btn-sm"
+          type="button"
+          onClick={reset}
+        >
           重置
         </button>
       </div>

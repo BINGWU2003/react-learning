@@ -27,7 +27,7 @@ const visibleProducts = computed(() =>
       搜索商品
       <input
         v-model="query"
-        class="demo-input"
+        class="d-input d-input-sm w-full"
         placeholder="例如 Apple"
       />
     </label>

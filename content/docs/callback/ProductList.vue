@@ -25,7 +25,7 @@ const products: Product[] = [
     <li v-for="product in products" :key="product.id">
       <span>{{ product.name }} · ¥{{ product.price }}</span>
       <button
-        class="demo-button"
+        class="d-btn d-btn-primary d-btn-sm"
         type="button"
         :aria-pressed="selectedId === product.id"
         @click="emit('select', product)"

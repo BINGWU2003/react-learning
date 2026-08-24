@@ -43,13 +43,13 @@ const result = computed(() => {
         搜索 5,000 条商品
         <input
           v-model="keyword"
-          class="demo-input"
+          class="d-input d-input-sm w-full"
           placeholder="例如 机械键盘"
         />
       </label>
       <label class="demo-field">
         价格排序
-        <select v-model="sortOrder" class="demo-select">
+        <select v-model="sortOrder" class="d-select d-select-sm w-full">
           <option value="asc">从低到高</option>
           <option value="desc">从高到低</option>
         </select>
@@ -70,7 +70,11 @@ const result = computed(() => {
     </ul>
 
     <div class="demo-actions">
-      <button class="demo-button" type="button" @click="cartCount++">
+      <button
+        class="d-btn d-btn-primary d-btn-sm"
+        type="button"
+        @click="cartCount++"
+      >
         购物车 +1（当前 {{ cartCount }}）
       </button>
     </div>

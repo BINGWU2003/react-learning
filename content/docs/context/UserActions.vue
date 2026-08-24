@@ -12,12 +12,16 @@ if (!context) throw new Error("Missing UserProvider");
       Consumer B 修改用户名
       <input
         :value="context.user.value.name"
-        class="demo-input"
+        class="d-input d-input-sm w-full"
         @input="context.setName(($event.target as HTMLInputElement).value)"
       />
     </label>
     <div class="demo-actions">
-      <button class="demo-button" type="button" @click="context.toggleRole">
+      <button
+        class="d-btn d-btn-primary d-btn-sm"
+        type="button"
+        @click="context.toggleRole"
+      >
         切换角色
       </button>
     </div>

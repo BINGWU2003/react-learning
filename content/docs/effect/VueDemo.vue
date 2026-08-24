@@ -57,7 +57,7 @@ watch(
   <div class="demo-stack">
     <label class="demo-field">
       当前房间
-      <select v-model="roomId" class="demo-select">
+      <select v-model="roomId" class="d-select d-select-sm w-full">
         <option v-for="room in rooms" :key="room.id" :value="room.id">
           {{ room.label }}
         </option>

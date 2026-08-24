@@ -3,6 +3,44 @@
 @import "fumadocs-ui/css/preset.css";
 @import "./demos.css";
 
+@plugin "daisyui" {
+  themes: false;
+  include: button, input, select, join, badge, toggle, alert, skeleton, loading;
+  prefix: "d-";
+  logs: false;
+}
+
+:root {
+  --color-base-100: var(--color-fd-background);
+  --color-base-200: var(--color-fd-card);
+  --color-base-300: var(--color-fd-muted);
+  --color-base-content: var(--color-fd-foreground);
+  --color-primary: var(--color-fd-primary);
+  --color-primary-content: var(--color-fd-primary-foreground);
+  --color-secondary: var(--color-fd-secondary);
+  --color-secondary-content: var(--color-fd-secondary-foreground);
+  --color-accent: var(--color-fd-accent);
+  --color-accent-content: var(--color-fd-accent-foreground);
+  --color-neutral: var(--color-fd-secondary);
+  --color-neutral-content: var(--color-fd-secondary-foreground);
+  --color-info: var(--color-fd-info);
+  --color-info-content: white;
+  --color-success: var(--color-fd-success);
+  --color-success-content: hsl(0, 0%, 9%);
+  --color-warning: var(--color-fd-warning);
+  --color-warning-content: hsl(0, 0%, 9%);
+  --color-error: var(--color-fd-error);
+  --color-error-content: white;
+  --radius-selector: 999px;
+  --radius-field: var(--ui-radius-sm);
+  --radius-box: var(--ui-radius);
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
 html {
   scrollbar-gutter: stable;
 }

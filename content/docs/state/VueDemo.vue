@@ -27,10 +27,20 @@ function reset() {
       <p>score：{{ profile.score }}</p>
     </div>
     <div class="demo-actions">
-      <button class="demo-button" type="button" @click="increment">
+      <button
+        class="d-btn d-btn-primary d-btn-sm"
+        type="button"
+        @click="increment"
+      >
         同时加一
       </button>
-      <button class="demo-button" type="button" @click="reset">重置</button>
+      <button
+        class="d-btn d-btn-primary d-btn-sm"
+        type="button"
+        @click="reset"
+      >
+        重置
+      </button>
     </div>
   </div>
 </template>

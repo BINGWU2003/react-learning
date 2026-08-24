@@ -7,18 +7,6 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import {
-  Alert,
-  Button,
-  Empty,
-  Input,
-  Segmented,
-  Select,
-  Skeleton,
-  Switch,
-  Tag,
-} from "antd";
-import { SiteAntdProvider } from "@/components/SiteAntdProvider";
 import { createResource } from "./api";
 import { resourceKeys, resourceListOptions } from "./queryOptions";
 import type {
@@ -69,10 +57,6 @@ function ResourcePanel() {
     },
   });
 
-  function changeTopic(value: string | number) {
-    setTopic(value as TopicFilter);
-  }
-
   function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const normalizedTitle = title.trim();
@@ -89,46 +73,68 @@ function ResourcePanel() {
   const updatedAt = query.dataUpdatedAt
     ? timeFormatter.format(query.dataUpdatedAt)
     : "尚未获取";
+  const queryStatus = query.isError
+    ? { label: "请求失败", tone: "d-badge-error" }
+    : query.isPending
+      ? { label: "首次加载", tone: "d-badge-info" }
+      : query.isFetching
+        ? { label: "后台更新", tone: "d-badge-info" }
+        : query.isStale
+          ? { label: "缓存已过期", tone: "d-badge-warning" }
+          : { label: "缓存新鲜", tone: "d-badge-success" };
 
   return (
     <div className="query-demo not-content">
       <div className="query-demo__toolbar">
-        <Segmented
-          className="query-demo__topic-filter"
-          options={topicOptions}
-          value={topic}
-          onChange={changeTopic}
-        />
+        <div
+          className="d-join query-demo__topic-filter"
+          role="group"
+          aria-label="学习资料分类"
+        >
+          {topicOptions.map((option) => (
+            <button
+              key={option.value}
+              className={`d-btn d-btn-sm d-join-item ${
+                topic === option.value ? "d-btn-primary" : "d-btn-outline"
+              }`}
+              type="button"
+              aria-pressed={topic === option.value}
+              onClick={() => setTopic(option.value as TopicFilter)}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
         <div className="query-demo__status">
-          <Tag color="cyan">Astro API · Netlify Function</Tag>
-          <Tag
-            color={
-              query.isError ? "error" : query.isFetching ? "processing" : "success"
-            }
+          <span className="d-badge d-badge-info d-badge-outline">
+            Astro API · Netlify Function
+          </span>
+          <span
+            className={`d-badge d-badge-outline ${queryStatus.tone}`}
+            aria-live="polite"
           >
-            {query.isError
-              ? "请求失败"
-              : query.isPending
-                ? "首次加载"
-                : query.isFetching
-                  ? "后台更新"
-                  : query.isStale
-                    ? "缓存已过期"
-                    : "缓存新鲜"}
-          </Tag>
+            {queryStatus.label}
+          </span>
         </div>
       </div>
 
       <div className="query-demo__status">
-        <Button size="small" onClick={refreshCurrentList}>
+        <button
+          className="d-btn d-btn-outline d-btn-sm"
+          type="button"
+          onClick={refreshCurrentList}
+        >
           使当前缓存失效
-        </Button>
-        <span>模拟接口失败</span>
-        <Switch
-          size="small"
-          checked={simulateError}
-          onChange={setSimulateError}
-        />
+        </button>
+        <label className="query-demo__toggle">
+          <span>模拟接口失败</span>
+          <input
+            className="d-toggle d-toggle-primary d-toggle-sm"
+            type="checkbox"
+            checked={simulateError}
+            onChange={(event) => setSimulateError(event.target.checked)}
+          />
+        </label>
         <p className="query-demo__status-text" aria-live="polite">
           最近更新：{updatedAt}
         </p>
@@ -136,21 +142,32 @@ function ResourcePanel() {
 
       <div className="query-demo__panel" aria-busy={query.isFetching}>
         {query.isPending ? (
-          <Skeleton active paragraph={{ rows: 4 }} />
+          <div
+            className="query-demo__skeleton"
+            role="status"
+            aria-label="正在加载学习资料"
+          >
+            <div className="d-skeleton query-demo__skeleton-title" />
+            <div className="d-skeleton query-demo__skeleton-line" />
+            <div className="d-skeleton query-demo__skeleton-line" />
+            <div className="d-skeleton query-demo__skeleton-line" />
+          </div>
         ) : query.isError ? (
-          <Alert
-            type="error"
-            showIcon
-            title="学习资料加载失败"
-            description={query.error.message}
-            action={
-              <Button size="small" onClick={() => setSimulateError(false)}>
-                恢复接口
-              </Button>
-            }
-          />
+          <div className="d-alert d-alert-error query-demo__alert" role="alert">
+            <div>
+              <strong>学习资料加载失败</strong>
+              <p>{query.error.message}</p>
+            </div>
+            <button
+              className="d-btn d-btn-sm"
+              type="button"
+              onClick={() => setSimulateError(false)}
+            >
+              恢复接口
+            </button>
+          </div>
         ) : query.data.length === 0 ? (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无学习资料" />
+          <p className="query-demo__empty">暂无学习资料</p>
         ) : (
           <ul className="query-demo__list">
             {query.data.map((resource) => (
@@ -159,9 +176,15 @@ function ResourcePanel() {
                   <strong>{resource.title}</strong>
                   <span>预计学习 {resource.minutes} 分钟</span>
                 </div>
-                <Tag color={resource.topic === "react" ? "blue" : "green"}>
+                <span
+                  className={`d-badge d-badge-outline ${
+                    resource.topic === "react"
+                      ? "d-badge-info"
+                      : "d-badge-success"
+                  }`}
+                >
                   {resource.topic === "react" ? "React" : "Vue"}
-                </Tag>
+                </span>
               </li>
             ))}
           </ul>
@@ -171,37 +194,50 @@ function ResourcePanel() {
       <section className="query-demo__create" aria-labelledby="create-title">
         <h3 id="create-title">Mutation：新增学习资料</h3>
         <form className="query-demo__create-form" onSubmit={submit}>
-          <Input
-            className="query-demo__title-input"
+          <input
+            className="d-input d-input-sm query-demo__title-input"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             placeholder="输入资料标题"
             aria-label="资料标题"
           />
-          <Select
-            className="query-demo__topic-select"
+          <select
+            className="d-select d-select-sm query-demo__topic-select"
             value={createTopic}
-            options={createTopicOptions}
             aria-label="资料所属方向"
-            onChange={setCreateTopic}
-          />
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={mutation.isPending}
-            disabled={!title.trim()}
+            onChange={(event) =>
+              setCreateTopic(event.target.value as LearningTopic)
+            }
           >
-            新增并重新同步
-          </Button>
+            {createTopicOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <button
+            className="d-btn d-btn-primary d-btn-sm"
+            type="submit"
+            aria-busy={mutation.isPending}
+            disabled={mutation.isPending || !title.trim()}
+          >
+            {mutation.isPending ? (
+              <span
+                className="d-loading d-loading-spinner d-loading-xs"
+                aria-hidden="true"
+              />
+            ) : null}
+            {mutation.isPending ? "正在新增" : "新增并重新同步"}
+          </button>
         </form>
         {mutation.isError ? (
-          <Alert type="error" showIcon title={mutation.error.message} />
+          <div className="d-alert d-alert-error" role="alert">
+            <span>{mutation.error.message}</span>
+          </div>
         ) : mutation.isSuccess ? (
-          <Alert
-            type="success"
-            showIcon
-            title="新增成功，相关查询已失效并重新获取"
-          />
+          <div className="d-alert d-alert-success" role="status">
+            <span>新增成功，相关查询已失效并重新获取</span>
+          </div>
         ) : (
           <p className="query-demo__status-text">
             Mutation 成功后调用 invalidateQueries，所有分类缓存都会重新同步。
@@ -216,10 +252,8 @@ export function QueryDemo() {
   const [queryClient] = useState(createQueryClient);
 
   return (
-    <SiteAntdProvider>
-      <QueryClientProvider client={queryClient}>
-        <ResourcePanel />
-      </QueryClientProvider>
-    </SiteAntdProvider>
+    <QueryClientProvider client={queryClient}>
+      <ResourcePanel />
+    </QueryClientProvider>
   );
 }

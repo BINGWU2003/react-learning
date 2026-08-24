@@ -41,7 +41,7 @@ export function ReactDemo() {
         <label className="demo-field">
           搜索 5,000 条商品
           <input
-            className="demo-input"
+            className="d-input d-input-sm w-full"
             value={keyword}
             placeholder="例如 机械键盘"
             onChange={(event) => setKeyword(event.target.value)}
@@ -50,7 +50,7 @@ export function ReactDemo() {
         <label className="demo-field">
           价格排序
           <select
-            className="demo-select"
+            className="d-select d-select-sm w-full"
             value={sortOrder}
             onChange={(event) => setSortOrder(event.target.value as SortOrder)}
           >
@@ -77,7 +77,7 @@ export function ReactDemo() {
 
       <div className="demo-actions">
         <button
-          className="demo-button"
+          className="d-btn d-btn-primary d-btn-sm"
           type="button"
           onClick={() => setCartCount((count) => count + 1)}
         >

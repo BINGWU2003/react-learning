@@ -18,7 +18,7 @@ const SearchInput = forwardRef<SearchInputHandle>(function SearchInput(_, ref) {
       子组件输入框
       <input
         ref={inputRef}
-        className="demo-input"
+        className="d-input d-input-sm w-full"
         defaultValue="React forwardRef"
       />
     </label>
@@ -34,7 +34,7 @@ export function ReactDemo() {
       <SearchInput ref={searchRef} />
       <div className="demo-actions">
         <button
-          className="demo-button"
+          className="d-btn d-btn-primary d-btn-sm"
           type="button"
           onClick={() => {
             searchRef.current?.focus();
@@ -44,7 +44,7 @@ export function ReactDemo() {
           聚焦
         </button>
         <button
-          className="demo-button"
+          className="d-btn d-btn-primary d-btn-sm"
           type="button"
           onClick={() => {
             searchRef.current?.select();

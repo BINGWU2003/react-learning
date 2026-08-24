@@ -11,7 +11,11 @@ const completed = ref(3);
     <p class="demo-muted">正文进入默认插槽，按钮进入 footer 具名插槽。</p>
 
     <template #footer>
-      <button class="demo-button" type="button" @click="completed += 1">
+      <button
+        class="d-btn d-btn-primary d-btn-sm"
+        type="button"
+        @click="completed += 1"
+      >
         完成一篇
       </button>
     </template>

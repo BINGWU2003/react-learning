@@ -30,7 +30,7 @@ export function ReactDemo() {
       <div className="demo-actions">
         {themes.map((item, index) => (
           <button
-            className="demo-button"
+            className="d-btn d-btn-primary d-btn-sm"
             type="button"
             key={item.name}
             onClick={() => setThemeIndex(index)}

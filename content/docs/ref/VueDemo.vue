@@ -20,10 +20,18 @@ function selectInput() {
   <div class="demo-stack">
     <SearchInput ref="searchRef" />
     <div class="demo-actions">
-      <button class="demo-button" type="button" @click="focusInput">
+      <button
+        class="d-btn d-btn-primary d-btn-sm"
+        type="button"
+        @click="focusInput"
+      >
         聚焦
       </button>
-      <button class="demo-button" type="button" @click="selectInput">
+      <button
+        class="d-btn d-btn-primary d-btn-sm"
+        type="button"
+        @click="selectInput"
+      >
         全选
       </button>
     </div>

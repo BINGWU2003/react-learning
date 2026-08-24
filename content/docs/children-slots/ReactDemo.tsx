@@ -9,7 +9,7 @@ export function ReactDemo() {
       title="本周学习进度"
       footer={
         <button
-          className="demo-button"
+          className="d-btn d-btn-primary d-btn-sm"
           type="button"
           onClick={() => setCompleted((current) => current + 1)}
         >

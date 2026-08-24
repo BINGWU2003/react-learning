@@ -33,13 +33,25 @@ export function ReactDemo() {
       </div>
 
       <div className="demo-actions">
-        <button className="demo-button" type="button" onClick={incrementCount}>
+        <button
+          className="d-btn d-btn-primary d-btn-sm"
+          type="button"
+          onClick={incrementCount}
+        >
           count + 1
         </button>
-        <button className="demo-button" type="button" onClick={toggleTheme}>
+        <button
+          className="d-btn d-btn-primary d-btn-sm"
+          type="button"
+          onClick={toggleTheme}
+        >
           切换无关状态
         </button>
-        <button className="demo-button" type="button" onClick={reset}>
+        <button
+          className="d-btn d-btn-primary d-btn-sm"
+          type="button"
+          onClick={reset}
+        >
           重置
         </button>
       </div>

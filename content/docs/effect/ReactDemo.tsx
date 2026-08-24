@@ -51,7 +51,7 @@ export function ReactDemo() {
       <label className="demo-field">
         当前房间
         <select
-          className="demo-select"
+          className="d-select d-select-sm w-full"
           value={roomId}
           onChange={(event) => setRoomId(event.target.value as RoomId)}
         >

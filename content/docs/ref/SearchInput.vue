@@ -19,7 +19,7 @@ defineExpose({ focus, select });
     子组件输入框
     <input
       ref="inputRef"
-      class="demo-input"
+      class="d-input d-input-sm w-full"
       value="Vue template ref"
     />
   </label>

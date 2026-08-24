@@ -17,7 +17,7 @@ export function ReactDemo() {
         <label className="demo-field">
           姓名
           <input
-            className="demo-input"
+            className="d-input d-input-sm w-full"
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
@@ -25,7 +25,7 @@ export function ReactDemo() {
         <label className="demo-field">
           学习方向
           <select
-            className="demo-select"
+            className="d-select d-select-sm w-full"
             value={direction}
             onChange={(event) => setDirection(event.target.value)}
           >
@@ -34,7 +34,7 @@ export function ReactDemo() {
             <option>两者对比</option>
           </select>
         </label>
-        <button className="demo-button" type="submit">
+        <button className="d-btn d-btn-primary d-btn-sm" type="submit">
           保存资料
         </button>
       </form>

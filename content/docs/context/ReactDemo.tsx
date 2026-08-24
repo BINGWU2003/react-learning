@@ -37,13 +37,17 @@ function UserActions() {
       <label className="demo-field">
         Consumer B 修改用户名
         <input
-          className="demo-input"
+          className="d-input d-input-sm w-full"
           value={user.name}
           onChange={(event) => setName(event.target.value)}
         />
       </label>
       <div className="demo-actions">
-        <button className="demo-button" type="button" onClick={toggleRole}>
+        <button
+          className="d-btn d-btn-primary d-btn-sm"
+          type="button"
+          onClick={toggleRole}
+        >
           切换角色
         </button>
       </div>

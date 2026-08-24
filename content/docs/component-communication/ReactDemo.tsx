@@ -20,14 +20,14 @@ function MessageInput({ onSend }: MessageInputProps) {
       <label className="demo-field">
         子组件输入
         <input
-          className="demo-input"
+          className="d-input d-input-sm w-full"
           value={value}
           placeholder="输入一条消息"
           onChange={(event) => setValue(event.target.value)}
         />
       </label>
       <div className="demo-actions">
-        <button className="demo-button" type="submit">
+        <button className="d-btn d-btn-primary d-btn-sm" type="submit">
           发送给父组件
         </button>
       </div>

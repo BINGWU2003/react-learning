@@ -21,12 +21,14 @@ function handleSubmit() {
       子组件输入
       <input
         v-model="value"
-        class="demo-input"
+        class="d-input d-input-sm w-full"
         placeholder="输入一条消息"
       />
     </label>
     <div class="demo-actions">
-      <button class="demo-button" type="submit">发送给父组件</button>
+      <button class="d-btn d-btn-primary d-btn-sm" type="submit">
+        发送给父组件
+      </button>
     </div>
   </form>
 </template>

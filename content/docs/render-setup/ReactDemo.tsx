@@ -17,14 +17,14 @@ export function ReactDemo() {
       </div>
       <div className="demo-actions">
         <button
-          className="demo-button"
+          className="d-btn d-btn-primary d-btn-sm"
           type="button"
           onClick={() => setCount((current) => current + 1)}
         >
           count + 1
         </button>
         <button
-          className="demo-button"
+          className="d-btn d-btn-primary d-btn-sm"
           type="button"
           onClick={() => setCompact((current) => !current)}
         >

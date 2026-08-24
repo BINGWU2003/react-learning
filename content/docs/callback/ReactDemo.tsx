@@ -28,7 +28,7 @@ export function ReactDemo() {
 
       <div className="demo-actions">
         <button
-          className="demo-button"
+          className="d-btn d-btn-primary d-btn-sm"
           type="button"
           onClick={() => setCartCount((count) => count + 1)}
         >

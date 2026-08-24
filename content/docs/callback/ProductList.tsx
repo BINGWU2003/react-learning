@@ -29,7 +29,7 @@ export const ProductList = memo(function ProductList({
             {product.name} · ¥{product.price}
           </span>
           <button
-            className="demo-button"
+            className="d-btn d-btn-primary d-btn-sm"
             type="button"
             aria-pressed={selectedId === product.id}
             onClick={() => onSelect(product)}

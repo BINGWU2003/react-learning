@@ -15,10 +15,18 @@ const compact = ref(false);
       <p>VueDemo 本次挂载已执行 setup：{{ setupExecutions }} 次</p>
     </div>
     <div class="demo-actions">
-      <button class="demo-button" type="button" @click="count += 1">
+      <button
+        class="d-btn d-btn-primary d-btn-sm"
+        type="button"
+        @click="count += 1"
+      >
         count + 1
       </button>
-      <button class="demo-button" type="button" @click="compact = !compact">
+      <button
+        class="d-btn d-btn-primary d-btn-sm"
+        type="button"
+        @click="compact = !compact"
+      >
         切换显示模式
       </button>
     </div>

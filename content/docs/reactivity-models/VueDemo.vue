@@ -44,13 +44,27 @@ function reset() {
     </div>
 
     <div class="demo-actions">
-      <button class="demo-button" type="button" @click="incrementCount">
+      <button
+        class="d-btn d-btn-primary d-btn-sm"
+        type="button"
+        @click="incrementCount"
+      >
         count + 1
       </button>
-      <button class="demo-button" type="button" @click="toggleTheme">
+      <button
+        class="d-btn d-btn-primary d-btn-sm"
+        type="button"
+        @click="toggleTheme"
+      >
         切换无关状态
       </button>
-      <button class="demo-button" type="button" @click="reset">重置</button>
+      <button
+        class="d-btn d-btn-primary d-btn-sm"
+        type="button"
+        @click="reset"
+      >
+        重置
+      </button>
     </div>
 
     <ol class="demo-trace" aria-label="Vue 执行观察">

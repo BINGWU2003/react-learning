@@ -36,7 +36,11 @@ function handleSelect(product: Product) {
     </div>
 
     <div class="demo-actions">
-      <button class="demo-button" type="button" @click="cartCount++">
+      <button
+        class="d-btn d-btn-primary d-btn-sm"
+        type="button"
+        @click="cartCount++"
+      >
         购物车 +1（当前 {{ cartCount }}）
       </button>
     </div>
