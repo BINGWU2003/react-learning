@@ -1,81 +1,60 @@
-import { defineConfig } from "astro/config";
+// @ts-check
 import netlify from "@astrojs/netlify";
+import { unified } from "@astrojs/markdown-remark";
+import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
-import starlight from "@astrojs/starlight";
 import vue from "@astrojs/vue";
 import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "astro/config";
+import {
+  rehypeCode,
+  remarkCodeTab,
+  remarkHeading,
+  remarkMdxMermaid,
+  remarkNpm,
+  remarkStructure,
+} from "fumadocs-core/mdx-plugins";
+
+/** @type {import("@astrojs/markdown-remark").RemarkPlugins} */
+const remarkPlugins = [
+  remarkHeading,
+  remarkMdxMermaid,
+  remarkCodeTab,
+  remarkNpm,
+  [remarkStructure, { exportAs: "structuredData" }],
+];
+
+/** @type {import("@astrojs/markdown-remark").RehypePlugins} */
+const rehypePlugins = [rehypeCode];
 
 export default defineConfig({
   adapter: netlify(),
+  markdown: {
+    processor: unified({
+      remarkPlugins,
+      rehypePlugins,
+    }),
+  },
   vite: {
     plugins: [tailwindcss()],
     optimizeDeps: {
-      include: ["mermaid"],
+      include: [
+        "@hookform/resolvers/zod",
+        "@tanstack/react-query",
+        "antd",
+        "mermaid",
+        "react-hook-form",
+        "use-immer",
+        "zod",
+      ],
     },
   },
-  redirects: {
-    "/": "/component-communication/",
-  },
   integrations: [
-    starlight({
-      title: "React × Vue",
-      description: "用同一个可运行 Demo 对照 React 与 Vue 的实现差异。",
-      favicon: "/favicon.svg",
-      logo: {
-        src: "./src/assets/logo.svg",
-        alt: "",
-      },
-      defaultLocale: "root",
-      locales: {
-        root: {
-          label: "简体中文",
-          lang: "zh-CN",
-        },
-      },
-      tableOfContents: false,
-      expressiveCode: {
-        themes: ["one-dark-pro"],
-      },
-      customCss: [
-        "./src/styles/global.css",
-        "./src/styles/custom.css",
-      ],
-      components: {
-        ThemeProvider: "./src/components/LightTheme.astro",
-        ThemeSelect: "./src/components/Empty.astro",
-      },
-      sidebar: [
-        {
-          label: "差异笔记",
-          items: [
-            { label: "渲染模型", slug: "render-setup" },
-            { label: "响应式 vs 状态更新", slug: "reactivity-models" },
-            { label: "状态 API", slug: "state" },
-            { label: "表单双向绑定", slug: "form-binding" },
-            { label: "逻辑复用", slug: "logic-reuse" },
-            { label: "内容分发", slug: "children-slots" },
-            { label: "组件通信", slug: "component-communication" },
-            { label: "跨组件状态", slug: "context" },
-            { label: "副作用", slug: "effect" },
-            { label: "DOM 引用", slug: "ref" },
-            { label: "派生状态", slug: "derived-state" },
-            { label: "计算缓存", slug: "memo" },
-            { label: "回调引用", slug: "callback" },
-            { label: "样式隔离", slug: "css-modules" },
-            { label: "动态样式", slug: "dynamic-styles" },
-          ],
-        },
-        {
-          label: "React 生态实践",
-          items: [
-            { label: "表单与数据校验", slug: "form-validation" },
-            { label: "服务端状态与缓存", slug: "react-query" },
-            { label: "复杂状态更新", slug: "use-immer" },
-          ],
-        },
-      ],
-    }),
-    react({ include: [/\.[jt]sx$/] }),
+    react(),
     vue(),
+    mdx({
+      extendMarkdownConfig: true,
+      syntaxHighlight: false,
+    }),
   ],
 });

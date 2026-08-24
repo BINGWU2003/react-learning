@@ -1,0 +1,63 @@
+---
+title: useEffect 与 watch
+description: React 使用 useEffect 同步外部系统；Vue 使用 watch、watchEffect 或生命周期 API 处理对应场景。
+---
+
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
+import { SourceCodeBlock } from "@/components/SourceCodeBlock";
+import reactDemoSource from "./ReactDemo.tsx?raw";
+import vueDemoSource from "./VueDemo.vue?raw";
+
+## 核心结论
+
+Effect 不是“状态变化后的通用代码区”，而是把组件状态与网络连接、浏览器 API、订阅等外部系统同步。能够在 render 或 `computed` 中得到的值，不应再用 Effect 保存一份。
+
+## 连接与清理
+
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
+
+## 完整 Demo 源码
+
+以下代码直接读取在线 Demo 使用的源文件，没有省略或改写。
+
+**React 源码**
+
+<SourceCodeBlock client:load lang="tsx" code={reactDemoSource} title="ReactDemo.tsx" />
+
+---
+
+**Vue 3 源码**
+
+<SourceCodeBlock client:load lang="vue" code={vueDemoSource} title="VueDemo.vue" />
+
+## 在线观察
+
+切换聊天室，观察旧连接总是在新连接建立前清理。这个示例依赖浏览器运行环境，因此使用纯客户端加载。
+
+### React
+
+<div class="not-prose"><ReactDemo client:only="react" /></div>
+
+### Vue 3
+
+<div class="not-prose"><VueDemo client:only="vue" /></div>
+
+## API 对照
+
+| React | Vue | 适用场景 |
+| --- | --- | --- |
+| `useEffect(fn, [source])` | `watch(source, fn)` | 明确监听某个状态 |
+| `useEffect(fn, [])` | `onMounted` / `onUnmounted` | 组件生命周期 |
+| 手动列出多个依赖 | `watchEffect` 自动追踪读取 | 同步依赖较多的副作用 |
+| `return cleanup` | `onCleanup` | 下次执行或卸载前清理 |
+
+<Callout title="React Strict Mode" type="warning">
+开发模式可能额外执行一次“连接 → 清理 → 再连接”，用于检查清理逻辑是否完整。正确的 Effect 应能安全地重复建立和销毁。
+</Callout>
+
+服务端数据请求通常交给[TanStack Query](/react-query/)；纯派生计算应回到[派生状态](/derived-state/)。

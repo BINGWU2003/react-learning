@@ -1,0 +1,74 @@
+---
+title: children 与 slots
+description: React 把嵌套内容作为 props.children 传递；Vue 通过默认、具名和作用域插槽组织内容出口。
+---
+
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
+import { SourceCodeTabs } from "@/components/SourceCodeTabs";
+import reactDemoSource from "./ReactDemo.tsx?raw";
+import reactProfileCardSource from "./ProfileCard.tsx?raw";
+import vueDemoSource from "./VueDemo.vue?raw";
+import vueProfileCardSource from "./ProfileCard.vue?raw";
+
+## 核心结论
+
+内容分发让容器组件负责结构，调用方负责具体内容。React 的嵌套 JSX 最终进入 `children` prop；Vue 用默认、具名和作用域 slot 把内容出口变成模板级协议。
+
+## 组合流程
+
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
+
+## 完整 Demo 源码
+
+以下代码直接读取在线 Demo 使用的源文件，没有省略或改写。
+
+**React 源码**
+
+<SourceCodeTabs
+  client:load
+  label="React 源码"
+  files={[
+    { title: "ReactDemo.tsx", lang: "tsx", code: reactDemoSource },
+    { title: "ProfileCard.tsx", lang: "tsx", code: reactProfileCardSource },
+  ]}
+/>
+
+---
+
+**Vue 3 源码**
+
+<SourceCodeTabs
+  client:load
+  label="Vue 3 源码"
+  files={[
+    { title: "VueDemo.vue", lang: "vue", code: vueDemoSource },
+    { title: "ProfileCard.vue", lang: "vue", code: vueProfileCardSource },
+  ]}
+/>
+
+## 在线观察
+
+两个父组件向同一个卡片结构传入正文和底部操作。
+
+### React
+
+<div class="not-prose"><ReactDemo client:visible /></div>
+
+### Vue 3
+
+<div class="not-prose"><VueDemo client:visible /></div>
+
+## 什么时候使用
+
+| 需求 | React | Vue 3 |
+| --- | --- | --- |
+| 单个主要内容区 | `children` | 默认 slot |
+| 多个具名区域 | 元素 prop，如 `footer` | 具名 slot |
+| 子组件把数据交给内容模板 | render prop | 作用域 slot |
+
+内容分发解决“谁提供 UI”，普通数据和事件仍使用[组件通信](/component-communication/)。

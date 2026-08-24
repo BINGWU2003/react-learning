@@ -1,89 +1,59 @@
-import type { ThemeConfig } from "antd";
+import { theme, type ThemeConfig } from "antd";
 
-const colors = {
-  accent: "#d6532d",
-  accentLow: "#f8e4d8",
-  accentSoft: "#f6e9e0",
-  canvas: "#f5f2eb",
-  ink: "#25221d",
-  inkActive: "#171511",
-  inkHover: "#3a342c",
-  inkMuted: "#6d685f",
-  line: "#d8d0c3",
-  lineStrong: "#aaa296",
-  surface: "#fffdf8",
-  surfaceMuted: "#eee9df",
-} as const;
-
-export const siteAntdTheme: ThemeConfig = {
+const shared: ThemeConfig = {
   token: {
-    colorPrimary: colors.accent,
-    colorText: colors.ink,
-    colorTextSecondary: colors.inkMuted,
-    colorTextDisabled: colors.inkMuted,
-    colorBgBase: colors.canvas,
-    colorBgContainer: colors.surface,
-    colorBgContainerDisabled: colors.surfaceMuted,
-    colorBgElevated: colors.surface,
-    colorBorder: colors.lineStrong,
-    colorBorderSecondary: colors.line,
-    colorFillAlter: colors.surfaceMuted,
-    borderRadius: 4,
+    borderRadius: 6,
     controlHeight: 36,
     fontFamily: "inherit",
     boxShadow: "none",
-    boxShadowSecondary: "0 8px 20px rgb(37 34 29 / 10%)",
   },
   components: {
     Button: {
-      colorPrimary: colors.ink,
-      colorPrimaryHover: colors.inkHover,
-      colorPrimaryActive: colors.inkActive,
-      primaryColor: colors.surface,
-      colorTextDisabled: colors.inkMuted,
-      colorBgContainerDisabled: colors.surfaceMuted,
-      colorBorderDisabled: colors.line,
-      defaultBg: colors.surface,
-      defaultBorderColor: colors.lineStrong,
-      defaultColor: colors.ink,
-      defaultHoverBg: colors.surface,
-      defaultHoverBorderColor: colors.ink,
-      defaultHoverColor: colors.ink,
-      defaultActiveBg: colors.surfaceMuted,
-      defaultActiveBorderColor: colors.ink,
-      defaultActiveColor: colors.ink,
-      fontWeight: 750,
+      fontWeight: 650,
       primaryShadow: "none",
       defaultShadow: "none",
       dangerShadow: "none",
     },
     Input: {
-      activeBorderColor: colors.accent,
-      hoverBorderColor: colors.lineStrong,
-      activeShadow: "0 0 0 3px rgb(214 83 45 / 14%)",
-      activeBg: colors.surface,
-      hoverBg: colors.surface,
-    },
-    Select: {
-      activeBorderColor: colors.accent,
-      hoverBorderColor: colors.lineStrong,
-      activeOutlineColor: "rgb(214 83 45 / 14%)",
-      selectorBg: colors.surface,
-      clearBg: colors.surface,
-      optionActiveBg: colors.canvas,
-      optionSelectedBg: colors.accentSoft,
-      optionSelectedColor: colors.ink,
-      optionSelectedFontWeight: 750,
-      controlItemBgActiveHover: colors.accentSoft,
-    },
-    Segmented: {
-      trackBg: colors.surfaceMuted,
-      itemColor: colors.inkMuted,
-      itemHoverColor: colors.ink,
-      itemHoverBg: colors.canvas,
-      itemActiveBg: colors.accentLow,
-      itemSelectedBg: colors.surface,
-      itemSelectedColor: colors.ink,
+      activeShadow: "0 0 0 3px rgb(127 127 127 / 16%)",
     },
   },
 };
+
+const lightTheme: ThemeConfig = {
+  ...shared,
+  algorithm: theme.defaultAlgorithm,
+  token: {
+    ...shared.token,
+    colorPrimary: "#18181b",
+    colorInfo: "#2563eb",
+    colorBgBase: "#ffffff",
+    colorBgContainer: "#ffffff",
+    colorBgElevated: "#ffffff",
+    colorBorder: "#d4d4d8",
+    colorBorderSecondary: "#e4e4e7",
+    colorText: "#18181b",
+    colorTextSecondary: "#71717a",
+  },
+};
+
+const darkTheme: ThemeConfig = {
+  ...shared,
+  algorithm: theme.darkAlgorithm,
+  token: {
+    ...shared.token,
+    colorPrimary: "#fafafa",
+    colorInfo: "#60a5fa",
+    colorBgBase: "#09090b",
+    colorBgContainer: "#18181b",
+    colorBgElevated: "#18181b",
+    colorBorder: "#3f3f46",
+    colorBorderSecondary: "#27272a",
+    colorText: "#fafafa",
+    colorTextSecondary: "#a1a1aa",
+  },
+};
+
+export function getSiteAntdTheme(isDark: boolean) {
+  return isDark ? darkTheme : lightTheme;
+}

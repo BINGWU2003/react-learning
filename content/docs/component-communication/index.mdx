@@ -1,0 +1,64 @@
+---
+title: Props / Callback 与 props / emit
+description: React 通过 props 传值并用回调向上传递事件；Vue 使用 props 与 emit 表达同样的数据流。
+---
+
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
+import { SourceCodeBlock } from "@/components/SourceCodeBlock";
+import { SourceCodeTabs } from "@/components/SourceCodeTabs";
+import reactDemoSource from "./ReactDemo.tsx?raw";
+import vueDemoSource from "./VueDemo.vue?raw";
+import vueMessageInputSource from "./MessageInput.vue?raw";
+
+## 核心结论
+
+两边都遵循单向数据流：父组件通过 props 向下传值，子组件通过一个明确的通知边界请求父组件更新。React 把通知表示成函数 prop，Vue 把它表示成组件事件。
+
+## 数据流
+
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
+
+## 完整 Demo 源码
+
+以下代码直接读取在线 Demo 使用的源文件，没有省略或改写。
+
+**React 源码**
+
+<SourceCodeBlock client:load lang="tsx" code={reactDemoSource} title="ReactDemo.tsx" />
+
+---
+
+**Vue 3 源码**
+
+<SourceCodeTabs
+  client:load
+  label="Vue 3 源码"
+  files={[
+    { title: "VueDemo.vue", lang: "vue", code: vueDemoSource },
+    { title: "MessageInput.vue", lang: "vue", code: vueMessageInputSource },
+  ]}
+/>
+
+## 在线观察
+
+在子组件中输入消息并发送，父组件负责保存最终结果。
+
+### React
+
+<div class="not-prose"><ReactDemo client:visible /></div>
+
+### Vue 3
+
+<div class="not-prose"><VueDemo client:visible /></div>
+
+## 设计边界
+
+- 子组件不应直接修改父组件拥有的状态。
+- React 的 `onSend` 只是普通函数；Vue 的 `send` 是组件公开事件协议。
+- 回调引用是否需要稳定属于性能问题，不属于通信机制本身，见[useCallback](/callback/)。
+- 跨越很多组件层级时，再考虑[Context 与 provide/inject](/context/)。

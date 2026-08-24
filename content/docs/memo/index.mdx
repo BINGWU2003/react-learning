@@ -1,0 +1,61 @@
+---
+title: useMemo 与 computed
+description: React 使用 useMemo 缓存昂贵计算；Vue 使用 computed 声明并缓存响应式派生值。
+---
+
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import Flow from "./Flow.astro";
+import { SourceCodeBlock } from "@/components/SourceCodeBlock";
+import reactDemoSource from "./ReactDemo.tsx?raw";
+import vueDemoSource from "./VueDemo.vue?raw";
+
+## 核心结论
+
+`useMemo` 是 React 的性能优化工具，需要手动声明依赖；`computed` 是 Vue 表达派生状态的常规抽象，会自动追踪读取的响应式依赖。两者都要求计算函数保持纯粹。
+
+## 缓存是否可复用
+
+<div class="not-prose flow-comparison-grid">
+  <Flow framework="react" />
+  <Flow framework="vue" />
+</div>
+
+## 完整 Demo 源码
+
+以下代码直接读取在线 Demo 使用的源文件，没有省略或改写。
+
+**React 源码**
+
+<SourceCodeBlock client:load lang="tsx" code={reactDemoSource} title="ReactDemo.tsx" />
+
+---
+
+**Vue 3 源码**
+
+<SourceCodeBlock client:load lang="vue" code={vueDemoSource} title="VueDemo.vue" />
+
+## 在线观察
+
+示例从 5,000 条商品中筛选、排序并汇总。修改无关的购物车数量时，两边都会复用结果。
+
+### React
+
+<div class="not-prose"><ReactDemo client:visible /></div>
+
+### Vue 3
+
+<div class="not-prose"><VueDemo client:visible /></div>
+
+## API 对照
+
+| React | Vue 3 |
+| --- | --- |
+| `useMemo(() => value, deps)` | `computed(() => value)` |
+| 手动维护依赖数组 | 自动追踪响应式依赖 |
+| 返回普通值 | 返回 `ComputedRef`，脚本中用 `.value` |
+| 主要用于性能优化 | 派生状态的常规表达方式 |
+
+> **先直接计算：**小数组或简单算式通常不需要 `useMemo`。先按[派生状态](/derived-state/)的方式直接计算，确认存在明显开销后再缓存。
+
+`v-memo` 缓存模板子树，不是这里的对应 API；计算函数中也不要请求接口、修改状态或操作 DOM。

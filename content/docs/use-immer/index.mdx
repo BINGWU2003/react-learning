@@ -1,0 +1,51 @@
+---
+title: useImmer 与复杂状态更新
+description: 使用 useImmer 通过 Draft 更新嵌套对象和数组，同时保持 React state 的不可变性。
+---
+
+import { ImmerDemo } from "./ImmerDemo";
+import Flow from "./Flow.astro";
+import { SourceCodeTabs } from "@/components/SourceCodeTabs";
+import immerDemoSource from "./ImmerDemo.tsx?raw";
+import initialPlanSource from "./initialPlan.ts?raw";
+import immerStylesSource from "./ImmerDemo.css?raw";
+
+## 核心结论
+
+`useImmer` 允许业务代码修改临时 Draft，Immer 再生成不可变的下一份 state，并复用没有变化的分支。它改善的是复杂本地状态的更新表达，不会改变 React 的 state snapshot 模型。
+
+## Draft 到新状态
+
+<div class="not-prose my-6">
+  <Flow />
+</div>
+
+## 完整 Demo 源码
+
+以下代码直接读取在线 Demo 使用的源文件，没有省略或改写。
+
+**React 源码**
+
+<SourceCodeTabs
+  client:load
+  label="React useImmer 源码"
+  files={[
+    { title: "ImmerDemo.tsx", lang: "tsx", code: immerDemoSource },
+    { title: "initialPlan.ts", lang: "ts", code: initialPlanSource },
+    { title: "ImmerDemo.css", lang: "css", code: immerStylesSource },
+  ]}
+/>
+
+## 在线 Demo
+
+修改计划、编辑任务、批量完成或增删任务，观察多层对象与数组如何保持易读的更新代码。
+
+<div class="not-prose"><ImmerDemo client:visible /></div>
+
+## 使用边界
+
+- 只能修改 updater 收到的 `draft`，不要直接修改当前 React state。
+- 一次 updater 中选择“修改 Draft”或“返回替代状态”，不要混用。
+- 简单布尔值或单层对象通常不需要 Immer，普通 `useState` 更直接。
+- 业务操作逐渐形成明确事件时，可以进一步使用 `useImmerReducer`。
+- `useImmer` 管理本地客户端状态；远程服务端状态应交给[TanStack Query](/react-query/)。

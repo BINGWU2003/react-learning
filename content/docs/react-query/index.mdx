@@ -1,0 +1,69 @@
+---
+title: TanStack Query 服务端状态与缓存
+description: 使用 TanStack Query 管理异步服务端状态，并通过 Astro API Endpoint 处理真实的查询、错误和 Mutation 请求。
+---
+
+import { QueryDemo } from "./QueryDemo";
+import Flow from "./Flow.astro";
+import { SourceCodeTabs } from "@/components/SourceCodeTabs";
+import queryDemoSource from "./QueryDemo.tsx?raw";
+import queryOptionsSource from "./queryOptions.ts?raw";
+import queryApiSource from "./api.ts?raw";
+import queryStylesSource from "./QueryDemo.css?raw";
+import endpointSource from "../../../src/pages/api/learning-resources.ts?raw";
+import storeSource from "../../../src/lib/learning-resources/store.ts?raw";
+import resourceTypesSource from "../../../src/lib/learning-resources/types.ts?raw";
+import antdProviderSource from "../../../src/components/SiteAntdProvider.tsx?raw";
+import antdThemeSource from "../../../src/styles/antdTheme.ts?raw";
+
+## 核心结论
+
+服务端状态拥有缓存、新鲜度、并发请求和重新同步等生命周期，不适合只用 `useEffect + useState` 手写。TanStack Query 用 `queryKey` 标识资源，用 `staleTime` 表达何时需要重新获取。
+
+## 查询与 Mutation 流程
+
+<div class="not-prose my-6">
+  <Flow />
+</div>
+
+## 完整 Demo 源码
+
+以下代码直接读取在线 Demo、API Endpoint 与本地数据层，没有省略或改写。
+
+**React 与 API 源码**
+
+<SourceCodeTabs
+  client:load
+  label="React Query 与 API 源码"
+  files={[
+    { title: "QueryDemo.tsx", lang: "tsx", code: queryDemoSource },
+    { title: "queryOptions.ts", lang: "ts", code: queryOptionsSource },
+    { title: "api.ts", lang: "ts", code: queryApiSource },
+    { title: "QueryDemo.css", lang: "css", code: queryStylesSource },
+    { title: "learning-resources.ts", lang: "ts", code: endpointSource },
+    { title: "store.ts", lang: "ts", code: storeSource },
+    { title: "types.ts", lang: "ts", code: resourceTypesSource },
+    { title: "SiteAntdProvider.tsx", lang: "tsx", code: antdProviderSource },
+    { title: "antdTheme.ts", lang: "ts", code: antdThemeSource },
+  ]}
+/>
+
+## 在线 Demo
+
+切换主题过滤、使缓存失效、模拟接口错误或新增资料。浏览器会向真实 Astro API Endpoint 发出 HTTP 请求。
+
+<div class="not-prose"><QueryDemo client:visible /></div>
+
+## 观察重点
+
+- `isPending` 表示还没有可展示的数据；`isFetching` 表示查询函数正在运行，也包含后台更新。
+- 所有查询参数都必须进入 `queryKey`，否则不同筛选条件会错误共享缓存。
+- `queryFn` 接收 `AbortSignal`，过期请求可以被及时取消。
+- Mutation 成功后让查询失效，由资源自己的查询逻辑负责重新同步。
+- API Route 设置 `prerender = false`；其他 Fumadocs 页面仍然静态生成。
+
+<Callout title="Demo 存储边界" type="warning">
+示例数据只保存在 Function 进程内存中，冷启动或切换实例后可能恢复。正式数据必须使用持久化存储。
+</Callout>
+
+组件与外部系统同步的基础见[useEffect 与 watch](/effect/)。

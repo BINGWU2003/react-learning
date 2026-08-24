@@ -1,0 +1,77 @@
+---
+title: useCallback 与 Vue 普通函数
+description: React 使用 useCallback 稳定回调引用；Vue setup 中声明的普通函数天然保持稳定。
+---
+
+import { ReactDemo } from "./ReactDemo";
+import VueDemo from "./VueDemo.vue";
+import CallbackFlow from "./CallbackFlow.astro";
+import { SourceCodeTabs } from "@/components/SourceCodeTabs";
+import reactDemoSource from "./ReactDemo.tsx?raw";
+import reactProductListSource from "./ProductList.tsx?raw";
+import vueDemoSource from "./VueDemo.vue?raw";
+import vueProductListSource from "./ProductList.vue?raw";
+
+## 核心结论
+
+React 组件每次 render 都会创建新的函数对象，`useCallback` 可以按依赖复用函数引用；Vue `setup` 通常只运行一次，其中声明的普通函数天然稳定。稳定引用只有在下游会比较引用时才有价值。
+
+## 引用比较
+
+<div class="not-prose flow-comparison-grid">
+  <CallbackFlow framework="react" />
+  <CallbackFlow framework="vue" />
+</div>
+
+## 完整 Demo 源码
+
+以下代码直接读取在线 Demo 使用的源文件，没有省略或改写。
+
+**React 源码**
+
+<SourceCodeTabs
+  client:load
+  label="React 源码"
+  files={[
+    { title: "ReactDemo.tsx", lang: "tsx", code: reactDemoSource },
+    { title: "ProductList.tsx", lang: "tsx", code: reactProductListSource },
+  ]}
+/>
+
+---
+
+**Vue 3 源码**
+
+<SourceCodeTabs
+  client:load
+  label="Vue 3 源码"
+  files={[
+    { title: "VueDemo.vue", lang: "vue", code: vueDemoSource },
+    { title: "ProductList.vue", lang: "vue", code: vueProductListSource },
+  ]}
+/>
+
+## 在线观察
+
+增加购物车数量只更新父组件的无关状态，不应让商品列表进行不必要的工作。
+
+### React
+
+<div class="not-prose"><ReactDemo client:visible /></div>
+
+### Vue 3
+
+<div class="not-prose"><VueDemo client:visible /></div>
+
+## API 对照
+
+| React | Vue 3 |
+| --- | --- |
+| `useCallback(fn, deps)` | 通常直接声明普通函数 |
+| 每次 render 都重新执行组件函数 | `setup` 每个实例通常只执行一次 |
+| 手动维护闭包依赖 | 通过 ref 读取最新响应式值 |
+| 常与 `memo` 子组件配合 | props 未变化时框架可跳过子组件更新 |
+
+`useCallback(fn, deps)` 可理解为 `useMemo(() => fn, deps)`。只有回调传给 `memo` 子组件，或作为其他 Hook 的依赖时，稳定引用通常才有价值。
+
+回调作为通信协议见[组件通信](/component-communication/)；计算结果缓存见[useMemo](/memo/)。

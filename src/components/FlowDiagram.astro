@@ -86,11 +86,44 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
 
 <script>
   let mermaidInstance: (typeof import("mermaid"))["default"] | undefined;
+  let themeObserver: MutationObserver | undefined;
+  let renderQueue = Promise.resolve();
 
   async function getMermaid() {
     if (mermaidInstance) return mermaidInstance;
 
     const { default: mermaid } = await import("mermaid");
+    mermaidInstance = mermaid;
+    return mermaid;
+  }
+
+  function resolveChartForTheme(chart: string, isDark: boolean) {
+    if (!isDark) return chart;
+
+    const darkColors: Record<string, string> = {
+      "#fffdf8": "#18181b",
+      "#fbfdfe": "#111827",
+      "#fbfdfb": "#111a16",
+      "#f4fafb": "#10252d",
+      "#f2f8f4": "#10231a",
+      "#e4f5fa": "#12313d",
+      "#e4f4eb": "#123124",
+      "#eee9df": "#27272a",
+      "#f8e4d8": "#3f2a22",
+      "#25221d": "#f4f4f5",
+      "#817a70": "#a1a1aa",
+    };
+
+    return Object.entries(darkColors).reduce(
+      (result, [light, dark]) => result.replaceAll(light, dark),
+      chart,
+    );
+  }
+
+  function initializeMermaid(
+    mermaid: (typeof import("mermaid"))["default"],
+    isDark: boolean,
+  ) {
     mermaid.initialize({
       startOnLoad: false,
       securityLevel: "strict",
@@ -101,35 +134,64 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
         useMaxWidth: true,
       },
       themeVariables: {
-        background: "#fffdf8",
-        primaryColor: "#eee9df",
-        primaryTextColor: "#25221d",
-        primaryBorderColor: "#cfc7ba",
-        lineColor: "#817a70",
-        secondaryColor: "#f8e4d8",
-        tertiaryColor: "#fffdf8",
+        background: isDark ? "#09090b" : "#ffffff",
+        primaryColor: isDark ? "#27272a" : "#f4f4f5",
+        primaryTextColor: isDark ? "#fafafa" : "#18181b",
+        primaryBorderColor: isDark ? "#52525b" : "#d4d4d8",
+        lineColor: isDark ? "#a1a1aa" : "#71717a",
+        secondaryColor: isDark ? "#27272a" : "#f4f4f5",
+        tertiaryColor: isDark ? "#18181b" : "#ffffff",
         fontFamily:
           'Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif',
       },
     });
-
-    mermaidInstance = mermaid;
-    return mermaid;
   }
 
-  async function renderFlowDiagrams() {
+  async function renderFlowDiagrams(root: ParentNode = document) {
     const nodes = Array.from(
-      document.querySelectorAll<HTMLElement>(".flow-card .mermaid:not([data-processed])"),
-    );
+      root.querySelectorAll<HTMLElement>(".flow-card .mermaid:not([data-processed])"),
+    ).filter((node) => !node.closest("[hidden]"));
 
     if (nodes.length === 0) return;
 
     try {
       const mermaid = await getMermaid();
-      await mermaid.run({ nodes });
+      const isDark = document.documentElement.classList.contains("dark");
+      initializeMermaid(mermaid, isDark);
+      nodes.forEach((node) => {
+        node.dataset.chart ??= node.textContent ?? "";
+        node.textContent = resolveChartForTheme(node.dataset.chart, isDark);
+      });
+      for (const node of nodes) {
+        try {
+          await mermaid.run({ nodes: [node] });
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          node.textContent = node.dataset.chart ?? "";
+          node.dataset.flowError = "true";
+          console.error(`流程图渲染失败：${message}`);
+        }
+      }
     } catch (error) {
-      console.error("流程图渲染失败", error);
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`流程图初始化失败：${message}`);
     }
+  }
+
+  function queueFlowRender(root: ParentNode = document, reset = false) {
+    renderQueue = renderQueue.then(async () => {
+      if (reset) {
+        root.querySelectorAll<HTMLElement>(".flow-card .mermaid[data-chart]").forEach((node) => {
+          node.removeAttribute("data-processed");
+          node.removeAttribute("data-flow-error");
+          node.textContent = node.dataset.chart ?? "";
+        });
+      }
+
+      await renderFlowDiagrams(root);
+    });
+
+    return renderQueue;
   }
 
   type ViewState = {
@@ -245,8 +307,6 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
         closeButton.focus();
       };
 
-      canvas.addEventListener("click", openDialog);
-      expandButton.addEventListener("click", (event) => event.stopPropagation());
       expandButton.addEventListener("click", openDialog);
       zoomIn.addEventListener("click", () => setScale(state.scale * 1.2));
       zoomOut.addEventListener("click", () => setScale(state.scale / 1.2));
@@ -308,10 +368,28 @@ const { chart, description, framework, showHeader = true, tone } = Astro.props;
   }
 
   async function initializeFlowDiagrams() {
-    await renderFlowDiagrams();
+    await queueFlowRender();
     enhanceFlowDiagrams();
   }
 
+  function watchThemeChanges() {
+    if (themeObserver) return;
+
+    themeObserver = new MutationObserver(() => {
+      void queueFlowRender(document, true);
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  }
+
   void initializeFlowDiagrams();
+  watchThemeChanges();
   document.addEventListener("astro:page-load", initializeFlowDiagrams);
+  document.addEventListener("chapter-tab-change", (event) => {
+    if (!(event instanceof CustomEvent) || event.detail?.value !== "flow") return;
+    const root = event.detail.root;
+    if (root instanceof HTMLElement) void queueFlowRender(root);
+  });
 </script>

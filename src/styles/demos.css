@@ -1,0 +1,636 @@
+:root {
+  --ui-canvas: var(--color-fd-background);
+  --ui-surface: var(--color-fd-card);
+  --ui-surface-muted: var(--color-fd-muted);
+  --ui-ink: var(--color-fd-foreground);
+  --ui-ink-muted: var(--color-fd-muted-foreground);
+  --ui-line: var(--color-fd-border);
+  --ui-line-strong: color-mix(in srgb, var(--color-fd-foreground) 32%, var(--color-fd-border));
+  --ui-accent: var(--color-fd-primary);
+  --ui-accent-low: var(--color-fd-accent);
+  --ui-react: #149eca;
+  --ui-react-low: color-mix(in srgb, #149eca 12%, var(--color-fd-card));
+  --ui-vue: #42b883;
+  --ui-vue-low: color-mix(in srgb, #42b883 12%, var(--color-fd-card));
+  --ui-radius-sm: 0.375rem;
+  --ui-radius: 0.5rem;
+  --ui-radius-lg: 0.75rem;
+  --ui-transition: 160ms ease;
+}
+
++/* Flow diagrams */
+
+.framework-flow__eyebrow {
+  margin: 0;
+  color: var(--color-fd-muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.flow-card__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--framework-color);
+}
+
+.framework-flow {
+  --framework-color: var(--ui-react);
+  --framework-low: var(--ui-react-low);
+  display: grid;
+  gap: 0.85rem;
+}
+
+.framework-flow--vue {
+  --framework-color: var(--ui-vue);
+  --framework-low: var(--ui-vue-low);
+}
+
+.flow-comparison-grid {
+  display: grid;
+  gap: 1.5rem;
+  margin-block: 1.5rem;
+}
+
+.framework-flow__intro {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.framework-flow__intro p,
+.framework-flow__focus,
+.framework-flow__hint,
+.flow-card h3,
+.flow-card p {
+  margin: 0;
+}
+
+.framework-flow__hint {
+  color: var(--ui-ink-muted);
+  font-size: 0.75rem;
+}
+
+.framework-flow__focus {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  color: var(--ui-ink-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.framework-flow__focus span {
+  flex: none;
+  padding: 0.12rem 0.38rem;
+  border: 1px solid color-mix(in srgb, var(--framework-color) 45%, var(--ui-line));
+  border-radius: 0.2rem;
+  color: var(--ui-ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.61rem;
+  font-weight: 800;
+  background: var(--framework-low);
+}
+
+.framework-flow__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+  justify-content: flex-start;
+}
+
+.framework-flow__legend span {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  color: var(--ui-ink-muted);
+  font-size: 0.7rem;
+  font-weight: 650;
+}
+
+.framework-flow__legend-mark {
+  display: block;
+  width: 1rem;
+  height: 0.62rem;
+  border-style: solid;
+  border-color: var(--framework-color);
+}
+
+.framework-flow__legend-mark--state {
+  border-width: 1px;
+  border-radius: 999px;
+  background: var(--ui-surface);
+}
+
+.framework-flow__legend-mark--component {
+  border-width: 2px;
+  border-radius: 0.1rem;
+  background: var(--framework-low);
+}
+
+.framework-flow__legend-mark--process {
+  border-width: 1.5px;
+  border-style: dashed;
+  border-radius: 0.15rem;
+  background: color-mix(in srgb, var(--framework-low) 45%, var(--ui-surface));
+}
+
+.framework-flow__legend-mark--resource {
+  border-width: 1.5px;
+  border-color: var(--ui-ink-muted);
+  border-radius: 50% / 30%;
+  background: var(--ui-surface-muted);
+}
+
+.flow-card {
+  --framework-color: var(--ui-react);
+  min-width: 0;
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid var(--ui-line-strong);
+  border-radius: var(--ui-radius);
+  background: var(--ui-surface);
+  box-shadow: none;
+}
+
+.flow-card--vue {
+  --framework-color: var(--ui-vue);
+}
+
+.flow-card--compare {
+  --framework-color: var(--ui-accent);
+}
+
+.flow-card__header {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--ui-line);
+}
+
+.flow-card__header h3 {
+  color: var(--ui-ink);
+  font-size: 0.85rem;
+}
+
+.flow-card__canvas {
+  position: relative;
+  display: grid;
+  min-height: 17rem;
+  padding: 0.75rem;
+  background: var(--ui-surface-muted);
+  place-items: center;
+}
+
+.flow-card__expand {
+  position: absolute;
+  z-index: 1;
+  top: 0.65rem;
+  right: 0.65rem;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--ui-line-strong);
+  border-radius: var(--ui-radius-sm);
+  padding: 0;
+  color: var(--ui-ink-muted);
+  background: var(--ui-surface);
+  box-shadow: 2px 2px 0 rgb(37 34 29 / 8%);
+  cursor: zoom-in;
+  transition:
+    color var(--ui-transition),
+    border-color var(--ui-transition),
+    transform var(--ui-transition);
+  place-items: center;
+}
+
+.flow-card__expand:hover {
+  border-color: var(--ui-ink);
+  color: var(--ui-ink);
+  transform: translate(-1px, -1px);
+}
+
+.flow-card__expand:focus-visible,
+.flow-lightbox button:focus-visible {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: 2px;
+}
+
+.flow-card__expand svg,
+.flow-lightbox__actions svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.flow-card__canvas .mermaid {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  text-align: center;
+}
+
+.flow-card__canvas .mermaid:not([data-processed]) {
+  color: transparent;
+}
+
+.flow-card__canvas svg {
+  display: block;
+  width: 100%;
+  max-width: 100% !important;
+  max-height: 16rem;
+  margin: 0 auto;
+}
+
+.flow-card__description {
+  min-height: 4rem;
+  padding: 0.75rem 0.9rem;
+  border-top: 1px solid var(--ui-line);
+  color: var(--ui-ink-muted);
+  font-size: 0.74rem;
+  line-height: 1.55;
+}
+
+.flow-lightbox {
+  width: min(72rem, calc(100vw - 2rem));
+  height: min(50rem, calc(100dvh - 2rem));
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  overflow: visible;
+  border: 0;
+  padding: 0;
+  color: var(--ui-ink);
+  background: transparent;
+}
+
+.flow-lightbox[open] {
+  display: block;
+}
+
+.flow-lightbox::backdrop {
+  background: rgb(37 34 29 / 64%);
+  backdrop-filter: blur(2px);
+}
+
+.flow-lightbox__panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--ui-ink);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: 0 1.25rem 4rem color-mix(in srgb, #000 28%, transparent);
+}
+
+.flow-lightbox__header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.5rem;
+  padding: 0.65rem 0.75rem 0.65rem 0.95rem;
+  border-bottom: 1px solid var(--ui-line);
+}
+
+.flow-lightbox__header > div,
+.flow-lightbox__actions {
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.flow-lightbox__header strong {
+  font-size: 0.85rem;
+}
+
+.flow-lightbox__actions button {
+  display: grid;
+  min-width: 2.15rem;
+  height: 2.15rem;
+  margin: 0;
+  border: 1px solid var(--ui-line);
+  border-radius: var(--ui-radius-sm);
+  padding: 0 0.5rem;
+  color: var(--ui-ink);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  background: var(--ui-canvas);
+  cursor: pointer;
+  place-items: center;
+}
+
+.flow-lightbox__actions button:hover {
+  border-color: var(--ui-ink);
+  background: var(--ui-surface);
+}
+
+.flow-lightbox__actions .flow-lightbox__scale {
+  min-width: 3.6rem;
+  font-size: 0.7rem;
+}
+
+.flow-lightbox__divider {
+  width: 1px;
+  height: 1.4rem;
+  margin-inline: 0.1rem;
+  background: var(--ui-line);
+}
+
+.flow-lightbox__viewport {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle, rgb(109 104 95 / 24%) 1px, transparent 1px) 0 0 / 18px 18px,
+    var(--ui-surface-muted);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.flow-lightbox__viewport.is-dragging {
+  cursor: grabbing;
+}
+
+.flow-lightbox__stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max-content;
+  height: max-content;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.flow-lightbox__stage img {
+  display: block;
+  max-width: none;
+  pointer-events: none;
+}
+
+.flow-lightbox__help {
+  margin: 0;
+  padding: 0.6rem 1rem;
+  border-top: 1px solid var(--ui-line);
+  color: var(--ui-ink-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.66rem;
+  text-align: center;
+}
+
+
+/* Shared controls used only by the runnable React and Vue examples. */
+
+.demo-stack {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.demo-card {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--ui-line);
+  border-radius: var(--ui-radius-sm);
+  background: var(--color-fd-card);
+}
+
+.demo-card h2,
+.demo-card h3,
+.demo-card p {
+  margin: 0;
+}
+
+.demo-card h2,
+.demo-card h3 {
+  color: var(--ui-ink);
+  font-size: 0.95rem;
+  letter-spacing: -0.02em;
+}
+
+.demo-card p {
+  color: var(--ui-ink-muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.demo-card > * + * {
+  margin-top: 0.6rem;
+}
+
+.demo-form {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.demo-field {
+  display: grid;
+  gap: 0.32rem;
+  color: var(--ui-ink-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.demo-input,
+.demo-select {
+  width: 100%;
+  min-height: 2.35rem;
+  border: 1px solid var(--ui-line-strong);
+  border-radius: var(--ui-radius-sm);
+  padding: 0.42rem 0.6rem;
+  color: var(--ui-ink);
+  font: inherit;
+  background: var(--ui-surface);
+  transition: border-color var(--ui-transition), box-shadow var(--ui-transition);
+}
+
+.demo-input:focus,
+.demo-select:focus {
+  border-color: var(--ui-accent);
+  outline: 0;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ui-accent) 18%, transparent);
+}
+
+.demo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.demo-button {
+  min-height: 2.25rem;
+  border: 1px solid var(--color-fd-border);
+  border-radius: var(--ui-radius-sm);
+  padding: 0.38rem 0.7rem;
+  color: var(--color-fd-primary-foreground);
+  font: inherit;
+  font-size: 0.77rem;
+  font-weight: 750;
+  background: var(--color-fd-primary);
+  cursor: pointer;
+  transition: background var(--ui-transition);
+}
+
+.demo-button:hover {
+  background: color-mix(in srgb, var(--color-fd-primary) 88%, var(--color-fd-foreground));
+}
+
+.demo-button:disabled {
+  border-color: var(--ui-line-strong);
+  color: var(--ui-ink-muted);
+  background: var(--ui-surface-muted);
+  cursor: not-allowed;
+}
+
+.demo-result {
+  min-height: 2.65rem;
+  padding: 0.7rem;
+  border-left: 2px solid var(--ui-accent);
+  color: var(--ui-ink);
+  font-size: 0.82rem;
+  background: var(--ui-surface-muted);
+}
+
+.demo-list {
+  display: grid;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  border-block: 1px solid var(--ui-line);
+  list-style: none;
+}
+
+.demo-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.1rem;
+  color: var(--ui-ink);
+  font-size: 0.78rem;
+}
+
+.demo-list li + li {
+  border-top: 1px solid var(--ui-line);
+}
+
+.demo-trace {
+  padding: 0;
+  margin: 0;
+  border-block: 1px solid var(--ui-line);
+  list-style: none;
+}
+
+.demo-trace li {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.58rem 0.1rem;
+}
+
+.demo-trace li + li {
+  border-top: 1px solid var(--ui-line);
+}
+
+.demo-trace span {
+  color: var(--ui-accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.demo-trace :is(code, strong, p) {
+  min-width: 0;
+  margin: 0;
+  color: var(--ui-ink);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.demo-trace code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.demo-trace p,
+.demo-muted {
+  color: var(--ui-ink-muted);
+}
+
+.demo-tag {
+  display: inline-flex;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 999px;
+  padding: 0.14rem 0.42rem;
+  color: var(--ui-ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.65rem;
+  font-weight: 750;
+  background: var(--color-fd-muted);
+}
+
+.dynamic-demo-card {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--demo-accent);
+  border-inline-start-width: 3px;
+  border-radius: min(var(--demo-radius), 0.65rem);
+  color: color-mix(in srgb, var(--demo-accent) 72%, var(--ui-ink));
+  background: var(--demo-background);
+  transition: border-radius var(--ui-transition), border-color var(--ui-transition), background var(--ui-transition);
+}
+
+.dynamic-demo-card h2,
+.dynamic-demo-card p {
+  margin: 0;
+}
+
+@media (max-width: 30rem) {
+  .framework-flow__focus {
+    display: grid;
+  }
+
+  .flow-lightbox {
+    width: calc(100vw - 0.75rem);
+    height: calc(100dvh - 0.75rem);
+  }
+
+  .flow-lightbox__header {
+    align-items: flex-start;
+  }
+
+  .flow-lightbox__header > div:first-child {
+    display: none;
+  }
+
+  .flow-lightbox__actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .demo-trace li {
+    grid-template-columns: 1fr;
+    gap: 0.22rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

@@ -1,0 +1,18 @@
+---
+import FlowDiagram from "./FlowDiagram.astro";
+
+type Props = {
+  chart: string;
+};
+
+const { chart } = Astro.props;
+---
+
+<div class="not-prose my-6">
+  <FlowDiagram
+    chart={chart}
+    description="图中实线表示主要数据或处理路径，虚线表示反馈、通知或下一轮更新。"
+    framework="Vue 3 × React"
+    tone="compare"
+  />
+</div>
