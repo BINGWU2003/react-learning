@@ -99,13 +99,19 @@ export function ImmerDemo() {
     <div className="immer-demo not-content">
       <header className="immer-demo__header">
         <div>
-          <span className="demo-tag">useImmer state</span>
+          <span className="d-badge d-badge-outline d-badge-sm">
+            useImmer state
+          </span>
           <h2>{plan.title || "未命名学习计划"}</h2>
           <p>
             {plan.owner.name || "未填写姓名"} · {plan.owner.level}
           </p>
         </div>
-        <button className="immer-demo__button" type="button" onClick={resetPlan}>
+        <button
+          className="d-btn d-btn-outline d-btn-sm"
+          type="button"
+          onClick={resetPlan}
+        >
           重置计划
         </button>
       </header>
@@ -113,15 +119,27 @@ export function ImmerDemo() {
       <div className="immer-demo__editor">
         <label>
           计划名称
-          <input value={plan.title} onChange={changePlanTitle} />
+          <input
+            className="d-input d-input-sm w-full"
+            value={plan.title}
+            onChange={changePlanTitle}
+          />
         </label>
         <label>
           学习者
-          <input value={plan.owner.name} onChange={changeOwnerName} />
+          <input
+            className="d-input d-input-sm w-full"
+            value={plan.owner.name}
+            onChange={changeOwnerName}
+          />
         </label>
         <label>
           当前阶段
-          <select value={plan.owner.level} onChange={changeLevel}>
+          <select
+            className="d-select d-select-sm w-full"
+            value={plan.owner.level}
+            onChange={changeLevel}
+          >
             <option value="初级">初级</option>
             <option value="进阶">进阶</option>
           </select>
@@ -159,7 +177,7 @@ export function ImmerDemo() {
                 </span>
               </div>
               <button
-                className="immer-demo__text-button"
+                className="d-btn d-btn-ghost d-btn-sm"
                 type="button"
                 onClick={() => completeModule(module.id)}
                 disabled={module.tasks.length === 0}
@@ -176,13 +194,14 @@ export function ImmerDemo() {
                     key={task.id}
                   >
                     <input
+                      className="d-toggle d-toggle-primary d-toggle-sm"
                       type="checkbox"
                       checked={task.completed}
                       aria-label={`${task.completed ? "取消完成" : "完成"} ${task.title}`}
                       onChange={() => toggleTask(module.id, task.id)}
                     />
                     <input
-                      className="immer-demo__task-title"
+                      className="d-input d-input-sm w-full immer-demo__task-title"
                       value={task.title}
                       aria-label={`编辑任务：${task.title}`}
                       onChange={(event) =>
@@ -190,7 +209,7 @@ export function ImmerDemo() {
                       }
                     />
                     <button
-                      className="immer-demo__remove"
+                      className="d-btn d-btn-error d-btn-ghost d-btn-sm"
                       type="button"
                       aria-label={`删除任务：${task.title}`}
                       onClick={() => removeTask(module.id, task.id)}
@@ -211,6 +230,7 @@ export function ImmerDemo() {
         <label>
           新任务
           <input
+            className="d-input d-input-sm w-full"
             value={newTaskTitle}
             placeholder="例如：完成一次状态重构"
             onChange={(event) => setNewTaskTitle(event.target.value)}
@@ -219,6 +239,7 @@ export function ImmerDemo() {
         <label>
           添加到
           <select
+            className="d-select d-select-sm w-full"
             value={targetModuleId}
             onChange={(event) => setTargetModuleId(event.target.value)}
           >
@@ -230,7 +251,7 @@ export function ImmerDemo() {
           </select>
         </label>
         <button
-          className="immer-demo__button immer-demo__button--primary"
+          className="d-btn d-btn-primary d-btn-sm"
           type="submit"
           disabled={!newTaskTitle.trim()}
         >

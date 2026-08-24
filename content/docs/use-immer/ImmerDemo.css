@@ -56,53 +56,6 @@
   font-weight: 700;
 }
 
-.immer-demo input:not([type="checkbox"]),
-.immer-demo select {
-  min-width: 0;
-  min-height: 2.35rem;
-  border: 1px solid var(--color-fd-border);
-  border-radius: var(--ui-radius-sm);
-  padding: 0.42rem 0.62rem;
-  color: var(--color-fd-foreground);
-  font: inherit;
-  background: var(--color-fd-background);
-}
-
-.immer-demo input:focus,
-.immer-demo select:focus,
-.immer-demo button:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--color-fd-primary) 20%, transparent);
-  outline-offset: 1px;
-}
-
-.immer-demo__button,
-.immer-demo__text-button,
-.immer-demo__remove {
-  border-radius: var(--ui-radius-sm);
-  padding: 0.42rem 0.65rem;
-  font: inherit;
-  font-size: 0.74rem;
-  font-weight: 750;
-  cursor: pointer;
-}
-
-.immer-demo__button {
-  border: 1px solid var(--color-fd-border);
-  color: var(--color-fd-foreground);
-  background: var(--color-fd-background);
-}
-
-.immer-demo__button--primary {
-  border-color: var(--ui-ink);
-  color: var(--ui-surface);
-  background: var(--ui-ink);
-}
-
-.immer-demo button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
 .immer-demo__progress {
   display: grid;
   gap: 0.65rem;
@@ -169,12 +122,6 @@
   font-size: 0.68rem;
 }
 
-.immer-demo__text-button {
-  border: 0;
-  color: var(--color-fd-primary);
-  background: transparent;
-}
-
 .immer-demo__module ul {
   display: grid;
   gap: 0;
@@ -202,20 +149,7 @@
 }
 
 .immer-demo__task-title {
-  min-height: 2rem !important;
-  border-color: transparent !important;
-  padding-block: 0.25rem !important;
-}
-
-.immer-demo__task-title:hover,
-.immer-demo__task-title:focus {
-  border-color: var(--color-fd-border) !important;
-}
-
-.immer-demo__remove {
-  border: 0;
-  color: #c43f3f;
-  background: transparent;
+  min-width: 0;
 }
 
 .immer-demo__empty {
@@ -232,10 +166,6 @@
   gap: 0.7rem;
   align-items: end;
   padding: 0.85rem;
-}
-
-.immer-demo__add .immer-demo__button {
-  min-height: 2.35rem;
 }
 
 @media (max-width: 42rem) {
